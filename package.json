@@ -1,0 +1,26 @@
+{
+  "name": "bluezebra-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshel-bahl/BlueZebra-backend.git"
+  },
+  "author": "Harshel Bahl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harshel-bahl/BlueZebra-backend/issues"
+  },
+  "homepage": "https://github.com/harshel-bahl/BlueZebra-backend#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^5.0.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.20",
+    "socket.io": "^4.5.4"
+  }
+}
