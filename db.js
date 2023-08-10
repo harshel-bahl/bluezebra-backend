@@ -39,17 +39,17 @@ class Database {
 
     var sql2 = `CREATE TABLE IF NOT EXISTS CRs (
       requestID VARCHAR(255) NOT NULL CHECK (requestID <> ''),
-      channelID VARCHAR(255) NOT NULL CHECK (channelID <> ''),
-      userID VARCHAR(255) NOT NULL CHECK (userID <> ''),
+      originUserID VARCHAR(255) NOT NULL CHECK (userID <> ''),
+      receivingUserID VARCHAR(255) NOT NULL CHECK (userID <> ''),
       requestDate DATETIME NOT NULL,
-      PRIMARY KEY (requestID, userID)
+      PRIMARY KEY (requestID)
     );`
 
     var sql3 = `CREATE TABLE IF NOT EXISTS RUChannels (
       channelID VARCHAR(255) NOT NULL CHECK (channelID <> ''),
       userID VARCHAR(255) NOT NULL CHECK (userID <> ''),
       creationDate DATETIME NOT NULL,
-      PRIMARY KEY (channelID, userID),
+      PRIMARY KEY (channelID, userID)
     );`
 
     var sql4 = `CREATE TABLE IF NOT EXISTS EVENTS (
@@ -58,8 +58,7 @@ class Database {
       datetime DATETIME(3) NOT NULL,
       originUserID VARCHAR(255) NOT NULL CHECK (originUserID <> ''),
       receivingUserID VARCHAR(255) NOT NULL CHECK (receivingUserID <> ''),
-      packet BLOB,
-      PRIMARY KEY (eventID)
+      packet BLOB
     );`;
 
     this.con.query(sql1, function (err, result) {
@@ -95,16 +94,20 @@ class Database {
     predValue1,
     predProp2 = null,
     predValue2 = null,
-    cols = "*",
+    cols = null,
     errorOnMultiple = false) {
 
     let query = `
-      SELECT ? 
-      FROM ?
-      WHERE ? = ? ${"AND ? = ?" * (predProp2 !== null && predValue2 !== null)}
+      SELECT ${cols == null ? "*" : "??"}
+      FROM ??
+      WHERE ?? = ? ${"AND ?? = ?" * (predProp2 !== null && predValue2 !== null)}
     `;
 
-    let values = [cols, table, predProp1, predValue1, predProp2, predValue2];
+    let values = [table, predProp1, predValue1, predProp2, predValue2];
+
+    if (cols !== null) {
+      values = [cols].concat(values);
+    };
 
     if (predProp2 !== null && predValue2 !== null) {
       values.push(predProp2);
@@ -130,21 +133,25 @@ class Database {
     table,
     predProp,
     predValue,
-    cols = "*",
-    limit = null,
+    cols = null,
     sortColumn = null,
     sortOrder = "DESC",
+    limit = null,
     failOnEmpty = false) {
 
     let query = `
-      SELECT ? 
-      FROM ?
-      WHERE ? = ?
-      ${sortColumn !== null ? `ORDER BY ? ?` : ""}
-      ${limit !== null ? `LIMIT ?` : ""}
+      SELECT ${cols == null ? "*" : "??"}
+      FROM ??
+      WHERE ?? = ?
+      ${sortColumn != null ? `ORDER BY ?? ${sortOrder}` : ""}
+      ${limit != null ? `LIMIT ?` : ""}
     `;
 
-    let values = [cols, table, predProp, predValue];
+    let values = [table, predProp, predValue];
+
+    if (cols !== null) {
+      values = [cols].concat(values);
+    };
 
     if (sortColumn !== null) {
       values.push(sortColumn);
@@ -183,9 +190,9 @@ class Database {
     updateValue) {
 
     let query = `
-    UPDATE ?
-    SET ? = ?
-    WHERE ? = ? ${"AND ? = ?" * (predProp2 !== null && predValue2 !== null)}
+      UPDATE ??
+      SET ?? = ?
+      WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
     let values = [table, updateProp, updateValue, predProp1, predValue1];
@@ -222,9 +229,9 @@ class Database {
     failOnEmpty = false) {
 
     let query = `
-    UPDATE ?
-    SET ? = ?
-    WHERE ? = ?
+      UPDATE ??
+      SET ?? = ?
+      WHERE ?? = ?
     `;
 
     let values = [table, updateProp, updateValue, predProp, predValue];
@@ -255,9 +262,9 @@ class Database {
     predValue2 = null) {
 
     let query = `
-    DELETE
-    FROM ?
-    WHERE ? = ? ${"AND ? = ?" * (predProp2 !== null && predValue2 !== null)}
+      DELETE
+      FROM ??
+      WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
     let values = [table, predProp1, predValue1];
@@ -290,9 +297,9 @@ class Database {
     failOnEmpty = false) {
 
     let query = `
-    DELETE
-    FROM ?
-    WHERE ? = ?
+      DELETE
+      FROM ??
+      WHERE ?? = ?
     `;
 
     let values = [table, predProp, predValue];
@@ -315,6 +322,8 @@ class Database {
 
   createUser(userID, username, avatar, creationDate) {
 
+    let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`
+
     let values = [
       userID,
       username,
@@ -324,7 +333,7 @@ class Database {
     ];
 
     return new Promise((resolve, reject) => {
-      this.con.query(`INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`, values, function (err, result) {
+      this.con.query(query, values, function (err, result) {
 
         if (err) {
           reject(new Error("db.createUser: " + err.message))
@@ -338,125 +347,41 @@ class Database {
   };
 
   fetchUsersByUsername(username, limit = 10) {
-    return new Promise((resolve, reject) => {
-      this.con.query(`
-      (SELECT * FROM USERS WHERE username = ?)
-      UNION ALL
-      (SELECT * FROM USERS WHERE username LIKE ? AND username != ? ORDER BY username LIMIT 10)
-      ORDER BY CASE WHEN username = ? THEN 0 ELSE 1 END, username
-      LIMIT ?;
-    `, [username, username + '%', username, username, limit], function (err, result) {
 
+    let query = `
+    (SELECT * FROM USERS WHERE username = ?)
+    UNION ALL
+    (SELECT * FROM USERS WHERE username LIKE ? AND username != ? ORDER BY username LIMIT 10)
+    ORDER BY CASE WHEN username = ? THEN 0 ELSE 1 END, username
+    LIMIT ?;
+    `
+    let values = [username, username + '%', username, username, limit]
+
+    return new Promise((resolve, reject) => {
+      this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.fetchUsersByUsername: " + err))
         } else {
           resolve(result);
         }
-
-        // let users = [];
-        // for (let i = 0; i < result.length; i++) {
-        //   users.push({
-        //     userID: result[i].userID,
-        //     username: result[i].username,
-        //     avatar: result[i].avatar,
-        //     creationDate: result[i].creationDate
-        //   });
-        // };
       });
     });
   };
-
-  checkUsername(username) {
-    return new Promise((resolve, reject) => {
-      this.con.query('SELECT userID FROM USERS WHERE username=?', [username], function (err, result) {
-
-        if (err) reject(new Error("db.checkUsername: " + err.message));
-
-        if (result.length == 0) {
-          resolve(true);
-        } else if (result.length > 0) {
-          resolve(false);
-        };
-      });
-    });
-  };
-
-  checkUserID(userID) {
-    return new Promise((resolve, reject) => {
-      this.con.query('SELECT userID FROM USERS WHERE userID=?', [userID], function (err, result) {
-
-        if (err) reject(new Error("db.checkUserID: " + err.message));
-
-        if (result.length == 0) {
-          resolve(false);
-        } else if (result.length > 0) {
-          resolve(true);
-        };
-      });
-    });
-  };
-
-  // fetchUserByUserID(userID) {
-  //   return new Promise((resolve, reject) => {
-  //     this.con.query(`SELECT * FROM USERS WHERE userID=?`, [userID], function (err, result) {
-
-  //       if (err) reject(new Error("db.fetchUserbyUserID: " + err));
-
-  //       if (result.length == 0) {
-  //         reject("db.fetchUserbyUserID: user not found");
-  //       } else {
-  //         resolve({
-  //           userID: result[0].userID,
-  //           username: result[0].username,
-  //           avatar: result[0].avatar,
-  //           creationDate: result[0].creationDate
-  //         });
-  //       }
-  //     });
-  //   });
-  // };
-
-
-
-  // updateLastOnline(userID, date) {
-  //   return new Promise((resolve, reject) => {
-  //     this.con.query(`UPDATE USERS SET lastOnline=? WHERE userID=?`, [date, userID], function (err, result) {
-
-  //       if (err) reject(new Error("db.updateLastOnline: " + err));
-
-  //       resolve();
-  //     });
-  //   });
-  // };
-
-  // fetchUserLastOnline(userID) {
-  //   return new Promise((resolve, reject) => {
-  //     this.con.query('SELECT lastOnline from USERS WHERE userID=?', [userID], function (err, result) {
-
-  //       if (err) reject(new Error("db.fetchUserLastOnline: " + err));
-
-  //       if (result.length != 0 && result.length == 1) {
-  //         resolve(result[0].lastOnline)
-  //       };
-  //     });
-  //   });
-  // };
 
   // CRs Table Functions
   // ==================
 
-  createCR(requestID, channelID, userID, requestDate) {
+  createCR(requestID, originUserID, receivingUserID, requestDate) {
 
     let values = [
       requestID,
-      channelID,
-      userID,
+      originUserID,
+      receivingUserID,
       requestDate
     ];
 
     return new Promise((resolve, reject) => {
       this.con.query(`INSERT INTO CRs VALUES (?, ?, ?, ?)`, values, function (err, result) {
-
         if (err) {
           reject(new Error("db.createCR: " + err.message));
         } else if (result.affectedRows == 0) {
@@ -474,6 +399,7 @@ class Database {
   createRUChannel(channelID, userID, creationDate) {
 
     let query = `INSERT INTO RUChannels VALUES (?, ?, ?)`
+
     let values = [
       channelID,
       userID,
@@ -482,11 +408,32 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
-
         if (err) {
           reject(new Error("db.createRUChannel: " + err.message));
         } else if (result.affectedRows == 0) {
           reject("db.createRUChannel: failed to create CR");
+        } else {
+          resolve();
+        };
+      });
+    });
+  };
+
+  deleteRUChannelByUserID(userID) {
+
+    let query = `
+    DELETE FROM RUChannels WHERE channelID IN (
+        SELECT channelID FROM RUChannels WHERE userID = ?
+    )`;
+
+    let values = [userID];
+
+    return new Promise((resolve, reject) => {
+      this.con.query(query, values, function (err, result) {
+        if (err) {
+          reject(new Error("db.deleteRUChannelByUserID: " + err.message));
+        } else if (result.affectedRows == 0) {
+          reject("db.deleteRUChannelByUserID: failed to create CR");
         } else {
           resolve();
         };
@@ -520,46 +467,6 @@ class Database {
       });
     });
   };
-
-  // fetchEventsByUserID(receivingUserID) {
-  //   return new Promise((resolve, reject) => {
-
-  //     let sql = `SELECT * FROM EVENTS WHERE receivingUserID=? ORDER BY datetime DESC`;
-
-  //     this.con.query(sql, [receivingUserID], function (err, result) {
-  //       if (err) throw err;
-
-  //       let events = [];
-  //       for (let i = 0; i < result.length; i++) {
-  //         events.push({
-  //           eventID: result[i].eventID,
-  //           eventName: result[i].eventName,
-  //           datetime: result[i].datetime,
-  //           originUserID: result[i].originUserID,
-  //           receivingUserID: result[i].receivingUserID,
-  //           attempts: result[i].attempts,
-  //           packet: result[i].packet
-  //         });
-  //       };
-
-  //       resolve(events);
-  //     });
-  //   });
-  // };
-
-  // deleteEvent(eventID) {
-  //   return new Promise((resolve, reject) => {
-  //     this.con.query(`DELETE FROM EVENTS WHERE eventID=?`, [eventID], function (err, result) {
-  //       if (err) throw err;
-
-  //       if (result.affectedRows != 0) {
-  //         resolve(true);
-  //       } else {
-  //         reject(false);
-  //       };
-  //     });
-  //   });
-  // };
 };
 
 module.exports = new Database();

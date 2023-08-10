@@ -5,9 +5,8 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const util = require('./utilities');
 const { v4: uuidv4 } = require('uuid');
-
 const db = require('./db');
-const { time } = require('console');
+
 db.connect();
 
 let connectedUsers = {};
@@ -57,7 +56,7 @@ io.on('connection', (socket) => {
                 util.handleFailure("CheckOnlineEmit", error, `receivingUserID: ${receivingUserID}, eventName: ${eventName}`, showLogs);
 
                 if (socket.userData.userID) {
-                    await db.addEvent(eventName, util.currDT, originUserID, receivingUserID, packet);
+                    await db.createEvent(eventName, util.currDT, originUserID, receivingUserID, packet);
                 } else {
                     throw new Error("origin userID not found");
                 };
@@ -66,7 +65,7 @@ io.on('connection', (socket) => {
             };
         } else {
             if (socket.userData.userID) {
-                await db.addEvent(eventName, util.currDT, originUserID, receivingUserID, packet);
+                await db.createEvent(eventName, util.currDT, originUserID, receivingUserID, packet);
             } else {
                 throw new Error("origin userID not found");
             };
@@ -75,7 +74,7 @@ io.on('connection', (socket) => {
 
     async function EmitPendingEvents(userID, receivingSocket, timeoutLength, showLogs = true) {
 
-        let pendingEvents = await db.fetchEventsByUserID(userID);
+        let pendingEvents = await db.fetchRecords('EVENTS', 'receivingUserID', userID, ['eventID', 'eventName', 'packet'], 'datetime');
 
         for (let i = 0; i < pendingEvents.length; i++) {
             let eventID = pendingEvents[i].eventID;
@@ -84,13 +83,13 @@ io.on('connection', (socket) => {
 
             try {
                 await EmitEvent(receivingSocket, eventName, packet, timeoutLength, showLogs);
-                await db.deleteEvent(eventID);
+                await db.deleteRecord("EVENTS", "eventID", eventID);
                 util.handleSuccess("EmitPendingEvents", `userID: ${userID}, eventID: ${eventID}, eventName: ${eventName}`, showLogs)
             } catch (error) {
                 util.handleFailure("EmitPendingEvents", error.toString(), `userID: ${userID}, eventID: ${eventID}, eventName: ${eventName}`, showLogs)
                 
                 if (error.message != "EmitEvent - operation has timed out") {
-                    await db.deleteEvent(eventID);
+                    await db.deleteRecord("EVENTS", "eventID", eventID);
                 }
             }
         };
@@ -102,15 +101,15 @@ io.on('connection', (socket) => {
     // - If successful, emits null callback to client with result, else emits error callback to client
     socket.on('checkUsername', async function (data, callback) {
         try {
-            let result = await db.checkUsername(data);
-
-            util.handleSuccess("checkUsername", `username: ${data}, result: ${result}`, showLogs);
-
-            if (result == true) {
+            let result = await db.fetchRecords("USERS", "username", data, "userID", undefined, undefined, 1)
+            
+            if (result.length == 0) {
                 callback(null, true);
-            } else if (result == false) {
+            } else if (result.length != 0) {
                 callback(null, false);
-            }
+            };
+
+            util.handleSuccess("checkUsername", `username: ${data}, result: ${result.length == 0 ? true : false}`, showLogs);
         } catch (error) {
             util.handleFailure("checkUsername", error, `username: ${data}`, showLogs);
             callback(error.message);
@@ -126,8 +125,6 @@ io.on('connection', (socket) => {
         data = JSON.parse(data.packet.toString());
 
         try {
-            await db.checkUsername(data.username)
-
             await db.createUser(
                 data.userID,
                 data.username,
@@ -155,7 +152,7 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            await db.deleteUser(userID);
+            await db.deleteRecord("USERS", "userID", userID);
             socket.userData.connected = false;
 
             util.handleSuccess("deleteUser", `userID: ${userID}`, showLogs);
@@ -227,7 +224,9 @@ io.on('connection', (socket) => {
             socket.userData.userID = null;
             socket.userData.connected = false;
 
-            await db.updateLastOnline(userID, lastOnline);
+            await db.updateRecord("USERS", "userID", userID, undefined, undefined, "lastOnline", lastOnline);
+
+            util.handleSuccess("disconnect", `userID: ${userID}`, showLogs);
 
             for (let i = 0; i < RUIDs.length; i++) {
                 if (RUIDs[i] in connectedUsers) {
@@ -241,7 +240,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', function () {
-        console.log(`SUCCESS: disconnect - (userID: ${socket.userData.userID})`);
+        util.handleSuccess("disconnect", `socketID: ${socket.socketID}`, showLogs);
         delete connectedUsers[socket.userData.userID];
         socket.userData.connected = false;
     });
@@ -251,7 +250,7 @@ io.on('connection', (socket) => {
     // fetchRU
     socket.on('fetchRU', async function (data, callback) {
         try {
-            let user = await db.fetchUserByUserID(data);
+            let user = await db.fetchRecord("USERS", "userID", data)
 
             util.handleSuccess("fetchRU", `userID: ${data}`, showLogs);
 
@@ -268,7 +267,7 @@ io.on('connection', (socket) => {
         try {
             let userPackets = await db.fetchUsersByUsername(data);
 
-            util.handleSuccess("fetchRUs", `username: ${data}, resultCount: ${users.length}`, showLogs);
+            util.handleSuccess("fetchRUs", `username: ${data}, resultCount: ${userPackets.length}`, showLogs);
 
             callback(null, userPackets);
         } catch (error) {
@@ -285,12 +284,12 @@ io.on('connection', (socket) => {
             let RUList = {};
             for (let i = 0; i < data.length; i++) {
                 try {
-                    if (await db.checkUserID(data[i]) == false) {
+                    if (await db.fetchRecords("USERS", "userID", data[i], "userID", undefined, undefined, 1)) {
                         RUList[data[i]] = false;
                     } else if (data[i] in connectedUsers) {
                         RUList[data[i]] = "online";
                     } else {
-                        RUList[data[i]] = await db.fetchUserLastOnline(data[i])
+                        RUList[data[i]] = await db.fetchRecord("USERS", "userID", data[i], undefined, undefined, "lastOnline")
                     };
                 } catch (error) {
                     util.handleFailure("checkChannelUsers", error, `userID: ${data[i]}`, showLogs);
@@ -312,14 +311,10 @@ io.on('connection', (socket) => {
     // The server acts as much like a piping system as possible.
 
     // sendCR
-    // - A JSON packet is sent with the CR:
-    // If user is online:
-    //     - The CR is sent immediately if user online and an ack is sent back to A
-    //     - If ack from B is successful nothing happens
-    //     - If ack from B presents failure, nothing happens since B will emit a sendCRFailure event to A
-    //     - If ack from B is timeout, nothing happens and the event will be retried on next startup of B
-    // If user is offline:
-    //     - A receivedCR event is stored in events database to be sent to B and an ack is sent back to A
+    // - A JSON packet is sent with the CR object:
+    // - CRs are created in database
+    // - checkOnlineEmit is called to emit event immediately if user is online, otherwise it is stored in events database
+    // - If 
     socket.on('sendCR', async function (data, ack) {
         let receivingUserID = data.userID;
         let packet = data.packet;
@@ -334,22 +329,6 @@ io.on('connection', (socket) => {
         };
     });
 
-    // sendCRFailure
-    // event handles the failure of local persistence in client A to ensure client B removes CR objects
-    // remove sendCR event from events table if present 
-    socket.on('sendCRFailure', async function (data, ack) {
-        let receivingUserID = data.userID;
-        let packet = data.packet;
-
-        try {
-            await CheckOnlineEmit(receivingUserID, "receivedCRFailure", packet, 1000, showLogs)
-            ack(null);
-            util.handleSuccess("sendCRFailure", `receivingUserID: ${receivingUserID}`, showLogs);
-        } catch {
-            util.handleFailure("sendCRFailure", error, `receivingUserID: ${receivingUserID}`, showLogs);
-            ack(error.message);
-        };
-    });
 
     socket.on('sendCRResult', async function (data, ack) {
         let receivingUserID = data.userID;
