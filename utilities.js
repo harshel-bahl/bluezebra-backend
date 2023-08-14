@@ -11,15 +11,15 @@ class utilities {
         return uuidv4();
     }
 
-    handleSuccess(blockName, message, showLogs = true) {
+    handleSuccess(blockName, info, showLogs = true) {
         if (showLogs == true) {
-            console.log(`SUCCESS ${this.currDT}: ${blockName} message: (${message})`)
+            console.log(`SUCCESS ${this.currDT} ${blockName} -- info: (${info})`)
         };
     };
 
-    handleFailure(blockName, err, message, showLogs = true) {
+    handleFailure(blockName, err, info, showLogs = true) {
         if (showLogs == true) {
-            console.log(`FAILED ${this.currDT}: ${blockName} (${err.message}), message: (${message})`)
+            console.log(`FAILED ${this.currDT} ${blockName} -- err: (${err.message}), info: (${info})`)
         };
     };
 }

@@ -19,7 +19,7 @@ class Database {
       console.log("Connected to MySQL server!");
     });
 
-    this.createTables()
+    this.createTables();
   };
 
   // Table Creation Functions
@@ -39,18 +39,18 @@ class Database {
 
     var sql2 = `CREATE TABLE IF NOT EXISTS CRs (
       requestID VARCHAR(255) NOT NULL CHECK (requestID <> ''),
-      originUserID VARCHAR(255) NOT NULL CHECK (userID <> ''),
-      receivingUserID VARCHAR(255) NOT NULL CHECK (userID <> ''),
+      originUserID VARCHAR(255) NOT NULL CHECK (originUserID <> ''),
+      receivingUserID VARCHAR(255) NOT NULL CHECK (receivingUserID <> ''),
       requestDate DATETIME NOT NULL,
       PRIMARY KEY (requestID)
-    );`
+    );`;
 
     var sql3 = `CREATE TABLE IF NOT EXISTS RUChannels (
       channelID VARCHAR(255) NOT NULL CHECK (channelID <> ''),
       userID VARCHAR(255) NOT NULL CHECK (userID <> ''),
       creationDate DATETIME NOT NULL,
       PRIMARY KEY (channelID, userID)
-    );`
+    );`;
 
     var sql4 = `CREATE TABLE IF NOT EXISTS EVENTS (
       eventID INT AUTO_INCREMENT PRIMARY KEY,
@@ -100,10 +100,16 @@ class Database {
     let query = `
       SELECT ${cols == null ? "*" : "??"}
       FROM ??
-      WHERE ?? = ? ${"AND ?? = ?" * (predProp2 !== null && predValue2 !== null)}
+      WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
-    let values = [table, predProp1, predValue1, predProp2, predValue2];
+    let values = [
+      table,
+      predProp1,
+      predValue1,
+      predProp2,
+      predValue2
+    ];
 
     if (cols !== null) {
       values = [cols].concat(values);
@@ -147,7 +153,11 @@ class Database {
       ${limit != null ? `LIMIT ?` : ""}
     `;
 
-    let values = [table, predProp, predValue];
+    let values = [
+      table,
+      predProp,
+      predValue
+    ];
 
     if (cols !== null) {
       values = [cols].concat(values);
@@ -195,7 +205,13 @@ class Database {
       WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
-    let values = [table, updateProp, updateValue, predProp1, predValue1];
+    let values = [
+      table,
+      updateProp,
+      updateValue,
+      predProp1,
+      predValue1
+    ];
 
     if (predProp2 !== null && predValue2 !== null) {
       values.push(predProp2);
@@ -234,7 +250,13 @@ class Database {
       WHERE ?? = ?
     `;
 
-    let values = [table, updateProp, updateValue, predProp, predValue];
+    let values = [
+      table,
+      updateProp,
+      updateValue,
+      predProp,
+      predValue
+    ];
 
     return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
@@ -267,7 +289,11 @@ class Database {
       WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
-    let values = [table, predProp1, predValue1];
+    let values = [
+      table,
+      predProp1,
+      predValue1
+    ];
 
     if (predProp2 !== null && predValue2 !== null) {
       values.push(predProp2);
@@ -302,7 +328,11 @@ class Database {
       WHERE ?? = ?
     `;
 
-    let values = [table, predProp, predValue];
+    let values = [
+      table,
+      predProp,
+      predValue
+    ];
 
     return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
@@ -322,7 +352,7 @@ class Database {
 
   createUser(userID, username, avatar, creationDate) {
 
-    let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`
+    let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`;
 
     let values = [
       userID,
@@ -336,7 +366,7 @@ class Database {
       this.con.query(query, values, function (err, result) {
 
         if (err) {
-          reject(new Error("db.createUser: " + err.message))
+          reject(new Error("db.createUser: " + err.message));
         } else if (result.affectedRows == 0) {
           reject("db.createUser: failed to create user");
         } else {
@@ -354,13 +384,14 @@ class Database {
     (SELECT * FROM USERS WHERE username LIKE ? AND username != ? ORDER BY username LIMIT 10)
     ORDER BY CASE WHEN username = ? THEN 0 ELSE 1 END, username
     LIMIT ?;
-    `
-    let values = [username, username + '%', username, username, limit]
+    `;
+
+    let values = [username, username + '%', username, username, limit];
 
     return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
         if (err) {
-          reject(new Error("db.fetchUsersByUsername: " + err))
+          reject(new Error("db.fetchUsersByUsername: " + err));
         } else {
           resolve(result);
         }
@@ -373,6 +404,8 @@ class Database {
 
   createCR(requestID, originUserID, receivingUserID, requestDate) {
 
+    let query = `INSERT INTO CRs VALUES (?, ?, ?, ?)`;
+
     let values = [
       requestID,
       originUserID,
@@ -381,11 +414,57 @@ class Database {
     ];
 
     return new Promise((resolve, reject) => {
-      this.con.query(`INSERT INTO CRs VALUES (?, ?, ?, ?)`, values, function (err, result) {
+      this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.createCR: " + err.message));
         } else if (result.affectedRows == 0) {
           reject("db.createCR: failed to create CR");
+        } else {
+          resolve();
+        };
+      });
+    });
+  };
+
+  fetchCRsByUserID(userID, cols = null, sortOrder = "DESC") {
+
+    let query = `
+    SELECT ${cols == null ? "*" : "??"}
+    FROM CRs
+    WHERE originUserID = ? OR receivingUserID = ?
+    ORDER BY requestDate ${sortOrder};
+    `;
+
+    let values = [userID, userID];
+
+    if (cols !== null) {
+      values = [cols].concat(values);
+    };
+
+    return new Promise((resolve, reject) => {
+      this.con.query(query, values, function (err, result) {
+        if (err) {
+          reject(new Error("db.fetchCRsByUserID: " + err.message));
+        } else {
+          resolve();
+        };
+      });
+    });
+  };
+
+  deleteCRsByUserID(userID) {
+
+    let query = `
+    DELETE FROM CRs
+    WHERE originUserID = ? OR receivingUserID = ?;
+    `;
+
+    let values = [userID, userID];
+
+    return new Promise((resolve, reject) => {
+      this.con.query(query, values, function (err, result) {
+        if (err) {
+          reject(new Error("db.deleteCRsByUserID: " + err.message));
         } else {
           resolve();
         };
@@ -398,7 +477,10 @@ class Database {
 
   createRUChannel(channelID, userID, creationDate) {
 
-    let query = `INSERT INTO RUChannels VALUES (?, ?, ?)`
+    let query = `
+    INSERT INTO RUChannels 
+    VALUES (?, ?, ?)
+    `;
 
     let values = [
       channelID,
@@ -419,7 +501,39 @@ class Database {
     });
   };
 
-  deleteRUChannelByUserID(userID) {
+  fetchRUChannelsbyUserID(userID, cols = null) {
+
+    let query = `
+    SELECT ${cols == null ? "*" : "??"}
+    FROM RUChannels
+    WHERE channelID IN (
+    SELECT channelID
+    FROM RUChannels
+    WHERE userID = ?
+    )
+    AND userID != ?; 
+    `;
+
+    let values = [userID, userID];
+
+    if (cols !== null) {
+      values = [cols].concat(values);
+    };
+
+    return new Promise((resolve, reject) => {
+      this.con.query(query, values, function (err, result) {
+        if (err) {
+          reject(new Error("db.fetchRUChannelsbyUserID: " + err.message));
+        } else if (result.length == 0) {
+          reject("db.fetchRUChannelsbyUserID: no RUChannels found");
+        } else {
+          resolve(result);
+        };
+      });
+    });
+  };
+
+  deleteRUChannelsByUserID(userID) {
 
     let query = `
     DELETE FROM RUChannels WHERE channelID IN (
@@ -431,9 +545,9 @@ class Database {
     return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
         if (err) {
-          reject(new Error("db.deleteRUChannelByUserID: " + err.message));
+          reject(new Error("db.deleteRUChannelsByUserID: " + err.message));
         } else if (result.affectedRows == 0) {
-          reject("db.deleteRUChannelByUserID: failed to create CR");
+          reject("db.deleteRUChannelsByUserID: failed to create CR");
         } else {
           resolve();
         };
@@ -452,15 +566,21 @@ class Database {
     VALUES (?, ?, ?, ?, ?)
     `;
 
-    let values = [eventName, datetime, originUserID, receivingUserID, packet];
+    let values = [
+      eventName,
+      datetime,
+      originUserID,
+      receivingUserID,
+      packet
+    ];
 
     return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
 
         if (err) {
-          reject(new Error("db.addEvent: " + err));
+          reject(new Error("db.createEvent: " + err));
         } else if (result.affectedRows == 0) {
-          reject("db.addEvent: failed to add event");
+          reject("db.createEvent: failed to add event");
         } else {
           resolve();
         };
