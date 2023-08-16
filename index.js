@@ -4,9 +4,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const util = require('./utilities');
-const db = require('./db');
-
-db.connect();
+const dbClass = require('./db');
 
 let connectedUsers = {};
 
@@ -17,6 +15,10 @@ let connectedUsers = {};
 // });
 
 let showLogs = true;
+
+let db = new dbClass(showLogs);
+
+db.connect();
 
 io.on('connection', (socket) => {
 

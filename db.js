@@ -3,7 +3,7 @@ const util = require('./utilities');
 
 class Database {
 
-  constructor() {
+  constructor(showLogs = false) {
     this.con = mysql.createConnection({
       host: "localhost",
       user: "root",
@@ -11,6 +11,8 @@ class Database {
       database: "bluezebra",
       // socketPath: "/var/run/mysqld/mysqld.sock"
     });
+
+    this.showLogs = showLogs;
   };
 
   connect() {
@@ -602,4 +604,4 @@ class Database {
   };
 };
 
-module.exports = new Database();
+module.exports = Database;
