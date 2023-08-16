@@ -97,37 +97,37 @@ class Database {
     cols = null,
     errorOnMultiple = false) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
       SELECT ${cols == null ? "*" : "??"}
       FROM ??
       WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
-    let values = [
-      table,
-      predProp1,
-      predValue1,
-      predProp2,
-      predValue2
-    ];
+      let values = [
+        table,
+        predProp1,
+        predValue1,
+        predProp2,
+        predValue2
+      ];
 
-    if (cols !== null) {
-      values = [cols].concat(values);
-    };
+      if (cols !== null) {
+        values = [cols].concat(values);
+      };
 
-    if (predProp2 !== null && predValue2 !== null) {
-      values.push(predProp2);
-      values.push(predValue2);
-    };
+      if (predProp2 !== null && predValue2 !== null) {
+        values.push(predProp2);
+        values.push(predValue2);
+      };
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
         if (err) {
-          reject(new Error(`db.fetchRecord - table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}, err: ${err}`));
+          reject(new Error(`db.fetchRecord - err: ${err}`));
         } else if (result.length == 0) {
-          reject(new Error(`db.fetchRecord - table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}, err: no results`));
+          reject(new Error(`db.fetchRecord - err: no results`));
         } else if (result.length > 1 && errorOnMultiple) {
-          reject(new Error(`db.fetchRecord - table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}, err: multiple results`));
+          reject(new Error(`db.fetchRecord - err: multiple results`));
         } else {
           resolve(result[0]);
         };
@@ -145,7 +145,8 @@ class Database {
     limit = null,
     failOnEmpty = false) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
       SELECT ${cols == null ? "*" : "??"}
       FROM ??
       WHERE ?? = ?
@@ -153,26 +154,25 @@ class Database {
       ${limit != null ? `LIMIT ?` : ""}
     `;
 
-    let values = [
-      table,
-      predProp,
-      predValue
-    ];
+      let values = [
+        table,
+        predProp,
+        predValue
+      ];
 
-    if (cols !== null) {
-      values = [cols].concat(values);
-    };
+      if (cols !== null) {
+        values = [cols].concat(values);
+      };
 
-    if (sortColumn !== null) {
-      values.push(sortColumn);
-      values.push(sortOrder);
-    };
+      if (sortColumn !== null) {
+        values.push(sortColumn);
+        values.push(sortOrder);
+      };
 
-    if (limit !== null) {
-      values.push(limit);
-    };
+      if (limit !== null) {
+        values.push(limit);
+      };
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
         if (err) {
           reject(new Error(`db.fetchRecords - table: ${table}, predProp: ${predProp}, predValue: ${predValue}, err: ${err.message}`));
@@ -199,26 +199,26 @@ class Database {
     updateProp,
     updateValue) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
       UPDATE ??
       SET ?? = ?
       WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
-    let values = [
-      table,
-      updateProp,
-      updateValue,
-      predProp1,
-      predValue1
-    ];
+      let values = [
+        table,
+        updateProp,
+        updateValue,
+        predProp1,
+        predValue1
+      ];
 
-    if (predProp2 !== null && predValue2 !== null) {
-      values.push(predProp2);
-      values.push(predValue2);
-    };
+      if (predProp2 !== null && predValue2 !== null) {
+        values.push(predProp2);
+        values.push(predValue2);
+      };
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
         if (err) {
           reject(new Error(`db.updateRecord - table: ${table}, updateProp: ${updateProp}, updateValue: ${updateValue}, err: ${err.message}`));
@@ -244,21 +244,21 @@ class Database {
     returnUpdatedCount = true,
     failOnEmpty = false) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
       UPDATE ??
       SET ?? = ?
       WHERE ?? = ?
     `;
 
-    let values = [
-      table,
-      updateProp,
-      updateValue,
-      predProp,
-      predValue
-    ];
+      let values = [
+        table,
+        updateProp,
+        updateValue,
+        predProp,
+        predValue
+      ];
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
         if (err) {
           reject(new Error(`db.updateRecords - table: ${table}, predProp: ${predProp}, predValue: ${predValue}, err: ${err.message}`));
@@ -283,24 +283,24 @@ class Database {
     predProp2 = null,
     predValue2 = null) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
       DELETE
       FROM ??
       WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
     `;
 
-    let values = [
-      table,
-      predProp1,
-      predValue1
-    ];
+      let values = [
+        table,
+        predProp1,
+        predValue1
+      ];
 
-    if (predProp2 !== null && predValue2 !== null) {
-      values.push(predProp2);
-      values.push(predValue2);
-    };
+      if (predProp2 !== null && predValue2 !== null) {
+        values.push(predProp2);
+        values.push(predValue2);
+      };
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
         if (err) {
           reject(new Error(`db.deleteRecord - table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}, err: ${err.message}`));
@@ -322,19 +322,19 @@ class Database {
     returnDeletionCount = true,
     failOnEmpty = false) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
       DELETE
       FROM ??
       WHERE ?? = ?
     `;
 
-    let values = [
-      table,
-      predProp,
-      predValue
-    ];
+      let values = [
+        table,
+        predProp,
+        predValue
+      ];
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result, fields) {
         if (err) {
           reject(new Error(`db.deleteRecords - table: ${table}, predProp: ${predProp}, predValue: ${predValue}, err: ${err.message}`));
@@ -352,23 +352,23 @@ class Database {
 
   createUser(userID, username, avatar, creationDate) {
 
-    let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`;
-
-    let values = [
-      userID,
-      username,
-      avatar,
-      creationDate,
-      null
-    ];
-
     return new Promise((resolve, reject) => {
+      let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`;
+
+      let values = [
+        userID,
+        username,
+        avatar,
+        creationDate,
+        null
+      ];
+
       this.con.query(query, values, function (err, result) {
 
         if (err) {
           reject(new Error("db.createUser: " + err.message));
         } else if (result.affectedRows == 0) {
-          reject("db.createUser: failed to create user");
+          reject(new Error("db.createUser: failed to create user"));
         } else {
           resolve();
         };
@@ -378,7 +378,8 @@ class Database {
 
   fetchUsersByUsername(username, limit = 10) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
     (SELECT * FROM USERS WHERE username = ?)
     UNION ALL
     (SELECT * FROM USERS WHERE username LIKE ? AND username != ? ORDER BY username LIMIT 10)
@@ -386,9 +387,8 @@ class Database {
     LIMIT ?;
     `;
 
-    let values = [username, username + '%', username, username, limit];
+      let values = [username, username + '%', username, username, limit];
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.fetchUsersByUsername: " + err));
@@ -404,21 +404,21 @@ class Database {
 
   createCR(requestID, originUserID, receivingUserID, requestDate) {
 
-    let query = `INSERT INTO CRs VALUES (?, ?, ?, ?)`;
-
-    let values = [
-      requestID,
-      originUserID,
-      receivingUserID,
-      requestDate
-    ];
-
     return new Promise((resolve, reject) => {
+      let query = `INSERT INTO CRs VALUES (?, ?, ?, ?)`;
+
+      let values = [
+        requestID,
+        originUserID,
+        receivingUserID,
+        requestDate
+      ];
+
       this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.createCR: " + err.message));
         } else if (result.affectedRows == 0) {
-          reject("db.createCR: failed to create CR");
+          reject(new Error("db.createCR: failed to create CR"));
         } else {
           resolve();
         };
@@ -428,20 +428,20 @@ class Database {
 
   fetchCRsByUserID(userID, cols = null, sortOrder = "DESC") {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
     SELECT ${cols == null ? "*" : "??"}
     FROM CRs
     WHERE originUserID = ? OR receivingUserID = ?
     ORDER BY requestDate ${sortOrder};
     `;
 
-    let values = [userID, userID];
+      let values = [userID, userID];
 
-    if (cols !== null) {
-      values = [cols].concat(values);
-    };
+      if (cols !== null) {
+        values = [cols].concat(values);
+      };
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.fetchCRsByUserID: " + err.message));
@@ -454,14 +454,14 @@ class Database {
 
   deleteCRsByUserID(userID) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
     DELETE FROM CRs
     WHERE originUserID = ? OR receivingUserID = ?;
     `;
 
-    let values = [userID, userID];
+      let values = [userID, userID];
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.deleteCRsByUserID: " + err.message));
@@ -477,23 +477,23 @@ class Database {
 
   createRUChannel(channelID, userID, creationDate) {
 
-    let query = `
+    return new Promise((resolve, reject) => {
+      let query = `
     INSERT INTO RUChannels 
     VALUES (?, ?, ?)
     `;
 
-    let values = [
-      channelID,
-      userID,
-      creationDate
-    ];
+      let values = [
+        channelID,
+        userID,
+        creationDate
+      ];
 
-    return new Promise((resolve, reject) => {
       this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.createRUChannel: " + err.message));
         } else if (result.affectedRows == 0) {
-          reject("db.createRUChannel: failed to create CR");
+          reject(new Error("db.createRUChannel: failed to create CR"));
         } else {
           resolve();
         };
@@ -502,85 +502,98 @@ class Database {
   };
 
   fetchRUChannelsbyUserID(userID, cols = null) {
-
-    let query = `
-    SELECT ${cols == null ? "*" : "??"}
-    FROM RUChannels
-    WHERE channelID IN (
-    SELECT channelID
-    FROM RUChannels
-    WHERE userID = ?
-    )
-    AND userID != ?; 
-    `;
-
-    let values = [userID, userID];
-
-    if (cols !== null) {
-      values = [cols].concat(values);
-    };
-
     return new Promise((resolve, reject) => {
+  
+      let selectCols;
+      if (Array.isArray(cols)) {
+        selectCols = cols.join(', ');
+      } else if (typeof cols === 'string') {
+        selectCols = cols;
+      } else {
+        selectCols = '*';
+      }
+  
+      let query = `
+      SELECT ${selectCols}
+      FROM RUChannels
+      WHERE userID != ?
+      AND channelID IN (
+        SELECT channelID
+        FROM RUChannels
+        WHERE userID = ?
+      );`;
+  
+      let values = [userID, userID];
+  
       this.con.query(query, values, function (err, result) {
         if (err) {
           reject(new Error("db.fetchRUChannelsbyUserID: " + err.message));
-        } else if (result.length == 0) {
-          reject("db.fetchRUChannelsbyUserID: no RUChannels found");
         } else {
           resolve(result);
         };
       });
     });
   };
+  
 
   deleteRUChannelsByUserID(userID) {
-
-    let query = `
-    DELETE FROM RUChannels WHERE channelID IN (
-        SELECT channelID FROM RUChannels WHERE userID = ?
-    )`;
-
-    let values = [userID];
-
-    return new Promise((resolve, reject) => {
-      this.con.query(query, values, function (err, result) {
-        if (err) {
-          reject(new Error("db.deleteRUChannelsByUserID: " + err.message));
-        } else if (result.affectedRows == 0) {
-          reject("db.deleteRUChannelsByUserID: failed to create CR");
+    return new Promise(async (resolve, reject) => {
+      try {
+        let channelRecords = await this.fetchRecords("RUChannels", "userID", userID, "channelID");
+        
+        if (channelRecords.length > 0) {
+          let query = `
+          DELETE 
+          FROM RUChannels 
+          WHERE channelID IN (?);
+          `;
+          
+          let values = [channelRecords.map(channelRecord => channelRecord.channelID)];
+          
+          this.con.query(query, values, function (err, result) {
+            if (err) {
+              reject(new Error("db.deleteRUChannelsByUserID: " + err.message));
+            } else if (result.affectedRows == 0) {
+              reject(new Error("db.deleteRUChannelsByUserID: No channels were deleted"));
+            } else {
+              resolve();
+            }
+          });
         } else {
           resolve();
-        };
-      });
+        }
+      } catch (error) {
+        reject(error);
+      }
     });
-  };
+  }
 
   // EVENTS Table Functions
   // =====================
 
   createEvent(eventName, datetime, originUserID, receivingUserID, packet) {
 
-    let query = `
-    INSERT INTO EVENTS 
-    (eventName, datetime, originUserID, receivingUserID, packet) 
-    VALUES (?, ?, ?, ?, ?)
-    `;
-
-    let values = [
-      eventName,
-      datetime,
-      originUserID,
-      receivingUserID,
-      packet
-    ];
-
     return new Promise((resolve, reject) => {
+      let query = `
+      INSERT INTO EVENTS 
+      (eventName, datetime, originUserID, receivingUserID, packet) 
+      VALUES (?, ?, ?, ?, ?)
+      `;
+
+      let values = [
+        eventName,
+        datetime,
+        originUserID,
+        receivingUserID,
+        packet
+      ];
+
       this.con.query(query, values, function (err, result) {
 
         if (err) {
           reject(new Error("db.createEvent: " + err));
         } else if (result.affectedRows == 0) {
-          reject("db.createEvent: failed to add event");
+          reject(new Error("db.createEvent: failed to add event"));
         } else {
           resolve();
         };

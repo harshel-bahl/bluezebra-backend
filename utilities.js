@@ -17,9 +17,21 @@ class utilities {
         };
     };
 
+    handleSuccessUndef(info, showLogs = true) {
+        if (showLogs == true) {
+            console.log(`SUCCESS ${this.currDT} -- info: (${info})`)
+        };
+    };
+
     handleFailure(blockName, err, info, showLogs = true) {
         if (showLogs == true) {
             console.log(`FAILED ${this.currDT} ${blockName} -- err: (${err.message}), info: (${info})`)
+        };
+    };
+
+    handleFailureUndef(err, info, showLogs = true) {
+        if (showLogs == true) {
+            console.log(`FAILED ${this.currDT} -- err: (${err.message}), info: (${info})`)
         };
     };
 }
