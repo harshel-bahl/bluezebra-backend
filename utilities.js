@@ -11,25 +11,65 @@ class utilities {
         return uuidv4();
     }
 
-    handleSuccess(blockName, info, showLogs = true) {
-        if (showLogs == true) {
-            console.log(`SUCCESS ${this.currDT} ${blockName} -- info: (${info})`)
+    funcErr(funcName, info) {
+        return new Error(`func: ${funcName}, info: ${info}`);
+    }
+
+    eventErr(event, info = null, response = null) {
+        if (response) {
+            return new Error(`event: ${event}, response: ${response}`);
+        } else {
+            return new Error(`event: ${event}, info: ${info}`);
         };
     };
 
-    handleSuccessUndef(info, showLogs = true) {
+    handleEventSuccess(eventName, info = null, showLogs = true) {
+        if (showLogs == true) {
+            if (info) {
+                console.log(`SUCCESS ${this.currDT} -- event: ${eventName}, info: (${info})`);
+            } else {
+                console.log(`SUCCESS ${this.currDT} -- event: ${eventName}`);
+            };
+        };
+    };
+
+    handleEventFailure(eventName, err, info = null, showLogs = true) {
+        if (showLogs == true) {
+            if (info) {
+                console.log(`FAILED ${this.currDT} -- event: ${eventName}, err: (${err.message}), info: (${info})`);
+            } else {
+                console.log(`FAILED ${this.currDT} -- event: ${eventName}, err: (${err.message})`);
+            };
+        };
+    };
+
+    handleFuncSuccess(func, info = null, showLogs = true) {
+        if (showLogs == true) {
+            if (info) {
+                console.log(`SUCCESS ${this.currDT} -- func: ${func}, info: (${info})`)
+            } else {
+                console.log(`SUCCESS ${this.currDT} -- func: ${func}`)
+            };
+        };
+    };
+
+    handleFuncFailure(func, err, info, showLogs = true) {
+        if (showLogs == true) {
+            if (info) {
+                console.log(`FAILED ${this.currDT} -- func: ${func}, err: (${err.message}), info: (${info})`);
+            } else {
+                console.log(`FAILED ${this.currDT} -- func: ${func}, err: (${err.message})`)
+            };
+        };
+    };
+
+    handleSuccess(info, showLogs = true) {
         if (showLogs == true) {
             console.log(`SUCCESS ${this.currDT} -- info: (${info})`)
         };
     };
 
-    handleFailure(blockName, err, info, showLogs = true) {
-        if (showLogs == true) {
-            console.log(`FAILED ${this.currDT} ${blockName} -- err: (${err.message}), info: (${info})`)
-        };
-    };
-
-    handleFailureUndef(err, info, showLogs = true) {
+    handleFailure(err, info, showLogs = true) {
         if (showLogs == true) {
             console.log(`FAILED ${this.currDT} -- err: (${err.message}), info: (${info})`)
         };
