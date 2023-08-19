@@ -23,7 +23,7 @@ let connectedUsers = {};
 
 io.on('connection', (socket) => {
 
-    util.handleSuccess("connectionSocket", `socketID: ${socket.id}`, showLogs);
+    util.handleEventSuccess("connection", `socketID: ${socket.id}`, showLogs);
 
     socket.userData = {
         socketID: socket.id,
@@ -174,16 +174,17 @@ io.on('connection', (socket) => {
         try {
             if (username == null || username == "") {
                 throw util.eventErr("checkUsername", "username is missing");
-            }
-            let result = await db.fetchRecords("USERS", "username", username, "userID", undefined, undefined, 1)
+            };
 
-            if (result.length == 0) {
+            let result = await db.fetchRecord("USERS", "username", username, undefined, undefined, "userID", false)
+
+            if (result == undefined) {
                 ack(null, true);
-            } else if (result.length != 0) {
+            } else {
                 ack(null, false);
             };
 
-            util.handleEventSuccess("checkUsername", `username: ${username}, result: ${result.length == 0 ? true : false}`, showLogs);
+            util.handleEventSuccess("checkUsername", `username: ${username}, result: ${result == undefined ? true : false}`, showLogs);
         } catch (error) {
             util.handleEventFailure("checkUsername", error, `username: ${username}`, showLogs);
             ack(error.message);
@@ -276,9 +277,8 @@ io.on('connection', (socket) => {
 
             try {
                 await EmitPendingEvents(userID, socket, 1000, true);
-                util.handleEventSuccess("connectUser.EmitPendingEvents", `userID: ${userID}`, showLogs);
             } catch (error) {
-                util.handleEventFailure("connectUser.EmitPendingEvents", error, `userID: ${userID}`, showLogs);
+
             };
         } catch (error) {
             util.handleEventFailure("connectUser", error, `socketID: ${socket.socketID}, userID: ${userID}`, showLogs);
@@ -293,22 +293,20 @@ io.on('connection', (socket) => {
                 throw util.eventErr("disconnect", "disconnected or socket.userData.userID is null");
             };
 
-            let userID = socket.userData.userID;
-
             DisconnectUser();
 
-            await db.updateRecord("USERS", "userID", userID, undefined, undefined, "lastOnline", util.currDT);
+            await db.updateRecord("USERS", "userID", socket.userData.userID, undefined, undefined, "lastOnline", util.currDT);
 
-            let RUChannels = await db.fetchRUChannelsbyUserID(userID);
+            let RUChannels = await db.fetchRUChannelsbyUserID(socket.userData.userID);
             let RUIDs = RUChannels.map(channel => channel.userID);
 
-            util.handleSuccess("disconnect", `userID: ${userID}`, showLogs);
+            util.handleEventSuccess("disconnect", `userID: ${userID}`, showLogs);
 
             for (let i = 0; i < RUIDs.length; i++) {
                 try {
                     if (RUIDs[i] in connectedUsers) {
                         let receivingSocketID = connectedUsers[RUIDs[i]].socketID;
-                        io.to(receivingSocketID).emit("userDisconnected", userID);
+                        io.to(receivingSocketID).emit("userDisconnected", socket.userData.userID);
                     };
 
                     util.handleEventSuccess("disconnect.userDisconnected", `RUID: ${RUIDs[i]}`, showLogs);
@@ -390,7 +388,7 @@ io.on('connection', (socket) => {
             util.handleEventSuccess("fetchRU", `userID: ${userID}`, showLogs);
             ack(null, user);
         } catch (error) {
-            util.handleEventFailure("fetchRU", error, `userID: ${userID}`, showLogs);
+            util.handleEventFailure("fetchRU", error, `originUserID: ${socket.userData.userID}, userID: ${userID}`, showLogs);
             ack(error.message)
         };
     });
@@ -418,114 +416,6 @@ io.on('connection', (socket) => {
             util.handleEventFailure("fetchRUs", error, `username: ${username}`, showLogs);
             ack(error.message);
         }
-    });
-
-    // sendCR
-    // - A CR packet is sent, and an ack is pending to A to create CR objects in its database
-    // - CR object is created in database and JSON packet for B is created
-    // - CheckOnlineEmit is called to emit event immediately if user is online, otherwise it is stored in events database, and an ack is sent to A after one of these
-    //   operations is completed
-    // - As long as the event is added to the events database, a successful ack is sent back to A to create the objects, even if the emit times out
-    socket.on('sendCR', async function (data, ack) {
-
-        let receivingUserID = data.userID;
-        let packet = data.packet;
-
-        try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendCR", "disconnected or socket.userData.userID is null");
-            };
-
-            if (receivingUserID == null || packet == null) {
-                throw util.eventErr("sendCR", "missing required parameters");
-            };
-
-            let packetObject = JSON.parse(packet.toString());
-            let packetProps = ["requestID", "date"];
-
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw util.eventErr("sendCR", "packet property(s) missing");
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw util.eventErr("sendCR", "packet property(s) null");
-            };
-
-            let originUser = await db.fetchRecord("USERS", "userID", socket.userData.userID);
-            packetObject.originUser = originUser;
-
-            let jsonBuffer = Buffer.from(JSON.stringify(packetObject));
-
-            try {
-                await db.createCR(packetObject.requestID, socket.userData.userID, receivingUserID, packetObject.date);
-
-                ack(null);
-                util.handleEventSuccess("sendCR", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
-
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCR", jsonBuffer, 1000, showLogs);
-            } catch (error) {
-                util.handleEventFailure("sendCR", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
-                ack(error.message);
-
-                try {
-                    await db.deleteRecord("CRs", "requestID", packetObject.requestID);
-
-                    util.handleSuccess("sendCR.deleteCR", `requestID: ${packetObject.requestID}`, showLogs);
-                } catch (error) {
-                    util.handleFailure("sendCR.deleteCR", error, `requestID: ${packetObject.requestID}`, showLogs);
-                };
-            };
-        } catch (error) {
-            util.handleEventFailure("sendCR", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
-            ack(error.message);
-        };
-    });
-
-    // sendCRResult
-    //
-    socket.on('sendCRResult', async function (data, ack) {
-
-        let receivingUserID = data.userID;
-        let packet = data.packet;
-
-        try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendCRResult", "disconnected or socket.userData.userID is null");
-            };
-
-            if (receivingUserID == null || packet == null) {
-                throw util.eventErr("sendCRResult", "missing required parameters");
-            };
-
-            let packetObject = JSON.parse(packet.toString());
-            let packetProps = ["requestID", "result", "channelID", "creationDate"];
-
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw util.eventErr("sendCRResult", "packet property(s) missing");
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw util.eventErr("sendCRResult", "packet property(s) null");
-            };
-
-            if (packetObject.result == true) {
-                await db.deleteRecord("CRs", "requestID", packetObject.requestID);
-
-                await db.createRUChannel(packetObject.channelID, socket.userData.userID, packetObject.creationDate);
-                await db.createRUChannel(packetObject.channelID, receivingUserID, packetObject.creationDate);
-
-                ack(null);
-                util.handleEventSuccess("sendCRResult", `receivingUserID: ${receivingUserID}`, showLogs);
-
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
-            } else if (packetObject.result == false) {
-                await db.deleteRecord("CRs", "requestID", packetObject.requestID);
-
-                ack(null);
-                util.handleEventSuccess("sendCRResult", `receivingUserID: ${receivingUserID}`, showLogs);
-
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
-            };
-        } catch (error) {
-            util.handleEventFailure("sendCRResult", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
-            ack(error.message);
-        };
     });
 
     // checkCRs
@@ -744,6 +634,114 @@ io.on('connection', (socket) => {
         };
     });
 
+    // sendCR
+    // - A CR packet is sent, and an ack is pending to A to create CR objects in its database
+    // - CR object is created in database and JSON packet for B is created
+    // - CheckOnlineEmit is called to emit event immediately if user is online, otherwise it is stored in events database, and an ack is sent to A after one of these
+    //   operations is completed
+    // - As long as the event is added to the events database, a successful ack is sent back to A to create the objects, even if the emit times out
+    socket.on('sendCR', async function (data, ack) {
+
+        let receivingUserID = data.userID;
+        let packet = data.packet;
+
+        try {
+            if (socket.userData.connected == false || socket.userData.userID == null) {
+                throw util.eventErr("sendCR", "disconnected or socket.userData.userID is null");
+            };
+
+            if (receivingUserID == null || packet == null) {
+                throw util.eventErr("sendCR", "missing required parameters");
+            };
+
+            let packetObject = JSON.parse(packet.toString());
+            let packetProps = ["requestID", "date"];
+
+            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
+                throw util.eventErr("sendCR", "packet property(s) missing");
+            } else if (Object.values(packetObject).every(item => item !== null) == false) {
+                throw util.eventErr("sendCR", "packet property(s) null");
+            };
+
+            let originUser = await db.fetchRecord("USERS", "userID", socket.userData.userID);
+            packetObject.originUser = originUser;
+
+            let jsonBuffer = Buffer.from(JSON.stringify(packetObject));
+
+            try {
+                await db.createCR(packetObject.requestID, socket.userData.userID, receivingUserID, packetObject.date);
+
+                ack(null);
+                util.handleEventSuccess("sendCR", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+
+                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCR", jsonBuffer, 1000, showLogs);
+            } catch (error) {
+                util.handleEventFailure("sendCR", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+                ack(error.message);
+
+                try {
+                    await db.deleteRecord("CRs", "requestID", packetObject.requestID);
+
+                    util.handleSuccess("sendCR.deleteCR", `requestID: ${packetObject.requestID}`, showLogs);
+                } catch (error) {
+                    util.handleFailure("sendCR.deleteCR", error, `requestID: ${packetObject.requestID}`, showLogs);
+                };
+            };
+        } catch (error) {
+            util.handleEventFailure("sendCR", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            ack(error.message);
+        };
+    });
+
+    // sendCRResult
+    //
+    socket.on('sendCRResult', async function (data, ack) {
+
+        let receivingUserID = data.userID;
+        let packet = data.packet;
+
+        try {
+            if (socket.userData.connected == false || socket.userData.userID == null) {
+                throw util.eventErr("sendCRResult", "disconnected or socket.userData.userID is null");
+            };
+
+            if (receivingUserID == null || packet == null) {
+                throw util.eventErr("sendCRResult", "missing required parameters");
+            };
+
+            let packetObject = JSON.parse(packet.toString());
+            let packetProps = ["requestID", "result", "channelID", "creationDate"];
+
+            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
+                throw util.eventErr("sendCRResult", "packet property(s) missing");
+            } else if (Object.values(packetObject).every(item => item !== null) == false) {
+                throw util.eventErr("sendCRResult", "packet property(s) null");
+            };
+
+            if (packetObject.result == true) {
+                await db.deleteRecord("CRs", "requestID", packetObject.requestID);
+
+                await db.createRUChannel(packetObject.channelID, socket.userData.userID, packetObject.creationDate);
+                await db.createRUChannel(packetObject.channelID, receivingUserID, packetObject.creationDate);
+
+                ack(null);
+                util.handleEventSuccess("sendCRResult", `receivingUserID: ${receivingUserID}`, showLogs);
+
+                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
+            } else if (packetObject.result == false) {
+                await db.deleteRecord("CRs", "requestID", packetObject.requestID);
+
+                ack(null);
+                util.handleEventSuccess("sendCRResult", `receivingUserID: ${receivingUserID}`, showLogs);
+
+                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
+            };
+        } catch (error) {
+            util.handleEventFailure("sendCRResult", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            ack(error.message);
+        };
+    });
+
     // sendCD
     //
     socket.on('sendCD', async function (data, ack) {
@@ -933,6 +931,46 @@ io.on('connection', (socket) => {
         } catch (error) {
             util.handleEventFailure("deliveredMessage", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs)
             ack(error.message);
+        };
+    });
+
+    // deleteMessage
+    //
+    socket.on("deleteMessage", async function (data, ack) {
+
+        let receivingUserID = data.userID;
+        let packet = data.packet;
+
+        try {
+            if (socket.userData.connected == false || socket.userData.userID == null) {
+                throw util.eventErr("deleteMessage", "disconnected or socket.userData.userID is null");
+            };
+
+            if (receivingUserID == null || packet == null) {
+                throw util.eventErr("deleteMessage", "missing required parameters");
+            };
+        } catch (error) {
+
+        };
+    });
+
+    // deleteMessageResult
+    //
+    socket.on("deleteMessageResult", async function (data, ack) {
+
+        let receivingUserID = data.userID;
+        let packet = data.packet;
+
+        try {
+            if (socket.userData.connected == false || socket.userData.userID == null) {
+                throw util.eventErr("deleteMessageResult", "disconnected or socket.userData.userID is null");
+            };
+
+            if (receivingUserID == null || packet == null) {
+                throw util.eventErr("deleteMessageResult", "missing required parameters");
+            };
+        } catch (error) {
+
         };
     });
 });
