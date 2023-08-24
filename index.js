@@ -1,168 +1,61 @@
+const dbC = require('./db');
+const eventFuncsC = require('./eventFuncs');
+const config = require('./config');
+const util = require('./utilities');
+const logger = require('./logger');
+
 const app = require('express')();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const util = require('./utilities');
-const dbClass = require('./db');
 
-// io.use((socket, next) => {
-//     let token = socket.handshake.auth.token;
+// const privateKey = fs.readFileSync('path_to/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('path_to/fullchain.pem', 'utf8');
+// const ca = fs.readFileSync('path_to/chain.pem', 'utf8');
 
-//     next();
-// });
+// const credentials = {
+// key: privateKey,
+// cert: certificate,
+// ca: ca
+// };
+// const server = https.createServer(credentials, app);
 
-let showLogs = true;
-let timeoutLength = 1000;
 
-let db = new dbClass(showLogs);
-
+let db = new dbC(showLogs);
 db.connect();
 
+let eventFuncs = new eventFuncsC(db, logger);
+
+
+// connectedUsers
+// - userID: socketID
 let connectedUsers = {};
+
 
 io.on('connection', (socket) => {
 
-    util.handleEventSuccess("connection", `socketID: ${socket.id}`, showLogs);
+    logger.info(util.eventS("connection", undefined, socket.id));
 
-    socket.userData = {
+    socket.userdata = {
         socketID: socket.id,
         userID: null,
         connected: null
     };
 
-    function EmitEvent(receivingSocket, eventName, packet, timeoutLength) {
-        return new Promise((resolve, reject) => {
-            try {
-                if (receivingSocket == null || eventName == null || timeoutLength == null) {
-                    throw util.funcErr("EmitEvent", "missing required parameters");
-                } else {
-                    receivingSocket.timeout(timeoutLength).emit(eventName, packet, async (err, response) => {
-                        try {
-                            if (err) {
-                                throw util.funcErr("EmitEvent", err.message);
-                            } else if (response != null) {
-                                throw util.funcErr("EmitEvent", response);
-                            } else {
-                                util.handleFuncSuccess("EmitEvent", `eventName: ${eventName}`, showLogs);
-                                resolve();
-                            };
-                        } catch (error) {
-                            util.handleFuncFailure("EmitEvent", error, `eventName: ${eventName}`, showLogs);
-                            reject(error);
-                        };
-                    });
-                };
-            } catch (error) {
-                util.handleFuncFailure("EmitEvent", error, `eventName: ${eventName}`, showLogs);
-                reject(error);
-            };
-        });
-    };
-
-    async function CheckOnlineEmit(originUserID, receivingUserID, eventName, packet = null, timeoutLength, showLogs = true) {
-        try {
-            if (originUserID == null || receivingUserID == null || eventName == null || timeoutLength == null) {
-                throw util.funcErr("CheckOnlineEmit", "missing required parameters");
-            } else {
-                if (receivingUserID in connectedUsers) {
-                    try {
-                        let receivingSocketID = connectedUsers[receivingUserID].socketID;
-                        let receivingSocket = await io.in(receivingSocketID).fetchSockets();
-
-                        if (receivingSocket.length == 0) {
-                            throw util.funcErr("CheckOnlineEmit", "receivingSocket not found");
-                        } else if (receivingSocket.length > 1) {
-                            throw util.funcErr("CheckOnlineEmit", "multiple receivingSockets found");
-                        } else {
-                            await EmitEvent(receivingSocket[0], eventName, packet, timeoutLength);
-
-                            util.handleFuncSuccess("CheckOnlineEmit", `eventName: ${eventName}, receivingUserID: ${receivingUserID}`, showLogs);
-                        };
-                    } catch (error) {
-                        if (error.message != `event: ${eventName}, info: operation has timed out`) {
-                            throw error;
-                        }
-
-                        await db.createEvent(eventName, util.currDT, originUserID, receivingUserID, packet);
-
-                        util.handleFuncSuccess("CheckOnlineEmit", `eventName: ${eventName}, receivingUserID: ${receivingUserID}`, showLogs);
-                    };
-                } else {
-                    await db.createEvent(eventName, util.currDT, originUserID, receivingUserID, packet);
-
-                    util.handleFuncSuccess("CheckOnlineEmit", `eventName: ${eventName}, receivingUserID: ${receivingUserID}`, showLogs);
-                };
-            };
-        } catch (error) {
-            util.handleFuncFailure("CheckOnlineEmit", error, `eventName: ${eventName}, receivingUserID: ${receivingUserID}`, showLogs);
-            throw error;
-        };
-    };
-
-    async function EmitPendingEvents(userID, receivingSocket, timeoutLength, showLogs = true) {
-        try {
-            if (userID == null || receivingSocket == null || timeoutLength == null) {
-                throw util.funcErr("EmitPendingEvents", "missing required parameters");
-            } else {
-
-                let pendingEvents = await db.fetchRecords('EVENTS', 'receivingUserID', userID, ['eventID', 'eventName', 'packet'], 'datetime');
-
-                for (let i = 0; i < pendingEvents.length; i++) {
-                    let eventID = pendingEvents[i].eventID;
-                    let eventName = pendingEvents[i].eventName;
-                    let packet = pendingEvents[i].packet;
-
-                    try {
-                        await EmitEvent(receivingSocket, eventName, packet, timeoutLength);
-                        await db.deleteRecord("EVENTS", "eventID", eventID);
-                    } catch (error) {
-                        if (error.message != `event: ${eventName}, info: operation has timed out`) {
-                            await db.deleteRecord("EVENTS", "eventID", eventID);
-                        };
-                    };
-                };
-
-                await EmitEvent(socket, "receivedPendingEvents", null, 1000)
-
-                util.handleFuncSuccess("EmitPendingEvents", `userID: ${userID}`, showLogs);
-            }
-        } catch (error) {
-            util.handleFuncFailure("EmitPendingEvents", error, `userID: ${userID}`, showLogs);
-            throw error;
-        };
-    };
-
-    async function DeleteUserData(userID) {
-        try {
-            await db.deleteCRsByUserID(userID);
-
-            await db.deleteRUChannelsByUserID(userID);
-
-            await db.deleteRecords("EVENTS", "receivingUserID", userID);
-
-            await db.deleteRecord("USERS", "userID", userID);
-
-            util.handleFuncSuccess("DeleteUserData", `userID: ${userID}`, showLogs);
-        } catch (error) {
-            util.handleFuncFailure("DeleteUserData", error, `userID: ${userID}`, showLogs);
-            throw error;
-        }
-    };
-
-    function ConnectUser(userID) {
-        socket.userData.userID = userID;
-        socket.userData.connected = true;
+    function connectUser(userID) {
+        socket.userdata.userID = userID;
+        socket.userdata.connected = true;
 
         connectedUsers[userID] = {
             socketID: socket.id
         };
     };
 
-    function DisconnectUser() {
-        delete connectedUsers[socket.userData.userID];
-        socket.userData.connected = false;
-        socket.userData.userID = null;
+    function disconnectUser() {
+        delete connectedUsers[socket.userdata.userID];
+        socket.userdata.connected = false;
+        socket.userdata.userID = null;
     };
 
     // checkUsername
@@ -173,10 +66,10 @@ io.on('connection', (socket) => {
 
         try {
             if (username == null || username == "") {
-                throw util.eventErr("checkUsername", "username is missing");
+                throw util.eventErr("checkUsername", "username is null or empty");
             };
 
-            let result = await db.fetchRecord("USERS", "username", username, undefined, undefined, "userID", false)
+            let result = await db.fetchRecord(socket.id, null, "USERS", "username", username, undefined, undefined, "userID", false)
 
             if (result == undefined) {
                 ack(null, true);
@@ -184,9 +77,9 @@ io.on('connection', (socket) => {
                 ack(null, false);
             };
 
-            util.handleEventSuccess("checkUsername", `username: ${username}, result: ${result == undefined ? true : false}`, showLogs);
+            logger.debug(util.eventS("checkUsername", `username: ${username}, result: ${result == undefined ? true : false}`, socket.id));
         } catch (error) {
-            util.handleEventFailure("checkUsername", error, `username: ${username}`, showLogs);
+            logger.error(util.eventF("checkUsername", error, `username: ${username}`, socket.id));
             ack(error.message);
         }
     });
@@ -195,38 +88,33 @@ io.on('connection', (socket) => {
     // creation operation
     socket.on('createUser', async function (data, ack) {
 
-        let packet = data.packet
+        let packetBuffer = data.packet
 
         try {
-            if (packet == null) {
+            if (packetBuffer == null) {
                 throw util.eventErr("createUser", "packet is null");
             }
 
-            let packetObject = JSON.parse(packet.toString());
+            let packetObject = JSON.parse(packetBuffer.toString());
             let packetProps = ["userID", "username", "avatar", "creationDate"];
 
             if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
                 throw util.eventErr("createUser", "packet property(s) missing");
             } else if (Object.values(packetObject).every(item => item !== null) == false) {
                 throw util.eventErr("createUser", "packet property(s) null");
-            }
+            };
 
             try {
-                await db.createUser(
-                    packetObject.userID,
-                    packetObject.username,
-                    packetObject.avatar,
-                    packetObject.creationDate
-                );
+                await db.createUser(socket.id, packetObject.userID, packetObject.username, packetObject.avatar, packetObject.creationDate);
 
-                util.handleEventSuccess("createUser", `userID: ${packetObject.userID}`, showLogs);
+                logger.info(util.eventS("createUser", `userID: ${packetObject.userID}`, socket.id));
                 ack(null);
             } catch (error) {
-                util.handleEventFailure("createUser", error, `userID: ${packetObject.userID}`, showLogs);
+                logger.error(util.eventF("createUser", error, `userID: ${packetObject.userID}`, socket.id));
                 ack(error.message);
             };
         } catch (error) {
-            util.handleEventFailure("createUser", error, `socketID: ${socket.socketID}`, showLogs);
+            logger.error(util.eventF("createUser", error, undefined, socket.id));
             ack(error.message);
         };
     });
@@ -243,79 +131,47 @@ io.on('connection', (socket) => {
                 throw util.eventErr("connectUser", "userID is null");
             };
 
-            let userRecord = await db.fetchRecords("USERS", "userID", userID, "userID", undefined, undefined, 1);
+            let userRecord = await db.fetchRecords(socket.id, null, "USERS", "userID", userID, "userID", undefined, undefined, 1);
 
             if (userRecord.length != 1) {
                 throw util.eventErr("connectUser", "user does not exist");
             } else {
-                ConnectUser(userID);
+                connectUser(userID);
             };
 
-            util.handleEventSuccess("connectUser", `userID: ${userID}`, showLogs);
+            logger.info(util.eventS("connectUser", undefined, socket.id, userID));
             ack(null);
 
-            try {
-                let RUIDs = await db.fetchRUChannelsbyUserID(userID, "userID");
+            await eventFuncs.sendUserOnline(socket.id, userID);
 
-                for (let i = 0; i < RUIDs.length; i++) {
-                    try {
-                        let RUID = RUIDs[i].userID;
-
-                        if (RUID in connectedUsers) {
-                            let receivingSocketID = connectedUsers[RUID].socketID;
-                            io.to(receivingSocketID).emit('userOnline', userID);
-                        };
-
-                        util.handleEventSuccess("connectUser.userOnline", `RUID: ${RUID}`, showLogs);
-                    } catch (error) {
-                        util.handleEventFailure("connectUser.userOnline", error, `RUID: ${RUIDs[i].userID}`, showLogs);
-                    };
-                };
-            } catch (error) {
-                util.handleEventFailure("connectUser.userOnline", error, `userID: ${userID}`, showLogs);
-            };
-
-            try {
-                await EmitPendingEvents(userID, socket, 1000, true);
-            } catch (error) {
-
-            };
+            await eventFuncs.emitPendingEvents(socket.id, userID, socket, 1000);
         } catch (error) {
-            util.handleEventFailure("connectUser", error, `socketID: ${socket.socketID}, userID: ${userID}`, showLogs);
+            logger.error(util.eventF("connectUser", error, undefined, socket.id, userID));
             ack(error.message);
         };
     });
 
     socket.on('disconnect', async function () {
 
+        let socketID = socket.id;
+        let userID = socket.userdata.userID;
+
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("disconnect", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || userID == null) {
+                throw util.eventErr("disconnect", "disconnected or socket.userdata.userID is null");
             };
 
-            DisconnectUser();
+            disconnectUser();
 
-            await db.updateRecord("USERS", "userID", socket.userData.userID, undefined, undefined, "lastOnline", util.currDT);
+            try {
+                await db.updateRecord(socketID, userID, "USERS", "userID", userID, undefined, undefined, "lastOnline", util.currDT);
+            } catch (error) { };
 
-            let RUChannels = await db.fetchRUChannelsbyUserID(socket.userData.userID);
-            let RUIDs = RUChannels.map(channel => channel.userID);
+            logger.info(util.eventS("disconnect", undefined, socketID, userID));
 
-            util.handleEventSuccess("disconnect", `userID: ${userID}`, showLogs);
-
-            for (let i = 0; i < RUIDs.length; i++) {
-                try {
-                    if (RUIDs[i] in connectedUsers) {
-                        let receivingSocketID = connectedUsers[RUIDs[i]].socketID;
-                        io.to(receivingSocketID).emit("userDisconnected", socket.userData.userID);
-                    };
-
-                    util.handleEventSuccess("disconnect.userDisconnected", `RUID: ${RUIDs[i]}`, showLogs);
-                } catch (error) {
-                    util.handleEventFailure("disconnect.userDisconnected", error, `RUID: ${RUIDs[i]}`, showLogs);
-                };
-            };
+            await eventFuncs.sendUserDisconnect(socketID, userID);
         } catch (error) {
-            util.handleEventFailure("disconnect", error, `socketID: ${socket.socketID}, userID: ${socket.userData.userID}`, showLogs);
+            logger.error(util.eventF("disconnect", error, undefined, socketID, userID));
         };
     });
 
@@ -329,38 +185,29 @@ io.on('connection', (socket) => {
         let userID = data.userID;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("deleteUser", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("deleteUser", "disconnected or socket.userdata.userID is null");
             };
 
             if (userID == null) {
                 throw util.eventErr("deleteUser", "missing required parameters");
-            } else if (userID != socket.userData.userID) {
-                throw util.eventErr("deleteUser", "userID does not match socket.userData.userID");
+            } else if (userID != socket.userdata.userID) {
+                throw util.eventErr("deleteUser", "userID does not match socket.userdata.userID");
             };
 
-            let RUChannelRecords = await db.fetchRUChannelsbyUserID(userID, "userID");
-            let RUIDs = RUChannelRecords.map(channel => channel.userID);
+            let RUIDs = await this.db.fetchRUChannelsbyUserID(origUID, "userID");
 
-            await DeleteUserData(userID);
+            await eventFuncs.deleteUserdata(socket.socketID, socket.userdata.userID);
 
-            DisconnectUser();
+            disconnectUser();
 
-            util.handleSuccess("deleteUser", `userID: ${userID}`, showLogs);
+            logger.info(util.eventS("deleteUser", `userID: ${userID}`, socket.socketID, socket.userdata.userID));
             ack(null);
 
-            let eventName = "deleteUserTrace";
-            let deletionPacket = { "userID": userID };
-            let jsonBuffer = Buffer.from(JSON.stringify(deletionPacket))
-            for (let i = 0; i < RUIDs.length; i++) {
-                try {
-                    await CheckOnlineEmit(userID, RUIDs[i], eventName, jsonBuffer, 1000);
-                } catch {
-
-                };
-            };
+            await eventFuncs.sendDeleteUserTrace(socket.socketID, userID, RUIDs);
+            
         } catch (error) {
-            util.handleEventFailure("deleteUser", error, `userID: ${userID}`, showLogs);
+            logger.error(util.eventF("deleteUser", error, `userID: ${userID}`, socket.socketID, socket.userdata.userID));
             ack(error.message);
         };
     });
@@ -375,20 +222,20 @@ io.on('connection', (socket) => {
         let userID = data;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("fetchRU", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("fetchRU", "disconnected or socket.userdata.userID is null");
             };
 
             if (userID == null) {
                 throw util.eventErr("fetchRU", "missing required parameters");
             };
 
-            let user = await db.fetchRecord("USERS", "userID", userID)
+            let userdata = await db.fetchRecord(socket.id, socket.userdata.userID, "USERS", "userID", userID)
 
-            util.handleEventSuccess("fetchRU", `userID: ${userID}`, showLogs);
-            ack(null, user);
+            logger.info(util.eventS("fetchRU", `userID: ${userID}`, socket.id, socket.userdata.userID));
+            ack(null, userdata);
         } catch (error) {
-            util.handleEventFailure("fetchRU", error, `originUserID: ${socket.userData.userID}, userID: ${userID}`, showLogs);
+            logger.error(util.eventF("fetchRU", error, `userID: ${userID}`, socket.id, socket.userdata.userID));
             ack(error.message)
         };
     });
@@ -400,22 +247,47 @@ io.on('connection', (socket) => {
         let username = data;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("fetchRUs", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("fetchRUs", "disconnected or socket.userdata.userID is null");
             };
 
             if (username == null) {
                 throw util.eventErr("fetchRUs", "missing required parameters");
             };
 
-            let userPackets = await db.fetchUsersByUsername(username);
+            let userPackets = await db.fetchUsersByUsername(socket.id, socket.userdata.userID, username, 15);
 
-            util.handleEventSuccess("fetchRUs", `username: ${username}, resultCount: ${userPackets.length}`, showLogs);
+            logger.info(util.eventS("fetchRUs", `username: ${username}, resultCount: ${userPackets.length}`, socket.id, socket.userdata.userID));
             ack(null, userPackets);
         } catch (error) {
-            util.handleEventFailure("fetchRUs", error, `username: ${username}`, showLogs);
+            logger.error(util.eventF("fetchRUs", error, `username: ${username}`, socket.id, socket.userdata.userID));
             ack(error.message);
         }
+    });
+
+    // checkRUIDsOnline
+    //
+    socket.on("checkRUIDsOnline", async function (data, ack) {
+
+        let RUIDs = data;
+
+        try {
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("checkRUIDsOnline", "disconnected or socket.userdata.userID is null");
+            };
+
+            if (RUIDs == null) {
+                throw util.eventErr("checkRUIDsOnline", "missing required paramters");
+            };
+
+            let returnRUIDs = await eventFuncs.checkRUIDsOnline(socket.socketID, socket.userdata.userID, RUIDs);
+
+            logger.info(util.eventS("checkRUIDsOnline", `RUIDCount: ${RUIDs.length}, returnRUIDCount: ${returnRUIDs.length}`, socket.socketID, socket.userdata.userID));
+            ack(null, returnRUIDs);
+        } catch (error) {
+            logger.error(util.eventF("checkRUIDsOnline", error, `RUIDCount: ${RUIDs.length}`, socket.socketID, socket.userdata.userID));
+            ack(error.message);
+        };
     });
 
     // checkCRs
@@ -425,80 +297,19 @@ io.on('connection', (socket) => {
         let clientRequestIDs = data.requestIDs;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("checkCRs", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("checkCRs", "disconnected or socket.userdata.userID is null");
             };
 
             if (clientRequestIDs == null) {
-                throw util.eventErr("checkCRs", "missing required paramters");
+                throw util.eventErr("checkCRs", `missing required paramters: (clientRequestIDs: ${clientRequestIDs})`);
             };
 
-            let serverRequestIDs = await db.fetchCRsByUserID(socket.userData.userID, "requestID");
+            await eventFuncs.checkCRs(socket.userdata.userID, socket, clientRequestIDs, ack);
 
-            let returnCRs = {};
-            for (let i = 0; i < clientRequestIDs.length; i++) {
-                if (!serverRequestIDs.includes(clientRequestIDs[i])) {
-                    returnCRs[clientRequestIDs[i]] = false;
-                }
-            };
-
-            for (let i = 0; i < serverRequestIDs.length; i++) {
-                if (!clientRequestIDs.includes(serverRequestIDs[i])) {
-                    try {
-                        let CR = await db.fetchRecord("CRs", "requestID", serverRequestIDs[i]);
-
-                        let packet = {
-                            requestID: CR.requestID,
-                            date: CR.requestDate
-                        };
-
-                        if (CR.originUserID != socket.userData.userID && CR.receivingUserID == socket.userData.userID) {
-                            let RU = await db.fetchRecord("USERS", "userID", CR.originUserID);
-
-                            let RUPacket = {
-                                userID: RU.userID,
-                                username: RU.username,
-                                avatar: RU.avatar,
-                                creationDate: RU.creationDate
-                            };
-                            packet.originUser = RUPacket;
-
-                            returnCRs[serverRequestIDs[i]] = {
-                                isOrigin: false,
-                                packet: packet
-                            };
-                        } else if (CR.originUserID == socket.userData.userID && CR.receivingUserID != socket.userData.userID) {
-                            let RU = await db.fetchRecord("USERS", "userID", CR.receivingUserID);
-
-                            let RUPacket = {
-                                userID: RU.userID,
-                                username: RU.username,
-                                avatar: RU.avatar,
-                                creationDate: RU.creationDate
-                            };
-                            packet.originUser = RUPacket;
-
-                            returnCRs[serverRequestIDs[i]] = {
-                                isOrigin: true,
-                                packet: packet
-                            };
-                        };
-                    } catch (error) {
-                        if (error.message == "db.fetchRecord - err: no results") {
-                            try {
-                                await db.deleteRecord("CRs", "requestID", serverRequestIDs[i])
-                            } catch {
-
-                            };
-                        };
-                    };
-                };
-            };
-
-            ack(null, returnCRs);
-            util.handleEventSuccess("checkCRs", `userID: ${socket.userData.userID}`, showLogs);
+            logger.info(util.eventS("checkCRs", `requestIDCount: ${clientRequestIDs.length}`, socket.socketID, socket.userdata.userID));
         } catch (error) {
-            util.handleEventFailure("checkCRs", error, `userID: ${socket.userData.userID}`, showLogs);
+            logger.error(util.eventF("checkCRs", error, `requestIDCount: ${clientRequestIDs.length}`, socket.socketID, socket.userdata.userID));
             ack(error.message);
         };
     });
@@ -510,8 +321,8 @@ io.on('connection', (socket) => {
         let channelIDs = data;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("checkRUChannels", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("checkRUChannels", "disconnected or socket.userdata.userID is null");
             };
 
             if (channelIDs == null) {
@@ -522,14 +333,14 @@ io.on('connection', (socket) => {
 
             for (let i = 0; i < channelIDs.length; i++) {
                 try {
-                    let channel = await db.fetchRecord("RUChannels", "channelID", channelIDs[i], "userID", socket.userData.userID, "userID", false);
+                    let channel = await db.fetchRecord("RUChannels", "channelID", channelIDs[i], "userID", socket.userdata.userID, "userID", false);
 
                     if (channel == undefined) {
                         returnRUChannels[channelIDs[i]] = false;
                         throw util.eventErr("checkRUChannels.checkChannel", "channel not found");
                     };
 
-                    let RUChannel = await db.fetchRUChannelsByChannelID(channelIDs[i], socket.userData.userID);
+                    let RUChannel = await db.fetchRUChannelsByChannelID(channelIDs[i], socket.userdata.userID);
                     let RU = await db.fetchRecord("USERS", "userID", RUChannel.userID, undefined, undefined, "userID", false);
 
                     if (RU == undefined) {
@@ -542,10 +353,10 @@ io.on('connection', (socket) => {
                 };
             };
 
-            util.handleEventSuccess("checkRUChannels", `userID: ${socket.userData.userID}`, showLogs);
+            util.handleEventSuccess("checkRUChannels", `userID: ${socket.userdata.userID}`, showLogs);
             ack(null, returnRUChannels);
         } catch (error) {
-            util.handleEventFailure("checkRUChannels", error, `userID: ${socket.userData.userID}`, showLogs);
+            util.handleEventFailure("checkRUChannels", error, `userID: ${socket.userdata.userID}`, showLogs);
             ack(error.message);
         };
     });
@@ -557,15 +368,15 @@ io.on('connection', (socket) => {
         let channelIDs = data;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("checkMissingRUChannels", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("checkMissingRUChannels", "disconnected or socket.userdata.userID is null");
             };
 
             if (channelIDs == null) {
                 throw util.eventErr("checkMissingRUChannels", "missing required paramters");
             };
 
-            let serverRUChannels = await db.fetchRUChannelsbyUserID(socket.userData.userID, "channelID");
+            let serverRUChannels = await db.fetchRUChannelsbyUserID(socket.userdata.userID, "channelID");
 
             let returnRUChannels = {};
             for (let i = 0; i < serverRUChannels.length; i++) {
@@ -578,61 +389,28 @@ io.on('connection', (socket) => {
                             throw util.eventErr("checkMissingRUChannels.checkRU", "RU not found");
                         };
 
-                        returnRUChannels[serverRUChannels[i].channelID] = {
+                        let jsonBuffer = Buffer.from(JSON.stringify({
                             creationDate: serverRUChannels[i].creationDate,
                             RU: RU
-                        };
+                        }));
+
+                        returnRUChannels[serverRUChannels[i].channelID] = jsonBuffer
                     };
                 } catch (error) {
                     util.handleEventFailure("checkMissingRUChannels.checkRU", error, `RUID: ${data[i]}`, showLogs);
                 };
             };
 
-            util.handleEventSuccess("checkMissingRUChannels", `userID: ${socket.userData.userID}`, showLogs);
+            util.handleEventSuccess("checkMissingRUChannels", `userID: ${socket.userdata.userID}`, showLogs);
             ack(null, returnRUChannels);
         } catch (error) {
-            util.handleEventFailure("checkMissingRUChannels", error, `userID: ${socket.userData.userID}`, showLogs);
+            util.handleEventFailure("checkMissingRUChannels", error, `userID: ${socket.userdata.userID}`, showLogs);
             ack(error.message);
         };
     });
 
-    // checkOnline
-    //
-    socket.on("checkOnline", async function (data, ack) {
 
-        let userIDs = data;
-
-        try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("checkOnline", "disconnected or socket.userData.userID is null");
-            };
-
-            if (userIDs == null) {
-                throw util.eventErr("checkOnline", "missing required paramters");
-            };
-
-            let returnUserIDs = {};
-
-            for (let i = 0; i < userIDs.length; i++) {
-                try {
-                    if (userIDs[i] in connectedUsers) {
-                        returnUserIDs[userIDs[i]] = true;
-                    } else {
-                        let RU = await db.fetchRecord("USERS", "userID", userIDs[i], undefined, undefined, "lastOnline");
-                        returnUserIDs[userIDs[i]] = RU.lastOnline;
-                    };
-                } catch (error) {
-                    util.handleEventFailure("checkOnline.userOnline", error, `userID: ${userIDs[i]}`, showLogs);
-                };
-            };
-
-            util.handleEventSuccess("checkOnline", `userID: ${socket.userData.userID}`, showLogs);
-            ack(null, returnUserIDs);
-        } catch (error) {
-            util.handleEventFailure("checkOnline", error, `userID: ${socket.userData.userID}`, showLogs);
-            ack(error.message);
-        };
-    });
+    
 
     // sendCR
     // - A CR packet is sent, and an ack is pending to A to create CR objects in its database
@@ -642,53 +420,29 @@ io.on('connection', (socket) => {
     // - As long as the event is added to the events database, a successful ack is sent back to A to create the objects, even if the emit times out
     socket.on('sendCR', async function (data, ack) {
 
-        let receivingUserID = data.userID;
-        let packet = data.packet;
+        let recUID = data.userID;
+        let packetBuffer = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendCR", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("sendCR", "disconnected or socket.userdata.userID is null");
             };
 
-            if (receivingUserID == null || packet == null) {
+            if (recUID == null || packetBuffer == null) {
                 throw util.eventErr("sendCR", "missing required parameters");
             };
 
-            let packetObject = JSON.parse(packet.toString());
-            let packetProps = ["requestID", "date"];
-
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw util.eventErr("sendCR", "packet property(s) missing");
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw util.eventErr("sendCR", "packet property(s) null");
-            };
-
-            let originUser = await db.fetchRecord("USERS", "userID", socket.userData.userID);
-            packetObject.originUser = originUser;
-
-            let jsonBuffer = Buffer.from(JSON.stringify(packetObject));
+            let packetObject = await eventFuncs.sendCR(socket.socketID, socket.userdata.userID, recUID, packetBuffer, ack);
 
             try {
-                await db.createCR(packetObject.requestID, socket.userData.userID, receivingUserID, packetObject.date);
+                await eventFuncs.receivedCR(origSocketID, origUID, recUID, packetObject);
 
-                ack(null);
-                util.handleEventSuccess("sendCR", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
-
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCR", jsonBuffer, 1000, showLogs);
+                logger.info(util.eventS("sendCR", undefined, socket.socketID, socket.userdata.userID, undefined, recUID));
             } catch (error) {
-                util.handleEventFailure("sendCR", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
-                ack(error.message);
-
-                try {
-                    await db.deleteRecord("CRs", "requestID", packetObject.requestID);
-
-                    util.handleSuccess("sendCR.deleteCR", `requestID: ${packetObject.requestID}`, showLogs);
-                } catch (error) {
-                    util.handleFailure("sendCR.deleteCR", error, `requestID: ${packetObject.requestID}`, showLogs);
-                };
+                logger.error(util.eventF("sendCR", error, `requestID: ${packetObject.requestID}`, socket.socketID, socket.userdata.userID, undefined, recUID));
             };
         } catch (error) {
-            util.handleEventFailure("sendCR", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            logger.error(util.eventF("sendCR", error, undefined, socket.socketID, socket.userdata.userID, undefined, recUID));
             ack(error.message);
         };
     });
@@ -701,8 +455,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendCRResult", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("sendCRResult", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {
@@ -721,23 +475,27 @@ io.on('connection', (socket) => {
             if (packetObject.result == true) {
                 await db.deleteRecord("CRs", "requestID", packetObject.requestID);
 
-                await db.createRUChannel(packetObject.channelID, socket.userData.userID, packetObject.creationDate);
+                await db.createRUChannel(packetObject.channelID, socket.userdata.userID, packetObject.creationDate);
                 await db.createRUChannel(packetObject.channelID, receivingUserID, packetObject.creationDate);
 
                 ack(null);
                 util.handleEventSuccess("sendCRResult", `receivingUserID: ${receivingUserID}`, showLogs);
 
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
+                try {
+                    await CheckOnlineEmit(socket.userdata.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
+                } catch (error) {
+                    await db.deleteRecords("RUChannels", "channelID", packetObject.channelID);
+                };
             } else if (packetObject.result == false) {
                 await db.deleteRecord("CRs", "requestID", packetObject.requestID);
 
                 ack(null);
                 util.handleEventSuccess("sendCRResult", `receivingUserID: ${receivingUserID}`, showLogs);
 
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
+                await CheckOnlineEmit(socket.userdata.userID, receivingUserID, "receivedCRResult", packet, 1000, showLogs);
             };
         } catch (error) {
-            util.handleEventFailure("sendCRResult", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            util.handleEventFailure("sendCRResult", error, `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs);
             ack(error.message);
         };
     });
@@ -750,8 +508,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendCD", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("sendCD", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {
@@ -768,19 +526,19 @@ io.on('connection', (socket) => {
             };
 
             if (packetObject.type == "clear") {
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCD", packet, 1000, showLogs);
+                await CheckOnlineEmit(socket.userdata.userID, receivingUserID, "receivedCD", packet, 1000, showLogs);
 
                 ack(null);
             } else if (packetObject.type == "delete") {
                 await db.deleteRecords("RUChannels", "channelID", packetObject.channelID);
                 ack(null);
 
-                await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCD", packet, 1000, showLogs);
+                await CheckOnlineEmit(socket.userdata.userID, receivingUserID, "receivedCD", packet, 1000, showLogs);
             };
 
-            util.handleEventSuccess("sendCD", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            util.handleEventSuccess("sendCD", `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs);
         } catch (error) {
-            util.handleEventFailure("sendCD", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs)
+            util.handleEventFailure("sendCD", error, `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs)
             ack(error.message);
         };
     });
@@ -793,8 +551,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendCDResult", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("sendCDResult", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {
@@ -810,11 +568,11 @@ io.on('connection', (socket) => {
                 throw util.eventErr("sendCDResult", "packet property(s) missing");
             };
 
-            await CheckOnlineEmit(socket.userData.userID, receivingUserID, "receivedCDResult", packet, 1000, showLogs)
+            await CheckOnlineEmit(socket.userdata.userID, receivingUserID, "receivedCDResult", packet, 1000, showLogs)
             ack(null);
-            util.handleEventSuccess("sendCDResult", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            util.handleEventSuccess("sendCDResult", `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs);
         } catch (error) {
-            util.handleEventFailure("sendCDResult", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs)
+            util.handleEventFailure("sendCDResult", error, `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs)
             ack(error.message);
         };
     });
@@ -826,8 +584,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("resetChannels", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("resetChannels", "disconnected or socket.userdata.userID is null");
             };
 
             if (packet == null) {
@@ -860,18 +618,18 @@ io.on('connection', (socket) => {
 
                     let jsonBuffer = Buffer.from(JSON.stringify(CDPacket));
 
-                    await CheckOnlineEmit(socket.userData.userID, deletionData.userID, "receivedCD", jsonBuffer, 1000, showLogs);
-                    
-                    util.handleEventSuccess("resetChannels.receivedCD", `originUserID: ${socket.userData.userID}, receivingUserID: ${deletionData.userID}`, showLogs);
+                    await CheckOnlineEmit(socket.userdata.userID, deletionData.userID, "receivedCD", jsonBuffer, 1000, showLogs);
+
+                    util.handleEventSuccess("resetChannels.receivedCD", `originUserID: ${socket.userdata.userID}, receivingUserID: ${deletionData.userID}`, showLogs);
                 } catch {
-                    util.handleEventFailure("resetChannels.receivedCD", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${packetObject[i].userID}`, showLogs);
+                    util.handleEventFailure("resetChannels.receivedCD", error, `originUserID: ${socket.userdata.userID}, receivingUserID: ${packetObject[i].userID}`, showLogs);
                 };
             };
 
             ack(null);
-            util.handleEventSuccess("resetChannels", `originUserID: ${socket.userData.userID}`, showLogs);
+            util.handleEventSuccess("resetChannels", `originUserID: ${socket.userdata.userID}`, showLogs);
         } catch (error) {
-            util.handleEventFailure("resetChannels", error, `originUserID: ${socket.userData.userID}`, showLogs);
+            util.handleEventFailure("resetChannels", error, `originUserID: ${socket.userdata.userID}`, showLogs);
             ack(error.message);
         };
     });
@@ -888,8 +646,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("sendMessage", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("sendMessage", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {
@@ -900,9 +658,9 @@ io.on('connection', (socket) => {
 
             ack(null);
 
-            util.handleEventSuccess("sendMessage", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            util.handleEventSuccess("sendMessage", `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs);
         } catch (error) {
-            util.handleEventFailure("sendMessage", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs)
+            util.handleEventFailure("sendMessage", error, `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs)
             ack(error.message);
         };
     });
@@ -910,13 +668,13 @@ io.on('connection', (socket) => {
     // deliveredMessage
     //
     socket.on('deliveredMessage', async function (data, ack) {
-        
+
         let receivingUserID = data.userID;
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("deliveredMessage", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("deliveredMessage", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {
@@ -927,9 +685,9 @@ io.on('connection', (socket) => {
 
             ack(null);
 
-            util.handleEventSuccess("deliveredMessage", `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs);
+            util.handleEventSuccess("deliveredMessage", `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs);
         } catch (error) {
-            util.handleEventFailure("deliveredMessage", error, `originUserID: ${socket.userData.userID}, receivingUserID: ${receivingUserID}`, showLogs)
+            util.handleEventFailure("deliveredMessage", error, `originUserID: ${socket.userdata.userID}, receivingUserID: ${receivingUserID}`, showLogs)
             ack(error.message);
         };
     });
@@ -942,8 +700,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("deleteMessage", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("deleteMessage", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {
@@ -962,8 +720,8 @@ io.on('connection', (socket) => {
         let packet = data.packet;
 
         try {
-            if (socket.userData.connected == false || socket.userData.userID == null) {
-                throw util.eventErr("deleteMessageResult", "disconnected or socket.userData.userID is null");
+            if (socket.userdata.connected == false || socket.userdata.userID == null) {
+                throw util.eventErr("deleteMessageResult", "disconnected or socket.userdata.userID is null");
             };
 
             if (receivingUserID == null || packet == null) {

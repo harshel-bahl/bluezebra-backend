@@ -3,7 +3,8 @@ const util = require('./utilities');
 
 class Database {
 
-  constructor(showLogs = false) {
+  constructor(logger) {
+
     this.con = mysql.createConnection({
       host: "localhost",
       user: "root",
@@ -12,16 +13,27 @@ class Database {
       // socketPath: "/var/run/mysqld/mysqld.sock"
     });
 
-    this.showLogs = showLogs;
+    this.logger = logger;
+
+    this.connected = false;
   };
 
-  connect() {
+  connectDB() {
     this.con.connect(function (err) {
-      if (err) throw err;
-      console.log("Connected to MySQL server!");
-    });
+      try {
+        if (err) {
+          throw err;
+        };
 
-    this.createTables();
+        this.logger.info(util.funcS("db.connect", "connected to MySQL DB"))
+        this.connected = true;
+
+        this.createTables();
+      } catch (error) {
+        this.logger.error(util.funcF("db.connect", error));
+        this.connected = false;
+      };
+    });
   };
 
   // Table Creation Functions
@@ -29,7 +41,7 @@ class Database {
 
   createTables() {
 
-    var sql1 = `CREATE TABLE IF NOT EXISTS USERS (
+    var table1 = `CREATE TABLE IF NOT EXISTS USERS (
       userID VARCHAR(255) NOT NULL CHECK (userID <> ''),
       username VARCHAR(255) NOT NULL CHECK (username <> ''), 
       avatar VARCHAR(50) NOT NULL,
@@ -39,7 +51,7 @@ class Database {
       UNIQUE (username)
     );`;
 
-    var sql2 = `CREATE TABLE IF NOT EXISTS CRs (
+    var table2 = `CREATE TABLE IF NOT EXISTS CRs (
       requestID VARCHAR(255) NOT NULL CHECK (requestID <> ''),
       originUserID VARCHAR(255) NOT NULL CHECK (originUserID <> ''),
       receivingUserID VARCHAR(255) NOT NULL CHECK (receivingUserID <> ''),
@@ -47,14 +59,14 @@ class Database {
       PRIMARY KEY (requestID)
     );`;
 
-    var sql3 = `CREATE TABLE IF NOT EXISTS RUChannels (
+    var table3 = `CREATE TABLE IF NOT EXISTS RUChannels (
       channelID VARCHAR(255) NOT NULL CHECK (channelID <> ''),
       userID VARCHAR(255) NOT NULL CHECK (userID <> ''),
       creationDate DATETIME NOT NULL,
       PRIMARY KEY (channelID, userID)
     );`;
 
-    var sql4 = `CREATE TABLE IF NOT EXISTS EVENTS (
+    var table4 = `CREATE TABLE IF NOT EXISTS EVENTS (
       eventID INT AUTO_INCREMENT PRIMARY KEY,
       eventName VARCHAR(255) NOT NULL,
       datetime DATETIME(3) NOT NULL,
@@ -63,24 +75,52 @@ class Database {
       packet BLOB
     );`;
 
-    this.con.query(sql1, function (err, result) {
-      if (err) throw err;
-      util.handleFuncSuccess("db.createTables", "Created 'users' table if not present", this.showLogs);
+    this.con.query(table1, function (err, result) {
+      try {
+        if (err) {
+          throw err;
+        };
+
+        this.logger.info(util.funcS("db.createTables", "created 'users' table if not present"));
+      } catch (error) {
+        this.logger.error(util.funcF("db.createTables", error, "failed to create 'users' table"));
+      };
     });
 
-    this.con.query(sql2, function (err, result) {
-      if (err) throw err;
-      util.handleFuncSuccess("db.createTables", "Created 'CRs' table if not present", this.showLogs);
+    this.con.query(table2, function (err, result) {
+      try {
+        if (err) {
+          throw err;
+        };
+
+        this.logger.info(util.funcS("db.createTables", "created 'CRs' table if not present"));
+      } catch (error) {
+        this.logger.error(util.funcF("db.createTables", error, "failed to create 'CRs' table"));
+      };
     });
 
-    this.con.query(sql3, function (err, result) {
-      if (err) throw err;
-      util.handleFuncSuccess("db.createTables", "Created 'RUChannels' table if not present", this.showLogs);
+    this.con.query(table3, function (err, result) {
+      try {
+        if (err) {
+          throw err;
+        };
+
+        this.logger.info(util.funcS("db.createTables", "created 'RUChannels' table if not present"));
+      } catch (error) {
+        this.logger.error(util.funcF("db.createTables", error, "failed to create 'RUChannels' table"));
+      };
     });
 
-    this.con.query(sql4, function (err, result) {
-      if (err) throw err;
-      util.handleFuncSuccess("db.createTables", "Created 'events' table if not present", this.showLogs);
+    this.con.query(table4, function (err, result) {
+      try {
+        if (err) {
+          throw err;
+        };
+
+        this.logger.info(util.funcS("db.createTables", "created 'events' table if not present"));
+      } catch (error) {
+        this.logger.error(util.funcF("db.createTables", error, "failed to create 'events' table"));
+      };
     });
   };
 
@@ -91,6 +131,8 @@ class Database {
   // fetchRecord
   // predProps should be a primary keys to ensure that only one record is fetched
   fetchRecord(
+    origSocketID,
+    origUID,
     table,
     predProp1,
     predValue1,
@@ -101,7 +143,6 @@ class Database {
     errorOnMultiple = false) {
 
     return new Promise((resolve, reject) => {
-
       try {
         if (table == null || predProp1 == null || predValue1 == null) {
           throw util.funcErr("db.fetchRecord", "missing required parameters");
@@ -139,18 +180,18 @@ class Database {
               } else if (result.length > 1 && errorOnMultiple) {
                 throw util.funcErr("db.fetchRecord", "multiple results");
               } else {
-                util.handleFuncSuccess("db.fetchRecord", `table: ${table}`, this.showLogs);
+                this.logger.debug(util.funcS("db.fetchRecord", `table: ${table}`, origSocketID, origUID));
                 resolve(result[0]);
               };
             } catch (error) {
-              util.handleFuncFailure("db.fetchRecord", error, `table: ${table}`, this.showLogs);
+              this.logger.warn(util.funcF("db.fetchRecord", error, `table: ${table}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
 
       } catch (error) {
-        util.handleFuncFailure("db.fetchRecord", error, `table: ${table}`, this.showLogs);
+        this.logger.error(util.funcF("db.fetchRecord", error, `table: ${table}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -159,6 +200,8 @@ class Database {
   // fetchRecords
   //
   fetchRecords(
+    origSocketID,
+    origUID,
     table,
     predProp,
     predValue,
@@ -209,18 +252,18 @@ class Database {
               } else if (result.length == 0 && failOnEmpty) {
                 throw util.funcErr("db.fetchRecords", "no results");
               } else {
-                util.handleFuncSuccess("db.fetchRecords", `table: ${table}`, this.showLogs);
+                this.logger.debug(util.funcS("db.fetchRecords", `table: ${table}`, origSocketID, origUID));
                 resolve(result);
               };
             } catch (error) {
-              util.handleFuncFailure("db.fetchRecords", error, `table: ${table}`, this.showLogs);
+              this.logger.warn(util.funcF("db.fetchRecords", error, `table: ${table}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
 
       } catch (error) {
-        util.handleFuncFailure("db.fetchRecords", error, `table: ${table}`, this.showLogs);
+        this.logger.error(util.funcF("db.fetchRecords", error, `table: ${table}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -232,6 +275,8 @@ class Database {
   // updateRecord
   // predProps should be a primary keys to ensure that only one record is updated
   updateRecord(
+    origSocketID,
+    origUID,
     table,
     predProp1,
     predValue1,
@@ -275,17 +320,17 @@ class Database {
               } else if (result.affectedRows == 1 && result.changedRows == 0) {
                 throw util.funcErr("db.updateRecord", "no changes made");
               } else {
-                util.handleFuncSuccess("db.updateRecord", `table: ${table}, updateProp: ${updateProp}`, this.showLogs);
+                this.logger.debug(util.funcS("db.updateRecord", `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.updateRecord", error, `table: ${table}, updateProp: ${updateProp}`, this.showLogs);
+              this.logger.warn(util.funcF("db.updateRecord", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.updateRecord", error, `table: ${table}, updateProp: ${updateProp}`, this.showLogs);
+        this.logger.error(util.funcF("db.updateRecord", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -294,6 +339,8 @@ class Database {
   // updateRecords
   // 
   updateRecords(
+    origSocketID,
+    origUID,
     table,
     predProp,
     predValue,
@@ -329,17 +376,17 @@ class Database {
               } else if (result.affectedRows == 0 && failOnEmpty) {
                 throw util.funcErr("db.updateRecords", "no records found");
               } else {
-                util.handleFuncSuccess("db.updateRecords", `table: ${table}, updateProp: ${updateProp}, updated: ${result.changedRows}`, this.showLogs);
+                this.logger.debug(util.funcS("db.updateRecords", `table: ${table}, updateProp: ${updateProp}, updated: ${result.changedRows}`, origSocketID, origUID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.updateRecords", error, `table: ${table}, updateProp: ${updateProp}`, this.showLogs);
+              this.logger.warn(util.funcF("db.updateRecords", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.updateRecords", error, `table: ${table}, updateProp: ${updateProp}`, this.showLogs);
+        this.logger.error(util.funcF("db.updateRecords", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -351,6 +398,8 @@ class Database {
   // deleteRecord
   //
   deleteRecord(
+    origSocketID,
+    origUID,
     table,
     predProp1,
     predValue1,
@@ -388,17 +437,17 @@ class Database {
               } else if (result.affectedRows == 0) {
                 throw util.funcErr("db.deleteRecord", "no record found");
               } else {
-                util.handleFuncSuccess("db.deleteRecord", `table: ${table}, predProp1: ${predProp1}`, this.showLogs);
+                this.logger.debug(util.funcS("db.deleteRecord", `table: ${table}, predProp1: ${predProp1}`, origSocketID, origUID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.deleteRecord", error, `table: ${table}, predProp1: ${predProp1}`, this.showLogs);
+              this.logger.warn(util.funcF("db.deleteRecord", error, `table: ${table}, predProp1: ${predProp1}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.deleteRecord", error, `table: ${table}, predProp1: ${predProp1}`, this.showLogs);
+        this.logger.error(util.funcF("db.deleteRecord", error, `table: ${table}, predProp1: ${predProp1}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -407,6 +456,8 @@ class Database {
   // deleteRecords
   // 
   deleteRecords(
+    origSocketID,
+    origUID,
     table,
     predProp,
     predValue,
@@ -438,17 +489,17 @@ class Database {
               } else if (result.affectedRows == 0 && failOnEmpty) {
                 throw util.funcErr("db.deleteRecords", "no records found");
               } else {
-                util.handleFuncSuccess("db.deleteRecords", `table: ${table}, predProp: ${predProp}, deleted: ${result.affectedRows}`, this.showLogs);
+                this.logger.debug(util.funcS("db.deleteRecords", `table: ${table}, predProp: ${predProp}, deleted: ${result.affectedRows}`, origSocketID, origUID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.deleteRecords", error, `table: ${table}, predProp: ${predProp}`, this.showLogs);
+              this.logger.warn(util.funcF("db.deleteRecords", error, `table: ${table}, predProp: ${predProp}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.deleteRecords", error, `table: ${table}, predProp: ${predProp}`, this.showLogs);
+        this.logger.error(util.funcF("db.deleteRecords", error, `table: ${table}, predProp: ${predProp}`, origSocketID, origUID));
         reject(error);
       }
     });
@@ -457,8 +508,13 @@ class Database {
   // USERS Table Functions
   // =====================
 
-  createUser(userID, username, avatar, creationDate) {
-
+  createUser(
+    origSocketID,
+    userID,
+    username,
+    avatar,
+    creationDate
+  ) {
     return new Promise((resolve, reject) => {
       try {
         if (userID == null || username == null || avatar == null || creationDate == null) {
@@ -481,24 +537,28 @@ class Database {
               } else if (result.affectedRows == 0) {
                 throw util.funcErr("db.createUser", "failed to create user");
               } else {
-                util.handleFuncSuccess("db.createUser", `userID: ${userID}`, this.showLogs);
+                this.logger.debug(util.funcS("db.createUser", `userID: ${userID}, username: ${username}`, origSocketID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.createUser", error, `userID: ${userID}`, this.showLogs);
+              this.logger.warn(util.funcF("db.createUser", error, `userID: ${userID}, username: ${username}`, origSocketID));
               reject(error);
             }
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.createUser", error, `userID: ${userID}`, this.showLogs);
+        this.logger.error(util.funcF("db.createUser", error, `userID: ${userID}, username: ${username}`, origSocketID));
         reject(error);
       }
     });
   };
 
-  fetchUsersByUsername(username, limit = 10) {
-
+  fetchUsersByUsername(
+    origSocketID,
+    origUID,
+    username,
+    limit = 10
+  ) {
     return new Promise((resolve, reject) => {
       try {
         if (username == null) {
@@ -520,17 +580,17 @@ class Database {
               if (err) {
                 throw util.funcErr("db.fetchUsersByUsername", err);
               } else {
-                util.handleFuncSuccess("db.fetchUsersByUsername", `username: ${username}`, this.showLogs);
+                this.logger.debug(util.funcS("db.fetchUsersByUsername", `username: ${username}`, origSocketID, origUID));
                 resolve(result);
               }
             } catch (error) {
-              util.handleFuncFailure("db.fetchUsersByUsername", error, `username: ${username}`, this.showLogs);
+              this.logger.warn(util.funcF("db.fetchUsersByUsername", error, `username: ${username}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.fetchUsersByUsername", error, `username: ${username}`, this.showLogs);
+        this.logger.error(util.funcF("db.fetchUsersByUsername", error, `username: ${username}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -539,22 +599,27 @@ class Database {
   // CRs Table Functions
   // ==================
 
-  createCR(requestID, originUserID, receivingUserID, requestDate) {
-
+  createCR(
+    origSocketID,
+    requestID,
+    origUID,
+    recUID,
+    requestDate
+  ) {
     return new Promise((resolve, reject) => {
       try {
-        if (requestID == null || originUserID == null || receivingUserID == null || requestDate == null) {
+        if (requestID == null || origUID == null || recUID == null || requestDate == null) {
           throw util.funcErr("db.createCR", "missing required parameters");
         } else if (originUserID == receivingUserID) {
-          throw util.funcErr("db.createCR", "originUserID and receivingUserID cannot be the same");
+          throw util.funcErr("db.createCR", "origUID and recUID cannot be the same");
         } else {
 
           let query = `INSERT INTO CRs VALUES (?, ?, ?, ?)`;
 
           let values = [
             requestID,
-            originUserID,
-            receivingUserID,
+            origUID,
+            recUID,
             requestDate
           ];
 
@@ -565,24 +630,29 @@ class Database {
               } else if (result.affectedRows == 0) {
                 throw util.funcErr("db.createCR", "failed to create CR");
               } else {
-                util.handleFuncSuccess("db.createCR", `requestID: ${requestID}`, this.showLogs);
+                this.logger.debug(util.funcS("db.createCR", `requestID: ${requestID}`, origSocketID, origUID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.createCR", error, `requestID: ${requestID}`, this.showLogs);
+              this.logger.warn(util.funcF("db.createCR", error, `requestID: ${requestID}`, origSocketID, origUID));
               reject(error);
             }
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.createCR", error, `requestID: ${requestID}`, this.showLogs);
+        this.logger.error(util.funcF("db.createCR", error, `requestID: ${requestID}`, origSocketID, origUID));
         reject(error);
       };
     });
   };
 
-  fetchCRsByUserID(userID, cols = null, sortOrder = "DESC") {
-
+  fetchCRsByUserID(
+    origSocketID,
+    origUID,
+    userID,
+    cols = null,
+    sortOrder = "DESC"
+  ) {
     return new Promise((resolve, reject) => {
       try {
         if (userID == null) {
@@ -607,28 +677,33 @@ class Database {
               if (err) {
                 throw util.funcErr("db.fetchCRsByUserID", err);
               } else {
+                this.logger.debug(util.funcS("db.fetchCRsbyUserID", `userID: ${userID}`, origSocketID, origUID));
                 resolve();
               };
             } catch (error) {
-              util.handleFuncFailure("db.fetchCRsByUserID", error, `userID: ${userID}`, this.showLogs);
+              this.logger.warn(util.funcF("db.fetchCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.fetchCRsByUserID", error, `userID: ${userID}`, this.showLogs);
+        this.logger.error(util.funcF("db.fetchCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
         reject(error);
       };
     });
   };
 
-  deleteCRsByUserID(userID) {
-
+  deleteCRsByUserID(
+    origSocketID,
+    origUID,
+    userID
+  ) {
     return new Promise((resolve, reject) => {
       try {
         if (userID == null) {
           throw util.funcErr("db.deleteCRsByUserID", "missing required parameters");
         } else {
+
           let query = `
             DELETE FROM CRs
             WHERE originUserID = ? OR receivingUserID = ?;
@@ -640,18 +715,19 @@ class Database {
             try {
               if (err) {
                 throw util.funcErr("db.deleteCRsByUserID", err);
-              } else {
-                util.handleFuncSuccess("db.deleteCRsByUserID", `userID: ${userID}`, this.showLogs);
-                resolve();
               };
+
+              this.logger.debug(util.funcS("db.deleteCRsByUserID", `userID: ${userID}`, origSocketID, origUID));
+              resolve();
+
             } catch (error) {
-              util.handleFuncFailure("db.deleteCRsByUserID", error, `userID: ${userID}`, this.showLogs);
+              this.logger.warn(util.funcF("db.deleteCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
               reject(error);
             }
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.deleteCRsByUserID", error, `userID: ${userID}`, this.showLogs);
+        this.logger.error(util.funcF("db.deleteCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -660,8 +736,13 @@ class Database {
   // RUChannels Table Functions
   // =========================
 
-  createRUChannel(channelID, userID, creationDate) {
-
+  createRUChannel(
+    origSocketID,
+    origUID,
+    channelID,
+    userID,
+    creationDate
+  ) {
     return new Promise((resolve, reject) => {
       try {
         if (channelID == null || userID == null || creationDate == null) {
@@ -685,24 +766,31 @@ class Database {
                 throw util.funcErr("db.createRUChannel", err);
               } else if (result.affectedRows == 0) {
                 throw util.funcErr("db.createRUChannel", "failed to create RUChannel");
-              } else {
-                util.handleFuncSuccess("db.createRUChannel", `channelID: ${channelID}`, this.showLogs);
-                resolve();
               };
+
+              this.logger.debug(util.funcS("db.createRUChannel", `channelID: ${channelID}`, origSocketID, origUID));
+              resolve();
+
             } catch (error) {
-              util.handleFuncFailure("db.createRUChannel", error, `channelID: ${channelID}`, this.showLogs);
+              this.logger.warn(util.funcF("db.createRUChannel", error, `channelID: ${channelID}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.createRUChannel", error, `channelID: ${channelID}`, this.showLogs);
+        this.logger.error(util.funcF("db.createRUChannel", error, `channelID: ${channelID}`, origSocketID, origUID));
         reject(error);
       };
     });
   };
 
-  fetchRUChannelsByChannelID(channelID, userID, cols = null) {
+  fetchRUChannelsByChannelID(
+    origSocketID,
+    origUID,
+    channelID,
+    userID,
+    cols = null
+  ) {
     return new Promise((resolve, reject) => {
 
       try {
@@ -731,25 +819,30 @@ class Database {
           try {
             if (err) {
               throw util.funcErr("db.fetchRUChannelsByChannelID", err);
-            } else {
-              util.handleFuncSuccess("db.fetchRUChannelsByChannelID", `channelID: ${channelID}, userID: ${userID}`, this.showLogs);
-              resolve(result);
             };
+
+            this.logger.debug(util.funcS("db.fetchRUChannelsByChannelID", `channelID: ${channelID}, userID: ${userID}`, origSocketID, origUID));
+            resolve(result);
+
           } catch (error) {
-            util.handleFuncFailure("db.fetchRUChannelsByChannelID", error, `channelID: ${channelID}, userID: ${userID}`, this.showLogs);
+            this.logger.warn(util.funcF("db.fetchRUChannelsByChannelID", error, `channelID: ${channelID}, userID: ${userID}`, origSocketID, origUID));
             reject(error);
           };
         });
       } catch (error) {
-        util.handleFuncFailure("db.fetchRUChannelsByChannelID", error, `channelID: ${channelID}, userID: ${userID}`, this.showLogs);
+        this.logger.error(util.funcF("db.fetchRUChannelsByChannelID", error, `channelID: ${channelID}, userID: ${userID}`, origSocketID, origUID));
         reject(error)
       };
     });
   };
 
-  fetchRUChannelsbyUserID(userID, cols = null) {
+  fetchRUChannelsbyUserID(
+    origSocketID,
+    origUID,
+    userID,
+    cols = null
+  ) {
     return new Promise((resolve, reject) => {
-
       try {
         if (userID == null) {
           throw util.funcErr("db.fetchRUChannelsbyUserID", "missing required parameters");
@@ -781,25 +874,29 @@ class Database {
           try {
             if (err) {
               throw util.funcErr("db.fetchRUChannelsbyUserID", err);
-            } else {
-              util.handleFuncSuccess("db.fetchRUChannelsbyUserID", `userID: ${userID}`, this.showLogs);
-              resolve(result);
             };
+
+            this.logger.debug(util.funcS("db.fetchRUChannelsbyUserID", `userID: ${userID}`, origSocketID, origUID));
+            resolve(result);
+
           } catch (error) {
-            util.handleFuncFailure("db.fetchRUChannelsbyUserID", error, `userID: ${userID}`, this.showLogs);
+            this.logger.warn(util.funcF("db.fetchRUChannelsbyUserID", error, `userID: ${userID}`, origSocketID, origUID));
             reject(error);
           };
         });
       } catch (error) {
-        util.handleFuncFailure("db.fetchRUChannelsbyUserID", error, `userID: ${userID}`, this.showLogs);
+        this.logger.error(util.funcF("db.fetchRUChannelsbyUserID", error, `userID: ${userID}`, origSocketID, origUID));
         reject(error);
       };
     });
   };
 
-  deleteRUChannelsByUserID(userID) {
+  deleteRUChannelsByUserID(
+    origSocketID,
+    origUID,
+    userID
+  ) {
     return new Promise(async (resolve, reject) => {
-
       try {
         if (userID == null) {
           throw util.funcErr("db.deleteRUChannelsByUserID", "missing required parameters");
@@ -823,22 +920,23 @@ class Database {
                   throw util.funcErr("db.deleteRUChannelsByUserID", err);
                 } else if (result.affectedRows == 0) {
                   throw util.funcErr("db.deleteRUChannelsByUserID", "no channels were deleted");
-                } else {
-                  util.handleFuncSuccess("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: ${result.affectedRows}`, this.showLogs);
-                  resolve();
-                }
+                };
+
+                this.logger.debug(util.funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: ${result.affectedRows}`, origSocketID, origUID));
+                resolve();
+
               } catch (error) {
-                util.handleFuncFailure("db.deleteRUChannelsByUserID", error, `userID: ${userID}`, this.showLogs);
+                this.logger.warn(util.funcF("db.deleteRUChannelsByUserID", error, `userID: ${userID}, deleted: ${result.affectedRows}`, origSocketID, origUID));
                 reject(error);
               };
             });
           } else {
-            util.handleFuncSuccess("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: 0`, this.showLogs);
+            this.logger.debug(util.funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: 0`, origSocketID, origUID));
             resolve();
           };
         };
       } catch (error) {
-        util.handleFuncFailure("db.deleteRUChannelsByUserID", error, `userID: ${userID}`, this.showLogs);
+        this.logger.error(util.funcF("db.deleteRUChannelsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
         reject(error);
       };
     });
@@ -847,12 +945,18 @@ class Database {
   // EVENTS Table Functions
   // =====================
 
-  createEvent(eventName, datetime, originUserID, receivingUserID, packet) {
-
+  createEvent(
+    origSocketID,
+    eventName,
+    datetime,
+    origUID,
+    recUID,
+    packetBuffer
+  ) {
     return new Promise((resolve, reject) => {
 
       try {
-        if (eventName == null || datetime == null || originUserID == null || receivingUserID == null) {
+        if (eventName == null || datetime == null || origUID == null || recUID == null) {
           throw util.funcErr("db.createEvent", "missing required parameters");
         } else {
 
@@ -865,9 +969,9 @@ class Database {
           let values = [
             eventName,
             datetime,
-            originUserID,
-            receivingUserID,
-            packet
+            origUID,
+            recUID,
+            packetBuffer
           ];
 
           this.con.query(query, values, function (err, result) {
@@ -876,18 +980,18 @@ class Database {
                 throw util.funcErr("db.createEvent", err);
               } else if (result.affectedRows == 0) {
                 throw util.funcErr("db.createEvent", "failed to add event");
-              } else {
-                util.handleFuncSuccess("db.createEvent", `eventName: ${eventName}`, this.showLogs);
-                resolve();
-              };
+              }
+              this.logger.debug(util.funcS("db.createEvent", `eventName: ${eventName} recUID: ${recUID}`, origSocketID, origUID));
+              resolve();
+
             } catch (error) {
-              util.handleFuncFailure("db.createEvent", error, `eventName: ${eventName}`, this.showLogs);
+              this.logger.warn(util.funcF("db.createEvent", error, `eventName: ${eventName} recUID: ${recUID}`, origSocketID, origUID));
               reject(error);
             };
           });
         };
       } catch (error) {
-        util.handleFuncFailure("db.createEvent", error, `eventName: ${eventName}`, this.showLogs);
+        this.logger.error(util.funcF("db.createEvent", error, `eventName: ${eventName} recUID: ${recUID}`, origSocketID, origUID));
         reject(error);
       };
     });

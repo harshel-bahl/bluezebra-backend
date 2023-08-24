@@ -23,57 +23,50 @@ class utilities {
         };
     };
 
-    handleEventSuccess(eventName, info = null, showLogs = true) {
-        if (showLogs == true) {
-            if (info) {
-                console.log(`SUCCESS ${this.currDT} -- event: ${eventName}, info: (${info})`);
-            } else {
-                console.log(`SUCCESS ${this.currDT} -- event: ${eventName}`);
-            };
-        };
+    eventS(
+        eventName,
+        info = null,
+        origSocketID = null,
+        origUID = null,
+        recSocketID = null,
+        recUID = null
+    ) {
+        return `event: ${eventName}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
     };
 
-    handleEventFailure(eventName, err, info = null, showLogs = true) {
-        if (showLogs == true) {
-            if (info) {
-                console.log(`FAILED ${this.currDT} -- event: ${eventName}, err: (${err.message}), info: (${info})`);
-            } else {
-                console.log(`FAILED ${this.currDT} -- event: ${eventName}, err: (${err.message})`);
-            };
-        };
+    eventF(
+        eventName,
+        err,
+        info = null,
+        origSocketID = null,
+        origUID = null,
+        recSocketID = null,
+        recUID = null
+    ) {
+        return `event: ${eventName}, err: ${err.message}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
     };
 
-    handleFuncSuccess(func, info = null, showLogs = true) {
-        if (showLogs == true) {
-            if (info) {
-                console.log(`SUCCESS ${this.currDT} -- func: ${func}, info: (${info})`)
-            } else {
-                console.log(`SUCCESS ${this.currDT} -- func: ${func}`)
-            };
-        };
+    funcS(
+        func,
+        info = null,
+        origSocketID = null,
+        origUID = null,
+        recSocketID = null,
+        recUID = null) {
+        return `func: ${func}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
     };
 
-    handleFuncFailure(func, err, info, showLogs = true) {
-        if (showLogs == true) {
-            if (info) {
-                console.log(`FAILED ${this.currDT} -- func: ${func}, err: (${err.message}), info: (${info})`);
-            } else {
-                console.log(`FAILED ${this.currDT} -- func: ${func}, err: (${err.message})`)
-            };
-        };
+    funcF(
+        func,
+        err,
+        info = null,
+        origSocketID = null,
+        origUID = null,
+        recSocketID = null,
+        recUID = null
+    ) {
+        return `func: ${func}, err: ${err.message}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
     };
-
-    handleSuccess(info, showLogs = true) {
-        if (showLogs == true) {
-            console.log(`SUCCESS ${this.currDT} -- info: (${info})`)
-        };
-    };
-
-    handleFailure(err, info, showLogs = true) {
-        if (showLogs == true) {
-            console.log(`FAILED ${this.currDT} -- err: (${err.message}), info: (${info})`)
-        };
-    };
-}
+};
 
 module.exports = new utilities();
