@@ -11,18 +11,6 @@ class utilities {
         return uuidv4();
     }
 
-    funcErr(funcName, info) {
-        return new Error(`func: ${funcName}, info: ${info}`);
-    }
-
-    eventErr(event, info = null, response = null) {
-        if (response) {
-            return new Error(`event: ${event}, response: ${response}`);
-        } else {
-            return new Error(`event: ${event}, info: ${info}`);
-        };
-    };
-
     eventS(
         eventName,
         info = null,
@@ -31,8 +19,15 @@ class utilities {
         recSocketID = null,
         recUID = null
     ) {
-        return `event: ${eventName}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
-    };
+        let baseS = `event: ${eventName}`;
+        let infoS = info !== null ? `, info: ${info}` : '';
+        let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
+        let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
+        let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
+        let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
+    
+        return baseS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS;
+    }
 
     eventF(
         eventName,
@@ -43,8 +38,16 @@ class utilities {
         recSocketID = null,
         recUID = null
     ) {
-        return `event: ${eventName}, err: ${err.message}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
-    };
+        let baseS = `event: ${eventName}`;
+        let errS = typeof err.toString === 'function' ? `, err: ${err.toString()}` : `, err: null`;
+        let infoS = info !== null ? `, info: ${info}` : '';
+        let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
+        let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
+        let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
+        let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
+    
+        return baseS + errS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS;
+    }
 
     funcS(
         func,
@@ -52,10 +55,18 @@ class utilities {
         origSocketID = null,
         origUID = null,
         recSocketID = null,
-        recUID = null) {
-        return `func: ${func}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
-    };
-
+        recUID = null
+    ) {
+        let baseS = `func: ${func}`;
+        let infoS = info !== null ? `, info: ${info}` : '';
+        let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
+        let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
+        let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
+        let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
+    
+        return baseS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS;
+    }
+    
     funcF(
         func,
         err,
@@ -65,8 +76,16 @@ class utilities {
         recSocketID = null,
         recUID = null
     ) {
-        return `func: ${func}, err: ${err.message}${info != null ? `, info: ${info}` : ''}${origSocketID != null ? `, origSocketID: ${origSocketID}` : ''}${origUID != null ? `, origUID: ${origUID}` : ''}${recSocketID != null ? `, recSocketID: ${recSocketID}` : ''}${recUID != null ? `, recUID: ${recUID}` : ''}`;
-    };
+        let baseS = `func: ${func}`;
+        let errS = typeof err.toString === 'function' ? `, err: ${err.toString()}` : `, err: null`;
+        let infoS = info !== null ? `, info: ${info}` : '';
+        let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
+        let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
+        let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
+        let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
+    
+        return baseS + errS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS;
+    }
 };
 
 module.exports = new utilities();

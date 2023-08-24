@@ -1,6 +1,7 @@
 const dbC = require('./db');
 const eventFuncsC = require('./eventFuncs');
 const config = require('./config');
+const error = require('./error');
 const util = require('./utilities');
 const logger = require('./logger');
 
@@ -21,26 +22,33 @@ const io = new Server(server);
 // };
 // const server = https.createServer(credentials, app);
 
+// add JWTs for authentication
 
-let db = new dbC(showLogs);
-db.connect();
+let db = new dbC(logger);
+db.connectDB();
 
 let eventFuncs = new eventFuncsC(db, logger);
+
+function startServer() {
+    server.listen(3000, () => {
+        logger.info(util.funcS("startServer", "Server listening on localhost, port 3000"));
+    });
+}
 
 
 // connectedUsers
 // - userID: socketID
 let connectedUsers = {};
 
-
 io.on('connection', (socket) => {
 
-    logger.info(util.eventS("connection", undefined, socket.id));
+    logger.info(util.eventS("connection", "socket connected", socket.id));
 
     socket.userdata = {
         socketID: socket.id,
         userID: null,
-        connected: null
+        connected: null,
+        emittedPendingEvents: false
     };
 
     function connectUser(userID) {
@@ -66,7 +74,7 @@ io.on('connection', (socket) => {
 
         try {
             if (username == null || username == "") {
-                throw util.eventErr("checkUsername", "username is null or empty");
+                throw new error.EventError("checkUsername", `missing required parameters: (username: ${username})`);
             };
 
             let result = await db.fetchRecord(socket.id, null, "USERS", "username", username, undefined, undefined, "userID", false)
@@ -80,7 +88,7 @@ io.on('connection', (socket) => {
             logger.debug(util.eventS("checkUsername", `username: ${username}, result: ${result == undefined ? true : false}`, socket.id));
         } catch (error) {
             logger.error(util.eventF("checkUsername", error, `username: ${username}`, socket.id));
-            ack(error.message);
+            ack(false);
         }
     });
 
@@ -92,16 +100,16 @@ io.on('connection', (socket) => {
 
         try {
             if (packetBuffer == null) {
-                throw util.eventErr("createUser", "packet is null");
+                throw new error.EventError("createUser", `missing required parameters: (packetBuffer: ${packetBuffer})`);
             }
 
             let packetObject = JSON.parse(packetBuffer.toString());
             let packetProps = ["userID", "username", "avatar", "creationDate"];
 
             if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw util.eventErr("createUser", "packet property(s) missing");
+                throw new error.EventError("createUser", `packet property(s) missing: (packetObject: ${packetObject})`);
             } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw util.eventErr("createUser", "packet property(s) null");
+                throw new error.EventError("createUser", `packet property(s) null: (packetObject: ${packetObject})`);
             };
 
             try {
@@ -111,11 +119,11 @@ io.on('connection', (socket) => {
                 ack(null);
             } catch (error) {
                 logger.error(util.eventF("createUser", error, `userID: ${packetObject.userID}`, socket.id));
-                ack(error.message);
+                ack(false);
             };
         } catch (error) {
             logger.error(util.eventF("createUser", error, undefined, socket.id));
-            ack(error.message);
+            ack(false);
         };
     });
 
@@ -147,11 +155,11 @@ io.on('connection', (socket) => {
             await eventFuncs.emitPendingEvents(socket.id, userID, socket, 1000);
         } catch (error) {
             logger.error(util.eventF("connectUser", error, undefined, socket.id, userID));
-            ack(error.message);
+            ack(false);
         };
     });
 
-    socket.on('disconnect', async function () {
+    socket.on('disconnect', async (reason) => {
 
         let socketID = socket.id;
         let userID = socket.userdata.userID;
@@ -733,6 +741,5 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000, () => {
-    console.log("Server listening on localhost, port 3000");
-});
+
+startServer();

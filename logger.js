@@ -10,25 +10,35 @@ const logLevels = {
     debug: 3,
 };
 
+const consoleFormat = combine(
+    colorize({ all: true }),
+    timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss.SSS',
+    }),
+    align(),
+    printf((info) => `[${info.timestamp}] ${info.level} -- ${info.message}`)
+);
+
+const fileFormat = combine(
+    timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss.SSS',
+    }),
+    align(),
+    printf((info) => `[${info.timestamp}] ${info.level} -- ${info.message}`)
+);
+
 const fileRotateTransport = new winston.transports.DailyRotateFile({
-    filename: 'combined-%DATE%.log',
+    format: fileFormat,
+    filename: 'logs/combined-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     maxFiles: '20d',
-  });
+});
 
 const logger = winston.createLogger({
     levels: logLevels,
     level: process.env.LOG_LEVEL || 'debug',
-    format: combine(
-        colorize({ all: true }),
-        timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss.SSS',
-        }),
-        align(),
-        printf((info) => `[${info.timestamp}] ${info.level}: (${info.message})`)
-    ),
     transports: [
-        new winston.transports.Console(),
+        new winston.transports.Console({ format: consoleFormat }),
         fileRotateTransport,
     ],
 });

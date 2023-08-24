@@ -1,0 +1,22 @@
+[2023-08-24 06:44:03.954] [32minfo[39m: (		[32mfunc: db.connectDB, info: connected to MySQL DB[39m)
+[2023-08-24 06:44:49.897] info: (	func: db.connectDB, info: connected to MySQL DB)
+[2023-08-24 06:45:38.038] info: (	func: db.connectDB, info: connected to MySQL DB)
+[2023-08-24 06:57:11.249] info -- 	func: db.connectDB, info: connected to MySQL DB
+[2023-08-24 07:05:30.276] info -- func: startServer, info: Server listening on localhost, port 3000
+[2023-08-24 07:05:30.279] info -- func: db.connectDB, info: connected to MySQL DB
+[2023-08-24 07:05:30.294] info -- func: db.createTables, info: created 'users' table if not present
+[2023-08-24 07:05:30.296] info -- func: db.createTables, info: created 'CRs' table if not present
+[2023-08-24 07:05:30.297] info -- func: db.createTables, info: created 'RUChannels' table if not present
+[2023-08-24 07:05:30.300] info -- func: db.createTables, info: created 'events' table if not present
+[2023-08-24 07:06:32.700] info -- func: startServer, info: Server listening on localhost, port 3000
+[2023-08-24 07:06:32.703] info -- func: db.connectDB, info: connected to MySQL DB
+[2023-08-24 07:06:32.706] info -- func: db.createTables, info: created 'users' table if not present
+[2023-08-24 07:06:32.707] info -- func: db.createTables, info: created 'CRs' table if not present
+[2023-08-24 07:06:32.707] info -- func: db.createTables, info: created 'RUChannels' table if not present
+[2023-08-24 07:06:32.708] info -- func: db.createTables, info: created 'events' table if not present
+[2023-08-24 07:07:09.625] info -- 	func: startServer, info: Server listening on localhost, port 3000
+[2023-08-24 07:07:09.628] info -- 	func: db.connectDB, info: connected to MySQL DB
+[2023-08-24 07:07:09.631] info -- 	func: db.createTables, info: created 'users' table if not present
+[2023-08-24 07:07:09.631] info -- 	func: db.createTables, info: created 'CRs' table if not present
+[2023-08-24 07:07:09.632] info -- 	func: db.createTables, info: created 'RUChannels' table if not present
+[2023-08-24 07:07:09.632] info -- 	func: db.createTables, info: created 'events' table if not present
