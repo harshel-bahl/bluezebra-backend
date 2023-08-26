@@ -1,6 +1,21 @@
 var mysql = require('mysql');
-const util = require('./utilities');
-const error = require('./error');
+
+const {
+  DBErr,
+  EmptyDBResult,
+  MultipleDBResults,
+  FuncErr
+} = require('./error');
+
+const {
+  currDT,
+  UUID,
+  isNull,
+  isNotNull,
+  checkParams,
+  funcS,
+  errLog,
+} = require('./utilities');
 
 class Database {
 
@@ -23,15 +38,15 @@ class Database {
     this.con.connect((err) => {
       try {
         if (err) {
-          throw new error.DBError("db.connectDC", err.message);
+          throw new DBErr(err.message);
         }
 
-        this.logger.info(util.funcS("db.connectDB", "connected to MySQL DB"))
+        this.logger.info(funcS("db.connectDB", "connected to MySQL DB"))
         this.connected = true;
 
         this.createTables();
       } catch (error) {
-        this.logger.error(util.funcF("db.connectDB", error));
+        this.logger.error(errLog(error))
         this.connected = false;
       }
     });
@@ -79,48 +94,48 @@ class Database {
     this.con.query(table1, (err, result) => {
       try {
         if (err) {
-          throw new error.DBError("db.createTables", err.message);
+          throw new DBErr(err.message);
         };
 
-        this.logger.info(util.funcS("db.createTables", "created 'users' table if not present"));
+        this.logger.info(funcS("db.createTables", "created 'users' table if not present"));
       } catch (error) {
-        this.logger.error(util.funcF("db.createTables", error, "failed to create 'users' table"));
+        this.logger.error(errLog(error, "failed to create 'users' table"));
       };
     });
 
     this.con.query(table2, (err, result) => {
       try {
         if (err) {
-          throw new error.DBError("db.createTables", err.message);
+          throw new DBErr(err.message);
         };
 
-        this.logger.info(util.funcS("db.createTables", "created 'CRs' table if not present"));
+        this.logger.info(funcS("db.createTables", "created 'CRs' table if not present"));
       } catch (error) {
-        this.logger.error(util.funcF("db.createTables", error, "failed to create 'CRs' table"));
+        this.logger.error(errLog(error, "failed to create 'CRs' table"));
       };
     });
 
     this.con.query(table3, (err, result) => {
       try {
         if (err) {
-          throw new error.DBError("db.createTables", err.message);
+          throw new DBErr(err.message);
         };
 
-        this.logger.info(util.funcS("db.createTables", "created 'RUChannels' table if not present"));
+        this.logger.info(funcS("db.createTables", "created 'RUChannels' table if not present"));
       } catch (error) {
-        this.logger.error(util.funcF("db.createTables", error, "failed to create 'RUChannels' table"));
+        this.logger.error(errLog(error, "failed to create 'RUChannels' table"));
       };
     });
 
     this.con.query(table4, (err, result) => {
       try {
         if (err) {
-          throw new error.DBError("db.createTables", err.message);
+          throw new DBErr(err.message);
         };
 
-        this.logger.info(util.funcS("db.createTables", "created 'events' table if not present"));
+        this.logger.info(funcS("db.createTables", "created 'events' table if not present"));
       } catch (error) {
-        this.logger.error(util.funcF("db.createTables", error, "failed to create 'events' table"));
+        this.logger.error(errLog(error, "failed to create 'events' table"));
       };
     });
   };
@@ -132,8 +147,8 @@ class Database {
   // fetchRecord
   // predProps should be a primary keys to ensure that only one record is fetched
   fetchRecord(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     table,
     predProp1,
     predValue1,
@@ -141,58 +156,59 @@ class Database {
     predValue2 = null,
     cols = null,
     errorOnEmpty = true,
-    errorOnMultiple = false) {
-
+    errorOnMultiple = false
+  ) {
     return new Promise((resolve, reject) => {
       try {
-        if (table == null || predProp1 == null || predValue1 == null) {
-          throw new error.DBError("db.fetchRecord", `missing required parameters: table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}`);
-        } else {
 
-          let query = `
+        checkParams({
+          table: table,
+          predProp1: predProp1,
+          predValue: predValue1
+        }, ["table", "predProp1", "predValue1"]);
+
+        let query = `
             SELECT ${cols == null ? "*" : "??"}
             FROM ??
             WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
           `;
 
-          let values = [
-            table,
-            predProp1,
-            predValue1,
-            predProp2,
-            predValue2
-          ];
+        let values = [
+          table,
+          predProp1,
+          predValue1,
+          predProp2,
+          predValue2
+        ];
 
-          if (cols !== null) {
-            values = [cols].concat(values);
-          };
-
-          if (predProp2 !== null && predValue2 !== null) {
-            values.push(predProp2);
-            values.push(predValue2);
-          };
-
-          this.con.query(query, values, (err, result, fields) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.fetchRecord", err.message);
-              } else if (result.length == 0 && errorOnEmpty) {
-                throw new error.DBError("db.fetchRecord", "no results");
-              } else if (result.length > 1 && errorOnMultiple) {
-                throw new error.DBError("db.fetchRecord", "multiple results");
-              } else {
-                this.logger.debug(util.funcS("db.fetchRecord", `table: ${table}`, origSocketID, origUID));
-                resolve(result[0]);
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.fetchRecord", error, `table: ${table}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
+        if (cols !== null) {
+          values = [cols].concat(values);
         };
 
+        if (predProp2 !== null && predValue2 !== null) {
+          values.push(predProp2);
+          values.push(predValue2);
+        };
+
+        this.con.query(query, values, (err, result, fields) => {
+          try {
+            if (err) {
+              throw new DBErr("db.fetchRecord", err.message);
+            } else if (result.length == 0 && errorOnEmpty) {
+              throw new EmptyDBResult();
+            } else if (result.length > 1 && errorOnMultiple) {
+              throw new MultipleDBResults();
+            } else {
+              this.logger.debug(funcS("db.fetchRecord", `table: ${table}`, socketID, UID));
+              resolve(result[0]);
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `table: ${table}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.fetchRecord", error, `table: ${table}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `table: ${table}`, socketID, UID));
         reject(error);
       };
     });
@@ -201,8 +217,8 @@ class Database {
   // fetchRecords
   //
   fetchRecords(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     table,
     predProp,
     predValue,
@@ -210,15 +226,18 @@ class Database {
     sortColumn = null,
     sortOrder = "DESC",
     limit = null,
-    failOnEmpty = false) {
-
+    failOnEmpty = false
+  ) {
     return new Promise((resolve, reject) => {
       try {
-        if (table == null || predProp == null || predValue == null) {
-          throw new error.DBError("db.fetchRecords", `missing required parameters: table: ${table}, predProp: ${predProp}, predValue: ${predValue}`);
-        } else {
 
-          let query = `
+        checkParams({
+          table: table,
+          predProp: predProp,
+          predValue: predValue
+        }, ["table", "predProp", "predValue"]);
+
+        let query = `
             SELECT ${cols == null ? "*" : "??"}
             FROM ??
             WHERE ?? = ?
@@ -226,44 +245,42 @@ class Database {
             ${limit != null ? `LIMIT ?` : ""}
           `;
 
-          let values = [
-            table,
-            predProp,
-            predValue
-          ];
+        let values = [
+          table,
+          predProp,
+          predValue
+        ];
 
-          if (cols !== null) {
-            values = [cols].concat(values);
-          };
-
-          if (sortColumn !== null) {
-            values.push(sortColumn);
-            values.push(sortOrder);
-          };
-
-          if (limit !== null) {
-            values.push(limit);
-          };
-
-          this.con.query(query, values, (err, result, fields) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.fetchRecords", err.message);
-              } else if (result.length == 0 && failOnEmpty) {
-                throw new error.DBError("db.fetchRecords", "no results");
-              } else {
-                this.logger.debug(util.funcS("db.fetchRecords", `table: ${table}`, origSocketID, origUID));
-                resolve(result);
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.fetchRecords", error, `table: ${table}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
+        if (cols !== null) {
+          values = [cols].concat(values);
         };
 
+        if (sortColumn !== null) {
+          values.push(sortColumn);
+          values.push(sortOrder);
+        };
+
+        if (limit !== null) {
+          values.push(limit);
+        };
+
+        this.con.query(query, values, (err, result, fields) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else if (result.length == 0 && failOnEmpty) {
+              throw new EmptyDBResult();
+            } else {
+              this.logger.debug(funcS("db.fetchRecords", `table: ${table}`, socketID, UID));
+              resolve(result);
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `table: ${table}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.fetchRecords", error, `table: ${table}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `table: ${table}`, socketID, UID));
         reject(error);
       };
     });
@@ -275,62 +292,65 @@ class Database {
   // updateRecord
   // predProps should be a primary keys to ensure that only one record is updated
   updateRecord(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     table,
     predProp1,
     predValue1,
     predProp2 = null,
     predValue2 = null,
     updateProp,
-    updateValue) {
-
+    updateValue
+  ) {
     return new Promise((resolve, reject) => {
-
       try {
-        if (table == null || predProp1 == null || predValue1 == null || updateProp == null || updateValue == null) {
-          throw new error.DBError("db.updateRecord", `missing required parameters: table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}, updateProp: ${updateProp}, updateValue: ${updateValue}`);
-        } else {
 
-          let query = `
+        checkParams({
+          table: table,
+          predProp1: predProp1,
+          predValue1: predValue1,
+          updateProp: updateProp,
+          updateValue: updateValue
+        }, ["table", "predProp1", "predValue1", "updateProp", "updateValue"]);
+
+        let query = `
             UPDATE ??
             SET ?? = ?
             WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
           `;
 
-          let values = [
-            table,
-            updateProp,
-            updateValue,
-            predProp1,
-            predValue1
-          ];
+        let values = [
+          table,
+          updateProp,
+          updateValue,
+          predProp1,
+          predValue1
+        ];
 
-          if (predProp2 !== null && predValue2 !== null) {
-            values.push(predProp2);
-            values.push(predValue2);
-          };
-
-          this.con.query(query, values, (err, result, fields) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.updateRecord", err.message);
-              } else if (result.affectedRows == 0) {
-                throw new error.DBError("db.updateRecord", "no records found");
-              } else if (result.affectedRows == 1 && result.changedRows == 0) {
-                throw new error.DBError("db.updateRecord", "no changes made");
-              } else {
-                this.logger.debug(util.funcS("db.updateRecord", `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.updateRecord", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
+        if (predProp2 !== null && predValue2 !== null) {
+          values.push(predProp2);
+          values.push(predValue2);
         };
+
+        this.con.query(query, values, (err, result, fields) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else if (result.affectedRows == 0) {
+              throw new EmptyDBResult();
+            } else if (result.affectedRows == 1 && result.changedRows == 0) {
+              throw new DBErr("no changes made");
+            } else {
+              this.logger.debug(funcS("db.updateRecord", `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+              resolve();
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.updateRecord", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
         reject(error);
       };
     });
@@ -339,54 +359,57 @@ class Database {
   // updateRecords
   // 
   updateRecords(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     table,
     predProp,
     predValue,
     updateProp,
     updateValue,
-    failOnEmpty = false) {
-
+    failOnEmpty = false
+  ) {
     return new Promise((resolve, reject) => {
-
       try {
-        if (table == null || predProp == null || predValue == null || updateProp == null || updateValue == null) {
-          throw new error.DBError("db.updateRecords", `missing required parameters: table: ${table}, predProp: ${predProp}, predValue: ${predValue}, updateProp: ${updateProp}, updateValue: ${updateValue}`);
-        } else {
 
-          let query = `
+        checkParams({
+          table: table,
+          predProp: predProp,
+          predValue: predValue,
+          updateProp: updateProp,
+          updateValue: updateValue
+        }, ["table", "predProp", "predValue", "updateProp", "updateValue"]);
+
+        let query = `
             UPDATE ??
             SET ?? = ?
             WHERE ?? = ?
           `;
 
-          let values = [
-            table,
-            updateProp,
-            updateValue,
-            predProp,
-            predValue
-          ];
+        let values = [
+          table,
+          updateProp,
+          updateValue,
+          predProp,
+          predValue
+        ];
 
-          this.con.query(query, values, (err, result, fields) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.updateRecords", err.message);
-              } else if (result.affectedRows == 0 && failOnEmpty) {
-                throw new error.DBError("db.updateRecords", "no records found");
-              } else {
-                this.logger.debug(util.funcS("db.updateRecords", `table: ${table}, updateProp: ${updateProp}, updated: ${result.changedRows}`, origSocketID, origUID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.updateRecords", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
-              reject(error);
+        this.con.query(query, values, (err, result, fields) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else if (result.affectedRows == 0 && failOnEmpty) {
+              throw new EmptyDBResult();
+            } else {
+              this.logger.debug(funcS("db.updateRecords", `table: ${table}, updateProp: ${updateProp}, updated: ${result.changedRows}`, socketID, UID));
+              resolve();
             };
-          });
-        };
+          } catch (error) {
+            this.logger.warn(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.updateRecords", error, `table: ${table}, updateProp: ${updateProp}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
         reject(error);
       };
     });
@@ -398,56 +421,57 @@ class Database {
   // deleteRecord
   //
   deleteRecord(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     table,
     predProp1,
     predValue1,
     predProp2 = null,
-    predValue2 = null) {
-
+    predValue2 = null
+  ) {
     return new Promise((resolve, reject) => {
-
       try {
-        if (table == null || predProp1 == null || predValue1 == null) {
-          throw new error.DBError("db.deleteRecord", `missing required parameters: table: ${table}, predProp1: ${predProp1}, predValue1: ${predValue1}`);
-        } else {
 
-          let query = `
+        checkParams({
+          table: table,
+          predProp1: predProp1,
+          predValue1: predValue1
+        }, ["table", "predProp1", "predValue1"]);
+
+        let query = `
             DELETE
             FROM ??
             WHERE ?? = ? ${predProp2 !== null && predValue2 !== null ? "AND ?? = ?" : ""}
           `;
 
-          let values = [
-            table,
-            predProp1,
-            predValue1
-          ];
+        let values = [
+          table,
+          predProp1,
+          predValue1
+        ];
 
-          if (predProp2 !== null && predValue2 !== null) {
-            values.push(predProp2);
-            values.push(predValue2);
-          };
-
-          this.con.query(query, values, (err, result, fields) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.deleteRecord", err.message);
-              } else if (result.affectedRows == 0) {
-                throw new error.DBError("db.deleteRecord", "no records found");
-              } else {
-                this.logger.debug(util.funcS("db.deleteRecord", `table: ${table}, predProp1: ${predProp1}`, origSocketID, origUID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.deleteRecord", error, `table: ${table}, predProp1: ${predProp1}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
+        if (predProp2 !== null && predValue2 !== null) {
+          values.push(predProp2);
+          values.push(predValue2);
         };
+
+        this.con.query(query, values, (err, result, fields) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else if (result.affectedRows == 0) {
+              throw new EmptyDBResult
+            } else {
+              this.logger.debug(funcS("db.deleteRecord", `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
+              resolve();
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.deleteRecord", error, `table: ${table}, predProp1: ${predProp1}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
         reject(error);
       };
     });
@@ -456,50 +480,51 @@ class Database {
   // deleteRecords
   // 
   deleteRecords(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     table,
     predProp,
     predValue,
-    failOnEmpty = false) {
-
+    failOnEmpty = false
+  ) {
     return new Promise((resolve, reject) => {
-
       try {
-        if (table == null || predProp == null || predValue == null) {
-          throw new error.DBError("db.deleteRecords", `missing required parameters: table: ${table}, predProp: ${predProp}, predValue: ${predValue}`);
-        } else {
 
-          let query = `
+        checkParams({
+          table: table,
+          predProp: predProp,
+          predValue: predValue
+        }, ["table", "predProp", "predValue"]);
+
+        let query = `
             DELETE
             FROM ??
             WHERE ?? = ?
           `;
 
-          let values = [
-            table,
-            predProp,
-            predValue
-          ];
+        let values = [
+          table,
+          predProp,
+          predValue
+        ];
 
-          this.con.query(query, values, (err, result, fields) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.deleteRecords", err.message);
-              } else if (result.affectedRows == 0 && failOnEmpty) {
-                throw new error.DBError("db.deleteRecords", "no records found");
-              } else {
-                this.logger.debug(util.funcS("db.deleteRecords", `table: ${table}, predProp: ${predProp}, deleted: ${result.affectedRows}`, origSocketID, origUID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.deleteRecords", error, `table: ${table}, predProp: ${predProp}`, origSocketID, origUID));
-              reject(error);
+        this.con.query(query, values, (err, result, fields) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else if (result.affectedRows == 0 && failOnEmpty) {
+              throw new EmptyDBResult
+            } else {
+              this.logger.debug(funcS("db.deleteRecords", `table: ${table}, predProp: ${predProp}, deleted: ${result.affectedRows}`, socketID, UID));
+              resolve();
             };
-          });
-        };
+          } catch (error) {
+            this.logger.warn(errLog(error, `table: ${table}, predProp: ${predProp}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.deleteRecords", error, `table: ${table}, predProp: ${predProp}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `table: ${table}, predProp: ${predProp}`, socketID, UID));
         reject(error);
       }
     });
@@ -509,7 +534,7 @@ class Database {
   // =====================
 
   createUser(
-    origSocketID = null,
+    socketID = null,
     userID,
     username,
     avatar,
@@ -517,55 +542,58 @@ class Database {
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (userID == null || username == null || avatar == null || creationDate == null) {
-          throw new error.DBError("db.createUser", `missing required parameters: userID: ${userID}, username: ${username}, avatar: ${avatar}, creationDate: ${creationDate}`);
-        } else {
-          let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`;
 
-          let values = [
-            userID,
-            username,
-            avatar,
-            creationDate,
-            null
-          ];
+        checkParams({
+          userID: userID,
+          username: username,
+          avatar: avatar,
+          creationDate: creationDate
+        }, ["userID", "username", "avatar", "creationDate"]);
 
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.createUser", err.message);
-              } else if (result.affectedRows == 0) {
-                throw new error.DBError("db.createUser", "failed to create user");
-              } else {
-                this.logger.debug(util.funcS("db.createUser", `userID: ${userID}, username: ${username}`, origSocketID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.createUser", error, `userID: ${userID}, username: ${username}`, origSocketID));
-              reject(error);
-            }
-          });
-        };
+        let query = `INSERT INTO USERS VALUES (?, ?, ?, ?, ?)`;
+
+        let values = [
+          userID,
+          username,
+          avatar,
+          creationDate,
+          null
+        ];
+
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else {
+              this.logger.debug(funcS("db.createUser", `userID: ${userID}, username: ${username}`, socketID));
+              resolve();
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `userID: ${userID}, username: ${username}`, socketID));
+            reject(error);
+          }
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.createUser", error, `userID: ${userID}, username: ${username}`, origSocketID));
+        this.logger.error(errLog(error, `userID: ${userID}, username: ${username}`, socketID));
         reject(error);
       }
     });
   };
 
   fetchUsersByUsername(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     username,
     limit = 10
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (username == null) {
-          throw new error.DBError("db.fetchUsersByUsername", `missing required parameters: username: ${username}`);
-        } else {
 
-          let query = `
+        checkParams({
+          username: username
+        }, ["username"]);
+
+        let query = `
             (SELECT * FROM USERS WHERE username = ?)
             UNION ALL
             (SELECT * FROM USERS WHERE username LIKE ? AND username != ? ORDER BY username LIMIT 10)
@@ -573,24 +601,23 @@ class Database {
             LIMIT ?;
           `;
 
-          let values = [username, username + '%', username, username, limit];
+        let values = [username, username + '%', username, username, limit];
 
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.fetchUsersByUsername", err.message);
-              } else {
-                this.logger.debug(util.funcS("db.fetchUsersByUsername", `username: ${username}`, origSocketID, origUID));
-                resolve(result);
-              }
-            } catch (error) {
-              this.logger.warn(util.funcF("db.fetchUsersByUsername", error, `username: ${username}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
-        };
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else {
+              this.logger.debug(funcS("db.fetchUsersByUsername", `username: ${username}`, socketID, UID));
+              resolve(result);
+            }
+          } catch (error) {
+            this.logger.warn(errLog(error, `username: ${username}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.fetchUsersByUsername", error, `username: ${username}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `username: ${username}`, socketID, UID));
         reject(error);
       };
     });
@@ -600,132 +627,137 @@ class Database {
   // ==================
 
   createCR(
-    origSocketID = null,
+    socketID = null,
     requestID,
-    origUID,
+    UID,
     recUID,
     requestDate
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (requestID == null || origUID == null || recUID == null || requestDate == null) {
-          throw new error.DBError("db.createCR", `missing required parameters: requestID: ${requestID}, origUID: ${origUID}, recUID: ${recUID}, requestDate: ${requestDate}`);
-        } else if (originUserID == receivingUserID) {
-          throw new error.DBError("db.createCR", "origUID and recUID cannot be the same");
-        } else {
 
-          let query = `INSERT INTO CRs VALUES (?, ?, ?, ?)`;
+        checkParams({
+          requestID: requestID,
+          UID: UID,
+          recUID: recUID,
+          requestDate: requestDate
+        }, ["requestID", "UID", "recUID", "requestDate"]);
 
-          let values = [
-            requestID,
-            origUID,
-            recUID,
-            requestDate
-          ];
+        if (originUserID == receivingUserID) {
+          throw new FuncErr("UID and recUID cannot be the same");
+        }
 
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.createCR", err.message);
-              } else {
-                this.logger.debug(util.funcS("db.createCR", `requestID: ${requestID}`, origSocketID, origUID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.createCR", error, `requestID: ${requestID}`, origSocketID, origUID));
-              reject(error);
-            }
-          });
-        };
+        let query = `INSERT INTO CRs VALUES (?, ?, ?, ?)`;
+
+        let values = [
+          requestID,
+          UID,
+          recUID,
+          requestDate
+        ];
+
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else {
+              this.logger.debug(funcS("db.createCR", `requestID: ${requestID}`, socketID, UID));
+              resolve();
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `requestID: ${requestID}`, socketID, UID));
+            reject(error);
+          }
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.createCR", error, `requestID: ${requestID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `requestID: ${requestID}`, socketID, UID));
         reject(error);
       };
     });
   };
 
   fetchCRsByUserID(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     userID,
     cols = null,
     sortOrder = "DESC"
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (userID == null) {
-          throw new error.DBError("db.fetchCRsByUserID", `missing required parameters: userID: ${userID}`);
-        } else {
 
-          let query = `
+        checkParams({
+          userID: userID
+        }, ["userID"]);
+
+        let query = `
             SELECT ${cols == null ? "*" : "??"}
             FROM CRs
             WHERE originUserID = ? OR receivingUserID = ?
             ORDER BY requestDate ${sortOrder};
           `;
 
-          let values = [userID, userID];
+        let values = [userID, userID];
 
-          if (cols !== null) {
-            values = [cols].concat(values);
-          };
-
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.fetchCRsByUserID", err.message);
-              } else {
-                this.logger.debug(util.funcS("db.fetchCRsbyUserID", `userID: ${userID}`, origSocketID, origUID));
-                resolve();
-              };
-            } catch (error) {
-              this.logger.warn(util.funcF("db.fetchCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
+        if (cols !== null) {
+          values = [cols].concat(values);
         };
+
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            } else {
+              this.logger.debug(funcS("db.fetchCRsbyUserID", `userID: ${userID}`, socketID, UID));
+              resolve();
+            };
+          } catch (error) {
+            this.logger.warn(errLog(error, `userID: ${userID}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.fetchCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
         reject(error);
       };
     });
   };
 
   deleteCRsByUserID(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     userID
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (userID == null) {
-          throw new error.DBError("db.deleteCRsByUserID", `missing required parameters: userID: ${userID}`);
-        } else {
 
-          let query = `
+        checkParams({
+          userID: userID
+        }, ["userID"]);
+
+        let query = `
             DELETE FROM CRs
             WHERE originUserID = ? OR receivingUserID = ?;
           `;
 
-          let values = [userID, userID];
+        let values = [userID, userID];
 
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.deleteCRsByUserID", err.message);
-              };
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            };
 
-              this.logger.debug(util.funcS("db.deleteCRsByUserID", `userID: ${userID}`, origSocketID, origUID));
-              resolve();
+            this.logger.debug(funcS("db.deleteCRsByUserID", `userID: ${userID}`, socketID, UID));
+            resolve();
 
-            } catch (error) {
-              this.logger.warn(util.funcF("db.deleteCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
-              reject(error);
-            }
-          });
-        };
+          } catch (error) {
+            this.logger.warn(errLog(error, `userID: ${userID}`, socketID, UID));
+            reject(error);
+          }
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.deleteCRsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
         reject(error);
       };
     });
@@ -735,64 +767,66 @@ class Database {
   // =========================
 
   createRUChannel(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     channelID,
     userID,
     creationDate
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (channelID == null || userID == null || creationDate == null) {
-          throw new error.DBError("db.createRUChannel", `missing required parameters: channelID: ${channelID}, userID: ${userID}, creationDate: ${creationDate}`);
-        } else {
+        checkParams({
+          channelID: channelID,
+          userID: userID,
+          creationDate: creationDate
+        }, ["channelID", "userID", "creationDate"]);
 
-          let query = `
+        let query = `
             INSERT INTO RUChannels 
             VALUES (?, ?, ?)
           `;
 
-          let values = [
-            channelID,
-            userID,
-            creationDate
-          ];
+        let values = [
+          channelID,
+          userID,
+          creationDate
+        ];
 
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.createRUChannel", err.message);
-              } 
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            }
 
-              this.logger.debug(util.funcS("db.createRUChannel", `channelID: ${channelID}`, origSocketID, origUID));
-              resolve();
+            this.logger.debug(funcS("db.createRUChannel", `channelID: ${channelID}`, socketID, UID));
+            resolve();
 
-            } catch (error) {
-              this.logger.warn(util.funcF("db.createRUChannel", error, `channelID: ${channelID}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
-        };
+          } catch (error) {
+            this.logger.warn(errLog(error, `channelID: ${channelID}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.createRUChannel", error, `channelID: ${channelID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `channelID: ${channelID}`, socketID, UID));
         reject(error);
       };
     });
   };
 
   fetchRUChannelsByChannelID(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     channelID,
     userID,
     cols = null
   ) {
     return new Promise((resolve, reject) => {
-
       try {
-        if (channelID == null || userID == null) {
-          throw new error.DBError("db.fetchRUChannelsByChannelID", `missing required parameters: channelID: ${channelID}, userID: ${userID}`);
-        };
+
+        checkParams({
+          channelID: channelID,
+          userID: userID
+        }, ["channelID", "userID"]);
 
         let selectCols;
         if (Array.isArray(cols)) {
@@ -814,35 +848,36 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new error.DBError("db.fetchRUChannelsByChannelID", err.message);
+              throw new DBErr(err.message);
             };
 
-            this.logger.debug(util.funcS("db.fetchRUChannelsByChannelID", `channelID: ${channelID}, userID: ${userID}`, origSocketID, origUID));
+            this.logger.debug(funcS("db.fetchRUChannelsByChannelID", `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
             resolve(result);
 
           } catch (error) {
-            this.logger.warn(util.funcF("db.fetchRUChannelsByChannelID", error, `channelID: ${channelID}, userID: ${userID}`, origSocketID, origUID));
+            this.logger.warn(errLog(error, `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(util.funcF("db.fetchRUChannelsByChannelID", error, `channelID: ${channelID}, userID: ${userID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
         reject(error)
       };
     });
   };
 
   fetchRUChannelsbyUserID(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     userID,
     cols = null
   ) {
     return new Promise((resolve, reject) => {
       try {
-        if (userID == null) {
-          throw new error.DBError("db.fetchRUChannelsbyUserID", `missing required parameters: userID: ${userID}`);
-        };
+
+        checkParams({
+          userID: userID
+        }, ["userID"]);
 
         let selectCols;
         if (Array.isArray(cols)) {
@@ -869,68 +904,68 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new error.DBError("db.fetchRUChannelsbyUserID", err.message);
+              throw new DBErr(err.message);
             };
 
-            this.logger.debug(util.funcS("db.fetchRUChannelsbyUserID", `userID: ${userID}`, origSocketID, origUID));
+            this.logger.debug(funcS("db.fetchRUChannelsbyUserID", `userID: ${userID}`, socketID, UID));
             resolve(result);
 
           } catch (error) {
-            this.logger.warn(util.funcF("db.fetchRUChannelsbyUserID", error, `userID: ${userID}`, origSocketID, origUID));
+            this.logger.warn(errLog(error, `userID: ${userID}`, socketID, UID));
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(util.funcF("db.fetchRUChannelsbyUserID", error, `userID: ${userID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
         reject(error);
       };
     });
   };
 
   deleteRUChannelsByUserID(
-    origSocketID = null,
-    origUID = null,
+    socketID = null,
+    UID = null,
     userID
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-        if (userID == null) {
-          throw new error.DBError("db.deleteRUChannelsByUserID", `missing required parameters: userID: ${userID}`);
-        } else {
 
-          let channelRecords = await this.fetchRecords("RUChannels", "userID", userID, "channelID");
+        checkParams({
+          userID: userID
+        }, ["userID"]);
 
-          if (channelRecords.length > 0) {
+        let channelRecords = await this.fetchRecords(socketID, UID, "RUChannels", "userID", userID, "channelID");
 
-            let query = `
+        if (channelRecords.length > 0) {
+
+          let query = `
               DELETE 
               FROM RUChannels 
               WHERE channelID IN (?);
             `;
 
-            let values = [channelRecords.map(channelRecord => channelRecord.channelID)];
+          let values = [channelRecords.map(channelRecord => channelRecord.channelID)];
 
-            this.con.query(query, values, (err, result) => {
-              try {
-                if (err) {
-                  throw new error.DBError("db.deleteRUChannelsByUserID", err.message);
-                } 
+          this.con.query(query, values, (err, result) => {
+            try {
+              if (err) {
+                throw new DBErr(err.message);
+              }
 
-                this.logger.debug(util.funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: ${result.affectedRows}`, origSocketID, origUID));
-                resolve();
+              this.logger.debug(funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: ${result.affectedRows}`, socketID, UID));
+              resolve();
 
-              } catch (error) {
-                this.logger.warn(util.funcF("db.deleteRUChannelsByUserID", error, `userID: ${userID}, deleted: ${result.affectedRows}`, origSocketID, origUID));
-                reject(error);
-              };
-            });
-          } else {
-            this.logger.debug(util.funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: 0`, origSocketID, origUID));
-            resolve();
-          };
+            } catch (error) {
+              this.logger.warn(errLog(error, `userID: ${userID}, deleted: ${result.affectedRows}`, socketID, UID));
+              reject(error);
+            };
+          });
+        } else {
+          this.logger.debug(funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: 0`, socketID, UID));
+          resolve();
         };
       } catch (error) {
-        this.logger.error(util.funcF("db.deleteRUChannelsByUserID", error, `userID: ${userID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
         reject(error);
       };
     });
@@ -940,51 +975,53 @@ class Database {
   // =====================
 
   createEvent(
-    origSocketID = null,
+    socketID = null,
     eventName,
     datetime,
-    origUID,
+    UID,
     recUID,
     packetBuffer
   ) {
     return new Promise((resolve, reject) => {
-
       try {
-        if (eventName == null || datetime == null || origUID == null || recUID == null) {
-          throw new error.DBError("db.createEvent", `missing required parameters: eventName: ${eventName}, datetime: ${datetime}, origUID: ${origUID}, recUID: ${recUID}`);
-        } else {
 
-          let query = `
+        checkParams({
+          eventName: eventName,
+          datetime: datetime,
+          UID: UID,
+          recUID: recUID
+        }, ["eventName", "datetime", "UID", "recUID"]);
+
+        let query = `
             INSERT INTO EVENTS 
             (eventName, datetime, originUserID, receivingUserID, packet) 
             VALUES (?, ?, ?, ?, ?)
           `;
 
-          let values = [
-            eventName,
-            datetime,
-            origUID,
-            recUID,
-            packetBuffer
-          ];
+        let values = [
+          eventName,
+          datetime,
+          UID,
+          recUID,
+          packetBuffer
+        ];
 
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new error.DBError("db.createEvent", err.message);
-              } 
+        this.con.query(query, values, (err, result) => {
+          try {
+            if (err) {
+              throw new DBErr(err.message);
+            }
 
-              this.logger.debug(util.funcS("db.createEvent", `eventName: ${eventName} recUID: ${recUID}`, origSocketID, origUID));
-              resolve();
+            this.logger.debug(funcS("db.createEvent", `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
+            resolve();
 
-            } catch (error) {
-              this.logger.warn(util.funcF("db.createEvent", error, `eventName: ${eventName} recUID: ${recUID}`, origSocketID, origUID));
-              reject(error);
-            };
-          });
-        };
+          } catch (error) {
+            this.logger.warn(errLog(error, `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
+            reject(error);
+          };
+        });
       } catch (error) {
-        this.logger.error(util.funcF("db.createEvent", error, `eventName: ${eventName} recUID: ${recUID}`, origSocketID, origUID));
+        this.logger.error(errLog(error, `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
         reject(error);
       };
     });

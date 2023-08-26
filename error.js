@@ -1,55 +1,138 @@
 
-class DBError extends Error {
-    constructor(func, message) {
-        super(message);
-        this.name = 'DBError';
-        this.func = func;
-    }
+// General Errors
+// ==============
 
-    toString() {
-        return `${this.name}[func: ${this.func}, info: ${this.message}]`;
+class ReqParamsNull extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ReqParamsNull';
+
+        Error.captureStackTrace(this, ReqParamsNull);
     }
 }
 
-class FuncError extends Error {
-    constructor(func, message) {
+class SocketStatusErr extends Error {
+    constructor(message) {
         super(message);
-        this.name = 'FuncError';
-        this.func = func;
-    }
+        this.name = 'SocketStatusErr';
 
-    toString() {
-        return `${this.name}[func: ${this.func}, info: ${this.message}]`;
+        Error.captureStackTrace(this, SocketStatusErr);
     }
 }
 
-class EventError extends Error {
-    constructor(event, message) {
-        super(message);
-        this.name = 'EventError';
-        this.event = event;
-    }
+// JSON Errors
+// ===========
 
-    toString() {
-        return `${this.name}[event: ${this.event}, info: ${this.message}]`;
+class ParseJSONErr extends Error {
+    constructor(message = "JSON parsing failed") {
+        super(message);
+        this.name = 'ParseJSONErr';
+
+        Error.captureStackTrace(this, ParseJSONErr);
     }
 }
 
-class ClientResponseError extends Error {
-    constructor(func, message) {
+class JSONBufferErr extends Error {
+    constructor(message = "JSON buffer conversion failed") {
         super(message);
-        this.name = 'ClientResponseError';
-        this.func = func;
-    }
+        this.name = 'JSONBufferErr';
 
-    toString() {
-        return `${this.name}[func: ${this.func}, info: ${this.message}]`;
+        Error.captureStackTrace(this, JSONBufferErr);
+    }
+}
+
+class MissingPacketProps extends Error {
+    constructor(message) {
+        super(message);
+                this.name = 'MissingPacketProps';
+
+        Error.captureStackTrace(this, MissingPacketProps);
+    }
+}
+
+class PacketPropsNull extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'PacketPropsNull';
+
+        Error.captureStackTrace(this, PacketPropsNull);
+    }
+}
+
+// Database Errors
+// ===============
+
+class DBErr extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'DBErr';
+
+        Error.captureStackTrace(this, DBErr);
+    }
+}
+
+class EmptyDBResult extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'EmptyDBResult';
+
+        Error.captureStackTrace(this, EmptyDBResult);
+    }
+}
+
+class MultipleDBResults extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'MultipleDBResults';
+
+        Error.captureStackTrace(this, MultipleDBResults);
+    }
+}
+
+// Function Errors
+// ===============
+
+class FuncErr extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'FuncErr';
+
+        Error.captureStackTrace(this, FuncErr);
+    }
+}
+
+// Event Errors
+// ============
+
+class EventErr extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'EventErr';
+
+        Error.captureStackTrace(this, EventErr);
+    }
+}
+
+class ClientResponseErr extends Error {
+    constructor(message) {
+        super(message);        
+        this.name = 'ClientResponseErr';
+
+        Error.captureStackTrace(this, ClientResponseErr);
     }
 }
 
 module.exports = {
-    DBError,
-    EventError,
-    FuncError,
-    ClientResponseError,
+    ReqParamsNull,
+    SocketStatusErr,
+    MissingPacketProps,
+    PacketPropsNull,
+    ParseJSONErr,
+    JSONBufferErr,
+    DBErr,
+    EmptyDBResult,
+    MultipleDBResults,
+    EventErr,
+    FuncErr,
+    ClientResponseErr,
 }

@@ -1,5 +1,32 @@
-const util = require('./utilities');
-const error = require('./error');
+const {
+    ReqParamsNull,
+    MissingPacketProps,
+    PacketPropsNull,
+    ParseJSONErr,
+    JSONBufferErr,
+    DBErr,
+    EmptyDBResult,
+    MultipleDBResults,
+    EventErr,
+    FuncErr,
+    ClientResponseErr,
+} = require('./error');
+
+const {
+    currDT,
+    UUID,
+    isNull,
+    isNotNull,
+    bufferToObject,
+    objectToBuffer,
+    checkPacketProps,
+    checkParams,
+    extractStackTrace,
+    funcS,
+    errLog,
+    eventS,
+    eventF,
+} = require('./utilities');
 
 class eventFuncs {
 
@@ -8,7 +35,7 @@ class eventFuncs {
         this.db = db;
         this.logger = logger;
         this.connectedUsers = connectedUsers;
-    };
+    }
 
     async fetchSocket(
         origSocketID = null,
@@ -16,24 +43,24 @@ class eventFuncs {
         socketID,
     ) {
         try {
-            if (socketID == null) {
-                throw new error.FuncError("eventFuncs.fetchSocket", `missing required parameters: (socketID: ${socketID})`);
-            }
+            checkParams({
+                socketID: socketID
+            }, ["socketID"]);
 
             let socket = await io.in(socketID).fetchSockets();
 
             if (socket.length == 0) {
-                throw new error.FuncError("eventFuncs.fetchSocket", "socket not found");
+                throw new FuncErr("socket not found");
             } else if (socket.length > 1) {
-                throw new error.FuncError("eventFuncs.fetchSocket", "multiple sockets found");
+                throw new FuncErr("multiple sockets found");
             }
 
-            this.logger.debug(util.funcS("eventFuncs.fetchSocket", `socketID: ${socketID}`, origSocketID, origUID));
+            this.logger.debug(funcS("eventFuncs.fetchSocket", `socketID: ${socketID}`, origSocketID, origUID));
 
             return socket[0];
 
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.fetchSocket", error, `socketID: ${socketID}`, origSocketID, origUID));
+            this.logger.error(errLog(error, `socketID: ${socketID}`, origSocketID, origUID));
             throw error;
         }
     }
@@ -48,21 +75,23 @@ class eventFuncs {
     ) {
         return new Promise((resolve, reject) => {
             try {
-                if (recUID == null || recSocket.id == null || recSocket == null || eventName == null) {
-                    throw new error.FuncError("eventFuncs.emitEvent", `missing required parameters: (recUID: ${recUID}, recSocketID: ${recSocket.id}, recSocket: ${recSocket}, eventName: ${eventName})`);
-                }
+                checkParams({
+                    recUID: recUID, 
+                    recSocket: recSocket, 
+                    eventName: eventName
+                }, ["recUID", "recSocket", "eventName"]);
 
                 if (packetBuffer) {
                     recSocket.emit(eventName, packetBuffer);
-                    this.logger.debug(util.funcS("eventFuncs.emitEvent", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                    this.logger.debug(funcS("eventFuncs.emitEvent", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
                     resolve();
                 } else {
                     recSocket.emit(eventName);
-                    this.logger.debug(util.funcS("eventFuncs.emitEvent", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                    this.logger.debug(funcS("eventFuncs.emitEvent", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
                     resolve();
                 }
             } catch (error) {
-                this.logger.error(util.funcF("eventFuncs.emitEvent", error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.error(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
                 reject(error);
             }
         })
@@ -79,20 +108,24 @@ class eventFuncs {
     ) {
         return new Promise((resolve, reject) => {
             try {
-                if (recSocket == null || recSocket.id == null || recUID == null || eventName == null || timeoutLength == null) {
-                    throw new error.FuncError("eventFuncs.emitEventWithAck", `missing required parameters: (recSocket: ${recSocket}, recSocketID: ${recSocket.id}, recUID: ${recUID}, eventName: ${eventName}, timeoutLength: ${timeoutLength})`);
-                }
+                checkParams({
+                    recSocket: recSocket, 
+                    socketID: recSocket.id, 
+                    recUID: recUID, 
+                    eventName: eventName, 
+                    timeoutLength: timeoutLength
+                }, ["recSocket", "socketID", "recUID", "eventName", "timeoutLength"]);
 
                 if (packetBuffer) {
                     recSocket.timeout(timeoutLength).emit(eventName, packetBuffer, async (err, response) => {
                         try {
                             if (err) {
-                                throw new error.FuncError("eventFuncs.emitEventWithAck", err.message);
+                                throw new FuncErr(err.message);
                             } else if (response[0] != null) {
-                                throw new error.ClientResponseError(response[0]);
+                                throw new ClientResponseErr(response[0]);
                             }
 
-                            this.logger.debug(util.funcS("eventFuncs.emitEventWithAck", `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
+                            this.logger.debug(funcS("eventFuncs.emitEventWithAck", `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
 
                             if (response[1] != null) {
                                 resolve(response[1]);
@@ -101,7 +134,7 @@ class eventFuncs {
                             }
 
                         } catch (error) {
-                            this.logger.warn(util.funcF("eventFuncs.emitEventWithAck", error, `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
+                            this.logger.warn(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
                             reject(error);
                         }
                     })
@@ -109,12 +142,12 @@ class eventFuncs {
                     recSocket.timeout(timeoutLength).emit(eventName, async (err, response) => {
                         try {
                             if (err) {
-                                throw new error.FuncError("eventFuncs.emitEventWithAck", err.message);
+                                throw new FuncErr(err.message);
                             } else if (response[0] != null) {
-                                throw new error.ClientResponseError(response[0]);
+                                throw new ClientResponseErr(response[0]);
                             }
 
-                            this.logger.debug(util.funcS("eventFuncs.emitEventWithAck", `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
+                            this.logger.debug(funcS("eventFuncs.emitEventWithAck", `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
 
                             if (response[1] != null) {
                                 resolve(response[1]);
@@ -123,13 +156,13 @@ class eventFuncs {
                             }
 
                         } catch (error) {
-                            this.logger.warn(util.funcF("eventFuncs.emitEventWithAck", error, `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
+                            this.logger.warn(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
                             reject(error);
                         }
                     })
                 }
             } catch (error) {
-                this.logger.error(util.funcF("eventFuncs.emitEventWithAck", error, `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
+                this.logger.error(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
                 reject(error);
             }
         })
@@ -144,23 +177,26 @@ class eventFuncs {
         packetBuffer = null
     ) {
         try {
-            if (recUID == null || recSocket.id == null || recSocket == null || eventName == null) {
-                throw new error.FuncError("eventFuncs.emitEventOrStore", `missing required parameters: (recUID: ${recUID}, recSocketID: ${recSocket.id}, recSocket: ${recSocket}, eventName: ${eventName})`);
-            }
+            checkParams({
+                recUID: recUID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                eventName: eventName
+            }, ["recUID", "recSocket", "recSocketID", "eventName"]);
 
             try {
                 await this.emitEvent(origSocketID, origUID, recUID, recSocket, eventName, packetBuffer);
 
-                this.logger.debug(util.funcS("eventFuncs.emitEventOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.debug(funcS("eventFuncs.emitEventOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             } catch (error) {
-                this.logger.warn(util.funcF("eventFuncs.emitEventOrStore", error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.warn(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
 
-                await this.db.createEvent(origSocketID, eventName, util.currDT, origUID, recUID, packetBuffer);
+                await this.db.createEvent(origSocketID, eventName, currDT, origUID, recUID, packetBuffer);
 
-                this.logger.debug(util.funcS("eventFuncs.emitEventOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.debug(funcS("eventFuncs.emitEventOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             }
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.emitEventOrStore", error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+            this.logger.error(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             throw error;
         }
     }
@@ -175,27 +211,31 @@ class eventFuncs {
         timeoutLength
     ) {
         try {
-            if (recUID == null || recSocket.id == null || recSocket == null || eventName == null || timeoutLength == null) {
-                throw new error.FuncError("eventFuncs.emitEventWithAckOrStore", `missing required parameters: (recUID: ${recUID}, recSocketID: ${recSocket.id}, recSocket: ${recSocket}, eventName: ${eventName}, timeoutLength: ${timeoutLength})`);
-            }
+            checkParams({
+                recUID: recUID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                eventName: eventName, 
+                timeoutLength: timeoutLength
+            }, ["recUID", "recSocket", "recSocketID", "eventName", "timeoutLength"]);
 
             try {
                 await this.emitEventWithAck(origSocketID, origUID, recUID, recSocket, eventName, packetBuffer, timeoutLength);
 
-                this.logger.debug(util.funcS("eventFuncs.emitEventWithAckOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.debug(funcS("eventFuncs.emitEventWithAckOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             } catch (error) {
                 // if (error.message != `event: ${eventName}, info: operation has timed out`) {
                 //     throw error;
                 // }
 
-                this.logger.warn(util.funcF("eventFuncs.emitEventWithAckOrStore", error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.warn(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
 
-                await this.db.createEvent(origSocketID, eventName, util.currDT, origUID, recUID, packetBuffer);
+                await this.db.createEvent(origSocketID, eventName, currDT, origUID, recUID, packetBuffer);
 
-                this.logger.debug(util.funcS("eventFuncs.emitEventWithAckOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.debug(funcS("eventFuncs.emitEventWithAckOrStore", `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             }
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.emitEventWithAckOrStore", error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+            this.logger.error(errLog(error, `event: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             throw error;
         }
     }
@@ -210,9 +250,10 @@ class eventFuncs {
         packetBuffer = null
     ) {
         try {
-            if (recUID == null || eventName == null) {
-                throw new error.FuncError("eventFuncs.checkOnlineEmit", `missing required parameters: (recUID: ${recUID}, eventName: ${eventName})`);
-            }
+            checkParams({
+                recUID: recUID, 
+                eventName: eventName
+            }, ["recUID", "eventName"]);
 
             if (recUID in this.connectedUsers) {
                 let recSocketID = this.connectedUsers[recUID].socketID;
@@ -221,12 +262,12 @@ class eventFuncs {
 
                 await this.emitEvent(origSocketID, origUID, recSocket, recUID, eventName, packetBuffer);
 
-                this.logger.debug(util.funcS("eventFuncs.checkOnlineEmit", `eventName: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
+                this.logger.debug(funcS("eventFuncs.checkOnlineEmit", `eventName: ${eventName}`, origSocketID, origUID, recSocketID, recUID));
             } else {
-                this.logger.debug(util.funcS("eventFuncs.checkOnlineEmit", `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
+                this.logger.debug(funcS("eventFuncs.checkOnlineEmit", `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
             }
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.checkOnlineEmit", error, `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
+            this.logger.error(errLog(error, `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
             throw error;
         }
     }
@@ -240,9 +281,11 @@ class eventFuncs {
         timeoutLength,
     ) {
         try {
-            if (recUID == null || eventName == null || timeoutLength == null) {
-                throw new error.FuncError("eventFuncs.checkOnlineEmitWithAckOrStore", `missing required parameters: (recUID: ${recUID}, eventName: ${eventName}, timeoutLength: ${timeoutLength})`);
-            }
+            checkParams({
+                recUID: recUID, 
+                eventName: eventName, 
+                timeoutLength: timeoutLength
+            }, ["recUID", "eventName", "timeoutLength"]);
 
             if (recUID in this.connectedUsers) {
                 let recSocketID = this.connectedUsers[recUID].socketID;
@@ -251,14 +294,14 @@ class eventFuncs {
 
                 await this.emitEventWithAckOrStore(origSocketID, origUID, recSocket, recUID, eventName, packetBuffer, timeoutLength);
 
-                this.logger.debug(util.funcS("eventFuncs.checkOnlineEmitWithAckOrStore", `eventName: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
+                this.logger.debug(funcS("eventFuncs.checkOnlineEmitWithAckOrStore", `eventName: ${eventName}`, origSocketID, origUID, recSocket.id, recUID));
             } else {
-                await this.db.createEvent(origSocketID, eventName, util.currDT, origUID, recUID, packetBuffer);
+                await this.db.createEvent(origSocketID, eventName, currDT, origUID, recUID, packetBuffer);
 
-                this.logger.debug(util.funcS("eventFuncs.checkOnlineEmitWithAckOrStore", `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
+                this.logger.debug(funcS("eventFuncs.checkOnlineEmitWithAckOrStore", `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
             }
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.checkOnlineEmitWithAckOrStore", error, `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
+            this.logger.error(errLog(error, `eventName: ${eventName}`, origSocketID, origUID, undefined, recUID));
             throw error;
         }
     }
@@ -272,9 +315,13 @@ class eventFuncs {
         batchSize = 10,
     ) {
         try {
-            if (userID == null || recSocket == null || timeoutLength == null || batchSize == null) {
-                throw new error.FuncError("eventFuncs.emitPendingEvents", `missing required parameters: (userID: ${userID}, recSocketID: ${recSocket.id}, recSocket: ${recSocket}, timeoutLength: ${timeoutLength}, batchSize: ${batchSize})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                timeoutLength: timeoutLength, 
+                batchSize: batchSize
+            }, ["userID", "recSocket", "recSocketID", "timeoutLength", "batchSize"]);
 
             let pendingEvents = await this.db.fetchRecords(recSocket.id, userID, "EVENTS", "receivingUserID", userID, ["eventID", "eventName", "packet"], "datetime");
 
@@ -282,9 +329,8 @@ class eventFuncs {
 
             for (let i = 0; i < totalBatches; i++) {
 
-                if (recSocket.userdata.connected == false)  {
-                    this.logger.info(util.funcS("eventFuncs.emitPendingEvents", `socket disconnected`, recSocket.id, userID, recSocket.id, userID));
-                    throw new error.FuncError("eventFuncs.emitPendingEvents", `socket disconnected`);
+                if (recSocket.userdata.connected == false) {
+                    throw new FuncErr(`socket disconnected`);
                 }
 
                 try {
@@ -298,18 +344,18 @@ class eventFuncs {
 
                     await this.emitEventBatch(userID, recSocket, packetObject, timeoutLength);
 
-                    this.logger.debug(util.funcS("eventFuncs.emitPendingEvents", `batch: ${i}, eventCount: ${currentBatch.length}`, recSocket.id, userID, recSocket.id, userID));
+                    this.logger.debug(funcS("eventFuncs.emitPendingEvents", `batch: ${i}, eventCount: ${currentBatch.length}`, recSocket.id, userID, recSocket.id, userID));
                 } catch (error) {
                     let batchIDs = pendingEvents.slice(i * batchSize, i * batchSize + batchSize).map(event => event.eventID);
-                    this.logger.error(util.funcF("eventFuncs.emitPendingEvents", error, `emit event batch failed - batch: ${i}, eventIDs: ${batchIDs}`, recSocket.id, userID, recSocket.id, userID));
+                    this.logger.error(errLog(error, `emit event batch failed - batch: ${i}, eventIDs: ${batchIDs}`, recSocket.id, userID, recSocket.id, userID));
                 }
             }
 
             await this.emitEvent(recSocket.id, userID, recSocket, userID, "receivedPendingEvents", null);
 
-            this.logger.info(util.funcS("eventFuncs.emitPendingEvents", `eventCount: ${pendingEvents.length}, completedEvents: `, recSocket.id, userID, recSocket.id, userID));
+            this.logger.info(funcS("eventFuncs.emitPendingEvents", `eventCount: ${pendingEvents.length}, completedEvents: `, recSocket.id, userID, recSocket.id, userID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.emitPendingEvents", error, undefined, recSocket.id, userID, recSocket.id, userID));
+            this.logger.error(errLog(error, undefined, recSocket.id, userID, recSocket.id, userID));
         }
     }
 
@@ -320,9 +366,13 @@ class eventFuncs {
         timeoutLength = 2000,
     ) {
         try {
-            if (userID == null || recSocket == null || recSocket.id == null || packetObject == null || timeoutLength == null) {
-                throw new error.FuncError("eventFuncs.emitEventBatch", `missing required parameters: (userID: ${userID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, packetObject: ${packetObject}, timeoutLength: ${timeoutLength})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                packetObject: packetObject, 
+                timeoutLength: timeoutLength
+            }, ["userID", "recSocket", "recSocketID", "packetObject", "timeoutLength"]);
 
             let packetBuffer = Buffer.from(JSON.stringify(packetObject));
 
@@ -331,8 +381,8 @@ class eventFuncs {
             try {
                 packetBuffer2 = await this.emitEventWithAck(recSocket.id, userID, recSocket, userID, "receivedPendingEvents", packetBuffer, timeoutLength);
             } catch (error) {
-                if (error instanceof error.ClientResponseError) {
-                    this.logger.error(util.funcF("eventFuncs.emitEventBatch", error, `client failed to handle event batch`, recSocket.id, userID, recSocket.id, userID));
+                if (error instanceof ClientResponseErr) {
+                    this.logger.error(errLog(error, `client failed to handle event batch`, recSocket.id, userID, recSocket.id, userID));
 
                     await this.handleEventBatchIndiv(recSocket.id, userID, packetObject);
                 } else {
@@ -347,41 +397,44 @@ class eventFuncs {
                     if (packetObject2[eventID] == true) {
                         this.db.deleteRecord(recSocket.id, userID, "EVENTS", "eventID", eventID);
 
-                        this.logger.debug(util.funcS("eventFuncs.emitEventBatch", `completed emit - eventID: ${eventID}`, recSocket.id, userID, recSocket.id, userID));
+                        this.logger.debug(funcS("eventFuncs.emitEventBatch", `completed emit - eventID: ${eventID}`, recSocket.id, userID, recSocket.id, userID));
                         completedEvents++;
                     } else if (packetObject2[eventID] == false) {
                         await this.handleEventFailure(recSocket.id, userID, packetObject2[eventID]);
 
                         this.db.deleteRecord(recSocket.id, userID, "EVENTS", "eventID", eventID);
 
-                        this.logger.warn(util.funcS("eventFuncs.emitEventBatch", `handled failed clientResponse - eventID: ${eventID}`, recSocket.id, userID, recSocket.id, userID));
+                        this.logger.warn(funcS("eventFuncs.emitEventBatch", `handled failed clientResponse - eventID: ${eventID}`, recSocket.id, userID, recSocket.id, userID));
                     }
                 } catch (error) {
-                    this.logger.error(util.funcF("eventFuncs.emitEventBatch", error, `failed to handle clientResponse - eventID: ${eventID}`, recSocket.id, userID, recSocket.id, userID));
+                    this.logger.error(errLog(error, `failed to handle clientResponse - eventID: ${eventID}`, recSocket.id, userID, recSocket.id, userID));
                 }
             });
         } catch (error) {
-            this.error(util.funcF("eventFuncs.emitEventBatch", error, undefined, recSocket.id, userID, recSocket.id, userID));
+            this.error(errLog(error, undefined, recSocket.id, userID, recSocket.id, userID));
             throw error;
         }
     }
 
     async handleEventBatchIndiv(
-        userID, 
+        userID,
         recSocket,
         packetObject,
         timeoutLength = 2000
     ) {
         try {
-            if (userID == null || recSocket == null || recSocket.id == null || packetObject == null || timeoutLength == null) {
-                throw new error.FuncError("eventFuncs.handleEventBatchIndiv", `missing required parameters: (userID: ${userID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, packetObject: ${packetObject}, timeoutLength: ${timeoutLength})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                packetObject: packetObject, 
+                timeoutLength: timeoutLength
+            }, ["userID", "recSocket", "recSocketID", "packetObject", "timeoutLength"]);
 
             for (let eventID in packetObject) {
 
-                if (recSocket.userdata.connected == false)  {
-                    this.logger.info(util.funcS("eventFuncs.handleEventBatchIndiv", `socket disconnected`, recSocket.id, userID, recSocket.id, userID));
-                    throw new error.FuncError("eventFuncs.handleEventBatchIndiv", `socket disconnected`);
+                if (recSocket.userdata.connected == false) {
+                    throw new FuncErr(`socket disconnected`);
                 }
 
                 try {
@@ -397,34 +450,29 @@ class eventFuncs {
                             break;
                     }
 
-                    this.logger.debug(util.funcS("eventFuncs.handleEventBatchIndiv", `eventID: ${eventID}, event: ${packetObject.eventID}`, recSocket.id, userID, recSocket.id, userID));
+                    this.logger.debug(funcS("eventFuncs.handleEventBatchIndiv", `eventID: ${eventID}, event: ${packetObject.eventID}`, recSocket.id, userID, recSocket.id, userID));
                 } catch (error) {
-                    this.logger.error(util.funcF("eventFuncs.handleEventBatchIndiv", error, `eventID: ${eventID}, event: ${packetObject.eventID}`, recSocket.id, userID, recSocket.id, userID));
+                    this.logger.error(errLog(error, `eventID: ${eventID}, event: ${packetObject.eventID}`, recSocket.id, userID, recSocket.id, userID));
                 }
             }
         } catch (error) {
-            this.error(util.funcF("eventFuncs.handleEventBatchIndiv", error, `eventIDs: ${Object.keys(packetObject)}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.error(errLog(error, `eventIDs: ${Object.keys(packetObject)}`, recSocket.id, userID, recSocket.id, userID));
             throw error;
         }
     }
 
     async handleEventFailure(
-        origSocketID,
+        origSocketID = null,
         origUID,
         packetObject
     ) {
         try {
-            if (origSocketID == null || origUID == null || packetObject == null) {
-                throw new error.FuncError("eventFuncs.handleEventFailure", `missing required parameters: (origSocketID: ${origSocketID}, origUID: ${origUID}, packetObject: ${packetObject})`);
-            }
+            checkParams({
+                origUID: origUID, 
+                packetObject: packetObject
+            }, ["origUID", "packetObject"]);
 
-            let packetProps = ["eventID", "eventName"];
-
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw new error.FuncError("eventFuncs.handleEventFailure", `packet property(s) missing: (packet: ${packetObject})`);
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw new error.FuncError("eventFuncs.handleEventFailure", `packet property(s) null: (packet: ${packetObject})`);
-            }
+            checkPacketProps(packetObject, ["eventID", "eventName"]);
 
             switch (packetObject.eventName) {
                 case "receivedCR":
@@ -437,20 +485,20 @@ class eventFuncs {
                     break;
             }
 
-            this.logger.debug(util.funcS("eventFuncs.handleEventFailure", `event: ${packetObject.eventName}`, origSocketID, origUID, origSocketID, origUID));
+            this.logger.debug(funcS("eventFuncs.handleEventFailure", `event: ${packetObject.eventName}`, origSocketID, origUID, origSocketID, origUID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.handleEventFailure", error, `event: ${packetObject.eventName}`, origSocketID, origUID, origSocketID, origUID));
+            this.logger.error(errLog(error, `event: ${packetObject.eventName}`, origSocketID, origUID, origSocketID, origUID));
         }
     }
 
     async deleteUserdata(
-        origSocketID,
+        origSocketID = null,
         userID
     ) {
         try {
-            if (origSocketID == null || userID == null) {
-                throw new error.FuncError("eventFuncs.deleteUserdata", `missing required parameters: (origSocketID: ${origSocketID}, userID: ${userID})`);
-            };
+            checkParams({
+                userID: userID
+            }, ["userID"]);
 
             await this.db.deleteCRsByUserID(userID);
 
@@ -460,51 +508,52 @@ class eventFuncs {
 
             await this.db.deleteRecord("USERS", "userID", userID);
 
-            this.logger.debug(util.funcS("eventFuncs.deleteUserdata", `userID: ${userID}`, origSocketID, userID));
+            this.logger.debug(funcS("eventFuncs.deleteUserdata", `userID: ${userID}`, origSocketID, userID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.deleteUserdata", error, `userID: ${userID}`, origSocketID, userID));
+            this.logger.error(errLog(error, `userID: ${userID}`, origSocketID, userID));
             throw error;
         };
     };
 
     async sendDeleteUserTrace(
-        origSocketID,
+        origSocketID = null,
         userID,
         RUIDs
     ) {
         try {
-            if (origSocketID == null || userID == null || RUIDs == null) {
-                throw new error.FuncError("eventFuncs.sendDeleteUserTrace", `missing required parameters: (origSocketID: ${origSocketID}, userID: ${userID}, RUIDs: ${RUIDs})`);
-            }
+            checkParams({
+                userID: userID, 
+                RUIDs: RUIDs
+            }, ["userID", "RUIDs"]);
 
             let packetObject = { "userID": userID };
 
-            let packetBuffer = Buffer.from(JSON.stringify(packetObject));
+            let packetBuffer = objectToBuffer(packetObject);
 
             for (let i = 0; i < RUIDs.length; i++) {
                 try {
                     await this.checkOnlineEmitWithAckOrStore(origSocketID, userID, RUIDs[i].userID, "deleteUserTrace", packetBuffer, 1000);
 
-                    this.logger.debug(util.funcS("eventFuncs.sendDeleteUserTrace", origSocketID, userID, undefined, RUIDs[i].userID));
-                } catch (error) { 
-                    this.logger.error(util.funcF("eventFuncs.sendDeleteUserTrace", error, undefined, origSocketID, userID, undefined, RUIDs[i].userID));
+                    this.logger.debug(funcS("eventFuncs.sendDeleteUserTrace", origSocketID, userID, undefined, RUIDs[i].userID));
+                } catch (error) {
+                    this.logger.error(errLog(error, undefined, origSocketID, userID, undefined, RUIDs[i].userID));
                 }
             }
 
-            this.logger.debug(util.funcS("eventFuncs.sendDeleteUserTrace", `RUIDCount: ${RUIDs.length}`, origSocketID, userID));
+            this.logger.debug(funcS("eventFuncs.sendDeleteUserTrace", `RUIDCount: ${RUIDs.length}`, origSocketID, userID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.sendDeleteUserTrace", error, `userID: ${userID}`, origSocketID, userID));
+            this.logger.error(errLog(error, `userID: ${userID}`, origSocketID, userID));
         }
     }
 
     async sendUserConnect(
-        origSocketID,
+        origSocketID = null,
         origUID
     ) {
         try {
-            if (origSocketID == null || origUID == null) {
-                throw new error.FuncError("eventFuncs.sendUserConnect", `missing required parameters: (origSocketID: ${origSocketID}, origUID: ${origUID})`);
-            }
+            checkParams({
+                origUID: origUID
+            }, ["origUID"]);
 
             let RUIDs = await this.db.fetchRUChannelsbyUserID(origUID, "userID");
 
@@ -512,26 +561,26 @@ class eventFuncs {
                 try {
                     await this.checkOnlineEmit(origSocketID, origUID, RUIDs[i].userID, "userConnect", origUID);
 
-                    this.logger.debug(util.funcS("eventFuncs.sendUserConnect", origSocketID, origUID, undefined, RUIDs[i].userID));
-                } catch (error) { 
-                    this.logger.error(util.funcF("eventFuncs.sendUserConnect", error, undefined, origSocketID, origUID, undefined, RUIDs[i].userID)); 
+                    this.logger.debug(funcS("eventFuncs.sendUserConnect", origSocketID, origUID, undefined, RUIDs[i].userID));
+                } catch (error) {
+                    this.logger.error(errLog(error, undefined, origSocketID, origUID, undefined, RUIDs[i].userID));
                 }
             }
 
-            this.logger.debug(util.funcS("eventFuncs.sendUserConnect", `event: userConnect`, origSocketID, origUID));
+            this.logger.debug(funcS("eventFuncs.sendUserConnect", `event: userConnect`, origSocketID, origUID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.sendUserConnect", error, undefined, origSocketID, origUID));
+            this.logger.error(errLog(error, undefined, origSocketID, origUID));
         }
     }
 
     async sendUserDisconnect(
-        origSocketID,
+        origSocketID = null,
         origUID
     ) {
         try {
-            if (origSocketID == null || origUID == null) {
-                throw new error.FuncError("eventFuncs.sendUserDisconnect", `missing required parameters: (origSocketID: ${origSocketID}, origUID: ${origUID})`);
-            }
+            checkParams({
+                origUID: origUID
+            }, ["origUID"]);
 
             let RUIDs = await this.db.fetchRUChannelsbyUserID(origUID, "userID");
 
@@ -539,27 +588,27 @@ class eventFuncs {
                 try {
                     await this.checkOnlineEmit(origSocketID, origUID, RUIDs[i].userID, "userDisconnect", origUID);
 
-                    this.logger.debug(util.funcS("eventFuncs.sendUserDisconnect", origSocketID, origUID, undefined, RUIDs[i].userID));
-                } catch (error) { 
-                    this.logger.error(util.funcF("eventFuncs.sendUserDisconnect", error, undefined, origSocketID, origUID, undefined, RUIDs[i].userID));
+                    this.logger.debug(funcS("eventFuncs.sendUserDisconnect", origSocketID, origUID, undefined, RUIDs[i].userID));
+                } catch (error) {
+                    this.logger.error(errLog(error, undefined, origSocketID, origUID, undefined, RUIDs[i].userID));
                 }
             }
 
-            this.logger.debug(util.funcS("eventFuncs.sendUserDisconnect", `event: userDisconnect`, origSocketID, origUID));
+            this.logger.debug(funcS("eventFuncs.sendUserDisconnect", `event: userDisconnect`, origSocketID, origUID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.sendUserDisconnect", error, undefined, origSocketID, origUID));
+            this.logger.error(errLog(error, undefined, origSocketID, origUID));
         }
     }
 
     async checkRUIDsOnline(
-        origSocketID,
-        origUID,
+        origSocketID = null,
+        origUID = null,
         RUIDs
     ) {
         try {
-            if (origSocketID == null || origUID == null || RUIDs == null) {
-                throw new error.FuncError("eventFuncs.checkRUIDsOnline", `missing required parameters: (origSocketID: ${origSocketID}, origUID: ${origUID}, RUIDs: ${RUIDs})`);
-            }
+            checkParams({
+                RUIDs: RUIDs
+            }, ["RUIDs"]);
 
             let returnRUIDs = {};
 
@@ -575,16 +624,16 @@ class eventFuncs {
                         }
                     }
 
-                    this.logger.debug(util.funcS("eventFuncs.checkRUIDsOnline", `RUID: ${RUIDs[i]}`, origSocketID, origUID));
+                    this.logger.debug(funcS("eventFuncs.checkRUIDsOnline", `RUID: ${RUIDs[i]}`, origSocketID, origUID));
                 } catch (error) {
-                    this.logger.error(util.funcF("eventFuncs.checkRUIDsOnline", error, `RUID: ${RUIDs[i]}`, origSocketID, origUID));
+                    this.logger.error(errLog(error, `RUID: ${RUIDs[i]}`, origSocketID, origUID));
                 }
             }
 
-            this.logger.debug(util.funcS("eventFuncs.checkRUIDsOnline", `RUIDCount: ${RUIDs.length}`, origSocketID, origUID));
+            this.logger.debug(funcS("eventFuncs.checkRUIDsOnline", `RUIDCount: ${RUIDs.length}`, origSocketID, origUID));
             return returnRUIDs;
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.checkRUIDsOnline", error, `RUIDCount: ${RUIDs.length}`, origSocketID, origUID));
+            this.logger.error(errLog(error, `RUIDCount: ${RUIDs.length}`, origSocketID, origUID));
             throw error;
         }
     }
@@ -596,9 +645,13 @@ class eventFuncs {
         ack
     ) {
         try {
-            if (userID == null || recSocket == null || recSocket.id == null || clientRequestIDs == null || ack === null) {
-                throw new error.FuncError("eventFuncs.checkCRs", `missing required parameters: (userID: ${userID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, clientRequestIDs: ${clientRequestIDs}, ack: ${ack})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                clientRequestIDs: clientRequestIDs, 
+                ack: ack
+            }, ["userID", "recSocket", "recSocketID", "clientRequestIDs", "ack"]);
 
             let serverRequestIDObjects = await this.db.fetchCRsByUserID(recSocket.id, userID, userID, "requestID");
             let serverRequestIDs = serverRequestIDObjects.map(CR => CR.requestID);
@@ -614,9 +667,9 @@ class eventFuncs {
 
             await this.sendMissingCRs(userID, recSocket, clientRequestIDs);
 
-            this.logger.debug(util.funcS("eventFuncs.checkCRs", `requestIDCount: ${clientRequestIDs.length}, returnCRCount: ${Object.keys(returnCRs).length}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.debug(funcS("eventFuncs.checkCRs", `requestIDCount: ${clientRequestIDs.length}, returnCRCount: ${Object.keys(returnCRs).length}`, recSocket.id, userID, recSocket.id, userID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.checkCRs", error, `requestIDCount: ${clientRequestIDs.length}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.error(errLog(error, `requestIDCount: ${clientRequestIDs.length}`, recSocket.id, userID, recSocket.id, userID));
             throw error;
         }
     }
@@ -627,9 +680,12 @@ class eventFuncs {
         clientRequestIDs,
     ) {
         try {
-            if (userID == null || recSocket == null || recSocket.id == null || clientRequestIDs == null) {
-                throw new error.FuncError("eventFuncs.sendMissingCRs", `missing required parameters: (userID: ${userID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, clientRequestIDs: ${clientRequestIDs})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                clientRequestIDs: clientRequestIDs
+            }, ["userID", "recSocket", "recSocketID", "clientRequestIDs"]);
 
             let missingCRCount = 0;
             for (let i = 0; i < serverRequestIDs.length; i++) {
@@ -659,28 +715,28 @@ class eventFuncs {
                         await this.receivedCR(recSocket.id, userID, recSocket, userID, packetBuffer);
 
                         missingCRCount++;
-                        this.logger.debug(util.funcS("eventFuncs.sendMissingCRs", `missing request sent - requestID: ${packetObject.requestID}`, recSocket.id, userID, recSocket.id, userID));
+                        this.logger.debug(funcS("eventFuncs.sendMissingCRs", `missing request sent - requestID: ${packetObject.requestID}`, recSocket.id, userID, recSocket.id, userID));
                     } catch (error) {
-                        this.logger.warn(util.funcF("eventFuncs.sendMissingCRs", error, `failed to send missing request - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                        this.logger.warn(errLog(error, `failed to send missing request - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
 
                         if (error.message == "db.fetchRecord - err: no results") {
                             try {
-                                this.logger.warn(util.funcF("eventFuncs.sendMissingCRs", error, `failed to find RU - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                                this.logger.warn(errLog(error, `failed to find RU - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
 
                                 await this.db.deleteRecord("CRs", "requestID", serverRequestIDs[i]);
 
-                                this.logger.debug(util.funcS("eventFuncs.sendMissingCRs", `deleted CR - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                                this.logger.debug(funcS("eventFuncs.sendMissingCRs", `deleted CR - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
                             } catch {
-                                this.logger.error(util.funcF("eventFuncs.sendMissingCRs", error, `failed to delete CR - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                                this.logger.error(errLog(error, `failed to delete CR - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
                             }
                         }
                     }
                 }
             }
 
-            this.logger.debug(util.funcS("eventFuncs.sendMissingCRs", `requestIDCount: ${clientRequestIDs.length}, missingCRCount: ${missingCRCount}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.debug(funcS("eventFuncs.sendMissingCRs", `requestIDCount: ${clientRequestIDs.length}, missingCRCount: ${missingCRCount}`, recSocket.id, userID, recSocket.id, userID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.sendMissingCRs", error, `requestIDCount: ${clientRequestIDs.length}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.error(errLog(error, `requestIDCount: ${clientRequestIDs.length}`, recSocket.id, userID, recSocket.id, userID));
         }
     }
 
@@ -691,9 +747,13 @@ class eventFuncs {
         ack
     ) {
         try {
-            if (userID == null || recSocket == null || recSocket.id == null || clientChannelIDs == null || ack === null) {
-                throw new error.FuncError("eventFuncs.checkRUChannels", `missing required parameters: (userID: ${userID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, clientChannelIDs: ${clientChannelIDs}, ack: ${ack})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                clientChannelIDs: clientChannelIDs, 
+                ack: ack
+            }, ["userID", "recSocket", "recSocketID", "clientChannelIDs", "ack"]);
 
             let serverChannelIDObjects = await this.db.fetchRUChannelsbyUserID(recSocket.id, userID, userID, "channelID");
             let serverChannelIDs = serverChannelIDObjects.map(channel => channel.channelID);
@@ -709,9 +769,9 @@ class eventFuncs {
 
             await this.sendMissingRUChannels(userID, recSocket, clientChannelIDs, serverChannelIDs);
 
-            this.logger.info(util.funcS("eventFuncs.checkRUChannels", `channelIDCount: ${clientChannelIDs.length}, returnRUChannelCount: ${Object.keys(returnRUChannels).length}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.info(funcS("eventFuncs.checkRUChannels", `channelIDCount: ${clientChannelIDs.length}, returnRUChannelCount: ${Object.keys(returnRUChannels).length}`, recSocket.id, userID, recSocket.id, userID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.checkRUChannels", error, `channelIDCount: ${clientChannelIDs.length}`, recSocket.id, userID, recSocket.id, userID));
+            this.logger.error(errLog(error, `channelIDCount: ${clientChannelIDs.length}`, recSocket.id, userID, recSocket.id, userID));
             throw error;
         }
     }
@@ -723,9 +783,13 @@ class eventFuncs {
         serverChannelIDs
     ) {
         try {
-            if (userID == null || recSocket == null || recSocket.id == null || clientChannelIDs == null || serverChannelIDs == null) {
-                throw new error.FuncError("eventFuncs.sendMissingRUChannels", `missing required parameters: (userID: ${userID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, clientChannelIDs: ${clientChannelIDs}, serverChannelIDs: ${serverChannelIDs})`);
-            }
+            checkParams({
+                userID: userID, 
+                recSocket: recSocket, 
+                recSocketID: recSocket.id, 
+                clientChannelIDs: clientChannelIDs, 
+                serverChannelIDs: serverChannelIDs
+            }, ["userID", "recSocket", "recSocketID", "clientChannelIDs", "serverChannelIDs"]);
 
             let missingRUChannels = 0;
             for (let i = 0; i < serverChannelIDs.length; i++) {
@@ -733,76 +797,93 @@ class eventFuncs {
                     try {
                         let RUChannel = await this.db.fetchRUChannelsByChannelID(recSocket.id, userID, serverChannelIDs[i], userID);
 
+                        let RU;
 
+                        try {
+                            RU = await this.db.fetchRecord("USERS", "userID", RUChannel.userID);
+                        } catch (error) {
+                            if (error instanceof EmptyDBResult) {
+                                try {
+                                    await this.db.deleteRecord("RUChannels", "channelID", serverChannelIDs[i]);
+
+                                    this.logger.debug(funcS("eventFuncs.sendMissingRUChannels", `deleted RUChannel - channelID: ${serverChannelIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                                } catch {
+                                    this.logger.error(errLog(error, `failed to delete RUChannel - channelID: ${serverChannelIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                                }
+                            }
+
+                            throw error;
+                        }
+
+                        let packetObject = {
+                            RUChannel: RUChannel,
+                            RU: RU
+                        }
+
+                        await this.receivedRUChannel(recSocket.id, userID, recSocket, userID, packetObject);
+
+                        missingRUChannels++;
                     } catch (error) {
-
+                        this.logger.error(errLog(error, `failed to send missing RUChannel - channelID: ${serverChannelIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
                     }
                 }
             }
-        } catch (error) {
 
+            this.logger.info(funcS("eventFuncs.sendMissingRUChannels", `channelIDCount: ${clientChannelIDs.length}, missingRUChannelCount: ${missingRUChannels}`, recSocket.id, userID, recSocket.id, userID));
+        } catch (error) {
+            this.logger.error(errLog(error, `channelIDCount: ${clientChannelIDs.length}`, recSocket.id, userID, recSocket.id, userID));
         }
     }
 
     async sendCR(
-        origSocketID,
-        origUID,
+        origSocketID = null,
+        origUID = null,
         recUID,
         packetBuffer,
         ack
     ) {
         try {
-            if (origUID == null || recUID == null || packetBuffer == null || ack == null) {
-                throw new error.FuncError("eventFuncs.sendCR", "missing required parameters: (origUID: ${origUID}, recUID: ${recUID}, packetBuffer: ${packetBuffer}, ack: ${ack})");
-            }
+            checkParams({
+                recUID: recUID, 
+                packetBuffer: packetBuffer,
+                ack: ack
+            }, ["recUID", "packetBuffer", "ack"]);
 
-            let packetObject = JSON.parse(packetBuffer.toString());
-            let packetProps = ["requestID", "date", "isOrigin"];
+            let packetObject = bufferToObject(packetBuffer);
 
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw new error.FuncError("eventFuncs.sendCR", "packet property(s) missing: (packet: ${packetObject})");
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw new error.FuncError("eventFuncs.sendCR", "packet property(s) null: (packet: ${packetObject})");
-            }
+            checkPacketProps(packetObject, ["requestID", "date", "isOrigin"]);
 
             await this.db.createCR(origSocketID, packetObject.requestID, origUID, recUID, packetObject.date);
 
             ack(null);
-            this.logger.debug(util.funcS("eventFuncs.sendCR", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
+            this.logger.debug(funcS("eventFuncs.sendCR", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
 
             return packetObject;
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.sendCR", error, undefined, origSocketID, origUID, undefined, recUID));
+            this.logger.error(errLog(error, undefined, origSocketID, origUID, undefined, recUID));
             throw error;
         }
     }
 
     async receivedCR(
-        origSocketID,
-        origUID,
+        origSocketID = null,
+        origUID = null,
         recSocket = null, // specify the socket if event is being emitted to the origUID
         recUID,
         packetObject
     ) {
         try {
-            if (origUID == null || recSocket == null || recSocket.id == null || recUID == null || packetObject == null) {
-                throw new error.FuncError("eventFuncs.receivedCR", `missing required parameters: (origUID: ${origUID}, recSocket: ${recSocket}, recSocketID: ${recSocket.id}, recUID: ${recUID}, packetObject: ${packetObject})`);
-            } else if (origSocketID == null || origUID == null || recUID == null || packetObject == null) {
-                throw new error.FuncError("eventFuncs.receivedCR", `missing required parameters: (origSocketID: ${origSocketID}, origUID: ${origUID}, recUID: ${recUID}, packetObject: ${packetObject})`);
-            }
+            checkParams({
+                recUID: recUID, 
+                packetObject: packetObject
+            }, ["recUID", "packetObject"]);
 
-            let packetProps = ["requestID", "date", "isOrigin"];
-
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw new error.FuncError("eventFuncs.receivedCR", "packet property(s) missing: (packet: ${packetObject})");
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw new error.FuncError("eventFuncs.receivedCR", "packet property(s) null: (packet: ${packetObject})");
-            }
+            checkPacketProps(packetObject, ["requestID", "date", "isOrigin"]);
 
             let RU = await this.db.fetchRecord("USERS", "userID", origUID);
             packetObject.RU = RU;
 
-            let packetBuffer = Buffer.from(JSON.stringify(packetObject));
+            let packetBuffer = bufferToObject(packetBuffer);
 
             if (recSocket) {
                 await this.emitEventWithAckOrStore(origSocketID, origUID, recSocket, recUID, "receivedCR", packetBuffer, 1000);
@@ -810,45 +891,35 @@ class eventFuncs {
                 await this.checkOnlineEmitWithAck(origSocketID, origUID, recUID, undefined, "receivedCR", packetBuffer);
             }
 
-            this.logger.debug(util.funcS("eventFuncs.receivedCR", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
+            this.logger.debug(funcS("eventFuncs.receivedCR", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.receivedCR", error, undefined, origSocketID, origUID, undefined, recUID));
+            this.logger.error(errLog(error, undefined, origSocketID, origUID, undefined, recUID));
 
             await this.receivedCRFailure(origSocketID, origUID, recUID, packetObject);
 
             throw error;
         }
-    }
+    }   
 
     async receivedCRFailure(
-        origSocketID,
-        origUID,
+        origSocketID = null,
+        origUID = null,
         recUID,
         packetObject
     ) {
         try {
-            if (origUID == null || recUID == null || packetObject == null) {
-                throw new error.FuncError("eventFuncs.receivedCRFailure", `missing required parameters: (origUID: ${origUID}, recUID: ${recUID}, packetObject: ${packetObject})`);
-            }
+            checkParams({
+                recUID: recUID, 
+                packetObject: packetObject
+            }, ["recUID", "packetObject"]);
 
-            if (packetObject.requestID) {
-                await this.db.deleteRecord("CRs", "requestID", packetObject.requestID);
+            checkPacketProps(packetObject, ["requestID"]);
 
-                this.logger.debug(util.funcS("eventFuncs.receivedCRFailure", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
-            } else {
-                throw new error.FuncError("eventFuncs.receivedCRFailure", "requestID missing");
-            }
+            await this.db.deleteRecord("CRs", "requestID", packetObject.requestID);
+
+            this.logger.debug(funcS("eventFuncs.receivedCRFailure", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
         } catch (error) {
-            this.logger.error(util.funcF("eventFuncs.receivedCRFailure", error, `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
-        }
-    }
-
-    async receivedRUChannel(
-
-    ) {
-        try {
-
-        } catch (error) {
+            this.logger.error(errLog(error, `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
         }
     }
 
@@ -864,25 +935,37 @@ class eventFuncs {
         };
     };
 
-    async receivedCRResult(
-
+    async receivedRUChannel(
+        origSocketID = null,
+        origUID = null,
+        recSocket,
+        recUID,
+        packetObject
     ) {
         try {
+            checkParams({
+                recSocket: recSocket, 
+                recSocketID: recSocket.id,
+                recUID: recUID, 
+                packetObject: packetObject
+            }, ["recSocket", "recSocketID", "recUID", "packetObject"]);
 
+            let packetBuffer = objectToBuffer(packetObject);
+
+            await this.emitEventWithAckOrStore(origSocketID, origUID, recSocket, recUID, "receivedRUChannel", packetBuffer, 1000);
+
+            this.logger.debug(funcS("eventFuncs.receivedRUChannel", `channelID: ${packetObject.channelID}`, origSocketID, origUID, recSocket.id, recUID));
         } catch (error) {
+            this.logger.error(errLog(error, `channelID: ${packetObject.channelID}`, origSocketID, origUID, recSocket.id, recUID));
+            throw error;
+        }
+    }
 
-        };
-    };
-
-    async receivedCRResultFailure(
+    async receivedRUChannelFailure(
 
     ) {
-        try {
 
-        } catch (error) {
-
-        };
-    };
+    }
 
     async sendCD(
         origUID,

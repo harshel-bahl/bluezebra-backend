@@ -1,7 +1,7 @@
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
-const { combine, timestamp, printf, colorize, align } = winston.format;
+const { combine, timestamp, printf, colorize, align, errors } = winston.format;
 
 const logLevels = {
     error: 0,
@@ -15,16 +15,34 @@ const consoleFormat = combine(
     timestamp({
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
-    align(),
-    printf((info) => `[${info.timestamp}] ${info.level} -- ${info.message}`)
+    errors({ stack: true }),
+    // align(),
+    printf((info) => {
+        let maxWidth = 41;
+        let timestampStr = `[${info.timestamp}]`;
+        let levelStr = info.level; 
+        let spacePadding = maxWidth - timestampStr.length - levelStr.length;
+        let paddingStr = ' '.repeat(spacePadding);
+        
+        return `${timestampStr} ${levelStr}${paddingStr}|| ${info.message}`;
+    })
 );
 
 const fileFormat = combine(
     timestamp({
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
-    align(),
-    printf((info) => `[${info.timestamp}] ${info.level} -- ${info.message}`)
+    errors({ stack: true }),
+    // align(),
+    printf((info) => {
+        let maxWidth = 31;
+        let timestampStr = `[${info.timestamp}]`;
+        let levelStr = info.level.toUpperCase(); 
+        let spacePadding = maxWidth - timestampStr.length - levelStr.length;
+        let paddingStr = ' '.repeat(spacePadding);
+        
+        return `${timestampStr} ${levelStr}${paddingStr}|| ${info.message}`;
+    })
 );
 
 const fileRotateTransport = new winston.transports.DailyRotateFile({
