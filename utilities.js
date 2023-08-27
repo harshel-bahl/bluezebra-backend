@@ -3,8 +3,9 @@ const { v4: uuidv4 } = require('uuid');
 const {
     ReqParamsNull,
     SocketStatusErr,
-    MissingPacketProps,
-    PacketPropsNull,
+    EmptyObj,
+    MissingObjProps,
+    ObjPropsNull,
     ParseJSONErr,
     JSONBufferErr,
     DBErr,
@@ -222,11 +223,11 @@ function checkParams(
     let nullParams = reqParams.filter(param => isNull(params[param]));
 
     if (nullParams.length > 0) {
-        throw new ReqParamsNull(FMsg(undefined, `null params: ${nullParams.join(', ')}`, socketID, UID));
+        throw new ReqParamsNull(`null params: ${nullParams.join(', ')}`);
     }
 }
 
-function checkPacketProps(
+function checkObjReqProps(
     packetObject,
     reqProps,
     checkIfNull = true,
@@ -235,13 +236,28 @@ function checkPacketProps(
     let missingProps = reqProps.filter(prop => !packetObject.hasOwnProperty(prop));
 
     if (missingProps.length > 0) {
-        throw new MissingPacketProps(`missing props: ${missingProps.join(', ')}`);
+        throw new MissingObjProps(`missing props: ${missingProps.join(', ')}`);
     }
 
     let nullProps = reqProps.filter(prop => checkIfNull && isNull(packetObject[prop]));
 
     if (checkIfNull && nullProps.length > 0) {
-        throw new PacketPropsNull(`null props: ${nullProps.join(', ')}`);
+        throw new ObjPropsNull(`null props: ${nullProps.join(', ')}`);
+    }
+}
+
+function checkObjProps(
+    packetObject,
+    errorOnEmpty = true
+) {
+    if (errorOnEmpty && isEmpty(packetObject)) {
+        throw new EmptyObj();
+    }
+
+    let nullProps = Object.keys(packetObject).filter(prop => isNull(packetObject[prop]));
+
+    if (nullProps.length > 0) {
+        throw new ObjPropsNull(`null props: ${nullProps.join(', ')}`);
     }
 }
 
@@ -258,6 +274,7 @@ module.exports = {
     UUID,
     isNull,
     isNotNull,
+    isEmpty,
     bufferToObject,
     objectToBuffer,
     cleanStackTrace,
@@ -267,6 +284,7 @@ module.exports = {
     logWarn,
     logError,
     checkParams,
-    checkPacketProps,
+    checkObjReqProps,
+    checkObjProps,
     checkSocketStatus,
 };

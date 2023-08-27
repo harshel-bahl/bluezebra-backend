@@ -41,21 +41,30 @@ class JSONBufferErr extends Error {
     }
 }
 
-class MissingPacketProps extends Error {
+class EmptyObj extends Error {
     constructor(message) {
         super(`(${message})`);
-                this.name = 'MissingPacketProps';
+        this.name = 'EmptyObj';
 
-        Error.captureStackTrace(this, MissingPacketProps);
+        Error.captureStackTrace(this, EmptyObj);
     }
 }
 
-class PacketPropsNull extends Error {
+class MissingObjProps extends Error {
+    constructor(message) {
+        super(`(${message})`);
+                this.name = 'MissingObjProps';
+
+        Error.captureStackTrace(this, MissingObjProps);
+    }
+}
+
+class ObjPropsNull extends Error {
     constructor(message) {
         super(`(${message})`);        
-        this.name = 'PacketPropsNull';
+        this.name = 'ObjPropsNull';
 
-        Error.captureStackTrace(this, PacketPropsNull);
+        Error.captureStackTrace(this, ObjPropsNull);
     }
 }
 
@@ -125,8 +134,9 @@ class ClientResponseErr extends Error {
 module.exports = {
     ReqParamsNull,
     SocketStatusErr,
-    MissingPacketProps,
-    PacketPropsNull,
+    EmptyObj,
+    MissingObjProps,
+    ObjPropsNull,
     ParseJSONErr,
     JSONBufferErr,
     DBErr,
