@@ -4,7 +4,7 @@
 
 class ReqParamsNull extends Error {
     constructor(message) {
-        super(message);
+        super(`(${message})`);
         this.name = 'ReqParamsNull';
 
         Error.captureStackTrace(this, ReqParamsNull);
@@ -13,7 +13,7 @@ class ReqParamsNull extends Error {
 
 class SocketStatusErr extends Error {
     constructor(message) {
-        super(message);
+        super(`(${message})`);
         this.name = 'SocketStatusErr';
 
         Error.captureStackTrace(this, SocketStatusErr);
@@ -25,7 +25,7 @@ class SocketStatusErr extends Error {
 
 class ParseJSONErr extends Error {
     constructor(message = "JSON parsing failed") {
-        super(message);
+        super(`(${message})`);
         this.name = 'ParseJSONErr';
 
         Error.captureStackTrace(this, ParseJSONErr);
@@ -34,7 +34,7 @@ class ParseJSONErr extends Error {
 
 class JSONBufferErr extends Error {
     constructor(message = "JSON buffer conversion failed") {
-        super(message);
+        super(`(${message})`);
         this.name = 'JSONBufferErr';
 
         Error.captureStackTrace(this, JSONBufferErr);
@@ -43,7 +43,7 @@ class JSONBufferErr extends Error {
 
 class MissingPacketProps extends Error {
     constructor(message) {
-        super(message);
+        super(`(${message})`);
                 this.name = 'MissingPacketProps';
 
         Error.captureStackTrace(this, MissingPacketProps);
@@ -52,7 +52,7 @@ class MissingPacketProps extends Error {
 
 class PacketPropsNull extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'PacketPropsNull';
 
         Error.captureStackTrace(this, PacketPropsNull);
@@ -64,7 +64,7 @@ class PacketPropsNull extends Error {
 
 class DBErr extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'DBErr';
 
         Error.captureStackTrace(this, DBErr);
@@ -73,7 +73,7 @@ class DBErr extends Error {
 
 class EmptyDBResult extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'EmptyDBResult';
 
         Error.captureStackTrace(this, EmptyDBResult);
@@ -82,7 +82,7 @@ class EmptyDBResult extends Error {
 
 class MultipleDBResults extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'MultipleDBResults';
 
         Error.captureStackTrace(this, MultipleDBResults);
@@ -94,7 +94,7 @@ class MultipleDBResults extends Error {
 
 class FuncErr extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'FuncErr';
 
         Error.captureStackTrace(this, FuncErr);
@@ -106,7 +106,7 @@ class FuncErr extends Error {
 
 class EventErr extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'EventErr';
 
         Error.captureStackTrace(this, EventErr);
@@ -115,7 +115,7 @@ class EventErr extends Error {
 
 class ClientResponseErr extends Error {
     constructor(message) {
-        super(message);        
+        super(`(${message})`);        
         this.name = 'ClientResponseErr';
 
         Error.captureStackTrace(this, ClientResponseErr);

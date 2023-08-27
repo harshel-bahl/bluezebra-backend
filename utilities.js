@@ -1,18 +1,25 @@
 const { v4: uuidv4 } = require('uuid');
+
 const {
     ReqParamsNull,
+    SocketStatusErr,
     MissingPacketProps,
     PacketPropsNull,
     ParseJSONErr,
     JSONBufferErr,
-    DBError,
+    DBErr,
     EmptyDBResult,
     MultipleDBResults,
-    EventError,
-    FuncError,
-    ClientResponseError,
+    EventErr,
+    FuncErr,
+    ClientResponseErr,
 } = require('./error');
 
+const logger = require('./logger');
+
+
+// Utility Functions
+// =================
 
 function currDT() {
     return new Date().toISOString().replace('T', ' ').replace('Z', '');
@@ -30,7 +37,13 @@ function isNotNull(value) {
     return value !== null && value !== undefined;
 }
 
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
+
 function bufferToObject(
+    socketID = null,
+    UID = null,
     buffer
 ) {
     try {
@@ -46,15 +59,178 @@ function objectToBuffer(
     try {
         return Buffer.from(JSON.stringify(object));
     } catch (error) {
-        throw new JSONBufferErr(error.message)
+        throw new JSONBufferErr(error.message);
+    }
+}
+
+function cleanStackTrace(
+    error
+) {
+    if (!error.stack) return error;
+
+    let stack = error.stack.split('\n');
+
+    const relevantStack = stack.filter(line => {
+        if (line.includes('(internal/')) return false;
+
+        if (line.includes('node_modules')) return false;
+
+        return true;
+    });
+
+    const cleanedStack = relevantStack.map(line => `--${line.replace(/^(\s*)at\s+/, '$1')}`).join('\n');
+
+    error.stack = cleanedStack;
+
+    return error;
+}
+
+function logObj(
+    func = null,
+    event = null,
+    info = null,
+    socketID = null,
+    UID = null,
+    recSocketID = null,
+    recUID = null,
+    json = null,
+) {
+    let outputLogObj = {};
+
+    if (func !== null) outputLogObj.func = func;
+    if (event !== null) outputLogObj.event = event;
+    if (info !== null) outputLogObj.info = info;
+    if (socketID !== null) outputLogObj.socketID = socketID;
+    if (UID !== null) outputLogObj.UID = UID;
+    if (recSocketID !== null) outputLogObj.recSocketID = recSocketID;
+    if (recUID !== null) outputLogObj.recUID = recUID;
+    if (json !== null) outputLogObj.json = json;
+
+    return outputLogObj;
+}
+
+function logDebug(
+    message = null,
+    func = null,
+    event = null,
+    error = null,
+    info = null,
+    socketID = null,
+    UID = null,
+    recSocketID = null,
+    recUID = null,
+    json = null,
+) {
+    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
+
+    let cleanedErr;
+    if (error) { cleanedErr = cleanStackTrace(error); }
+
+    let logArgs = [];
+
+    if (message) logArgs.push(message);
+    if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
+    if (cleanedErr) logArgs.push(cleanedErr);
+
+    logger.debug(...logArgs);
+}
+
+function logInfo(
+    message = null,
+    func = null,
+    event = null,
+    error = null,
+    info = null,
+    socketID = null,
+    UID = null,
+    recSocketID = null,
+    recUID = null,
+    json = null,
+) {
+    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
+
+    let cleanedErr;
+    if (error) { cleanedErr = cleanStackTrace(error); }
+
+    let logArgs = [];
+
+    if (message) logArgs.push(message);
+    if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
+    if (cleanedErr) logArgs.push(cleanedErr);
+
+    logger.info(...logArgs);
+}
+
+function logWarn(
+    message = null,
+    func = null,
+    event = null,
+    error = null,
+    info = null,
+    socketID = null,
+    UID = null,
+    recSocketID = null,
+    recUID = null,
+    json = null,
+) {
+    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
+
+    let cleanedErr;
+    if (error) { cleanedErr = cleanStackTrace(error); }
+
+    let logArgs = [];
+
+    if (message) logArgs.push(message);
+    if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
+    if (cleanedErr) logArgs.push(cleanedErr);
+
+    logger.warn(...logArgs);
+}
+
+function logError(
+    message = null,
+    func = null,
+    event = null,
+    error = null,
+    info = null,
+    socketID = null,
+    UID = null,
+    recSocketID = null,
+    recUID = null,
+    json = null,
+) {
+    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
+
+    let cleanedErr;
+    if (error) { cleanedErr = cleanStackTrace(error); }
+
+    let logArgs = [];
+
+    if (message) logArgs.push(message);
+    if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
+    if (cleanedErr) logArgs.push(cleanedErr);
+
+    logger.error(...logArgs);
+}
+
+function checkParams(
+    socketID = null,
+    UID = null,
+    params,
+    reqParams,
+) {
+    let nullParams = reqParams.filter(param => isNull(params[param]));
+
+    if (nullParams.length > 0) {
+        throw new ReqParamsNull(FMsg(undefined, `null params: ${nullParams.join(', ')}`, socketID, UID));
     }
 }
 
 function checkPacketProps(
-    packetObject, 
-    reqProps, 
-    checkIfNull = true
-    ) {
+    packetObject,
+    reqProps,
+    checkIfNull = true,
+) {
 
     let missingProps = reqProps.filter(prop => !packetObject.hasOwnProperty(prop));
 
@@ -69,119 +245,12 @@ function checkPacketProps(
     }
 }
 
-function checkParams(
-    params,
-    reqParams
-) {
-    let nullParams = reqParams.filter(param => isNull(params[param]));
-
-    if (nullParams.length > 0) {
-        throw new ReqParamsNull(`null params: ${nullParams.join(', ')}`);
-    }
-}
-
 function checkSocketStatus(
-    socket
+    socket,
 ) {
     if (!socket.userdata.connected || isNull(socket.userdata.userID)) {
-
+        throw new SocketStatusErr(`socket status: (connected: ${socket.userdata.connected}, userID: ${socket.userdata.userID})`);
     }
-}
-
-function extractStackTrace(
-    message,
-    sliceFromTop = 2
-) {
-    const err = new Error();
-    const stackLines = err.stack.split('\n');
-    
-    const relevantStack = stackLines.slice(sliceFromTop).filter(line => {
-        if (line.includes('(internal/')) return false;
-
-        if (line.includes('node_modules')) return false;
-
-        return true;
-    });
-
-    const cleanedStack = relevantStack.map(line => line.replace(/^(\s*)at\s+/, '$1')).join('\n');
-
-    return `${message}\n${cleanedStack}`;
-}
-
-function funcS(
-    func,
-    info = null,
-    origSocketID = null,
-    origUID = null,
-    recSocketID = null,
-    recUID = null
-) {
-    let baseS = `func: ${func}`;
-    let infoS = info !== null ? `, info: ${info}` : '';
-    let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
-    let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
-    let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
-    let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
-
-    return baseS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS;
-}
-
-function errLog(
-    err,
-    info = null,
-    origSocketID = null,
-    origUID = null,
-    recSocketID = null,
-    recUID = null
-) {
-    let infoS = info !== null ? `, info: ${info}` : '';
-    let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
-    let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
-    let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
-    let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
-
-    let errS = extractStackTrace(err + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS, 3);
-    
-    return errS
-}
-
-function eventS(
-    eventName,
-    info = null,
-    origSocketID = null,
-    origUID = null,
-    recSocketID = null,
-    recUID = null
-) {
-    let baseS = `event: ${eventName}`;
-    let infoS = info !== null ? `, info: ${info}` : '';
-    let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
-    let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
-    let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
-    let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
-
-    return baseS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS;
-}
-
-function eventErrLog(
-    eventName,
-    err,
-    info = null,
-    origSocketID = null,
-    origUID = null,
-    recSocketID = null,
-    recUID = null
-) {
-    let baseS = `, event: ${eventName}`;
-    let infoS = info !== null ? `, info: ${info}` : '';
-    let origSocketIDS = origSocketID !== null ? `, origSocketID: ${origSocketID}` : '';
-    let origUIDS = origUID !== null ? `, origUID: ${origUID}` : '';
-    let recSocketIDS = recSocketID !== null ? `, recSocketID: ${recSocketID}` : '';
-    let recUIDS = recUID !== null ? `, recUID: ${recUID}` : '';
-
-    let errS = extractStackTrace(err + baseS + infoS + origSocketIDS + origUIDS + recSocketIDS + recUIDS, 3);
-
-    return errS
 }
 
 module.exports = {
@@ -191,11 +260,13 @@ module.exports = {
     isNotNull,
     bufferToObject,
     objectToBuffer,
-    checkPacketProps,
+    cleanStackTrace,
+    logObj,
+    logDebug,
+    logInfo,
+    logWarn,
+    logError,
     checkParams,
-    extractStackTrace,
-    funcS,
-    errLog,
-    eventS,
-    eventErrLog,
+    checkPacketProps,
+    checkSocketStatus,
 };

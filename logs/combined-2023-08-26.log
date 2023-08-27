@@ -1,0 +1,12 @@
+[2023-08-26 16:19:30.854] INFO  || func: startServer, info: Server listening on localhost, port 3000
+[2023-08-26 16:19:30.876] INFO  || func: db.connectDB, info: connected to MySQL DB
+[2023-08-26 16:19:30.890] INFO  || func: db.createTables, info: created 'users' table if not present
+[2023-08-26 16:19:30.891] INFO  || func: db.createTables, info: created 'CRs' table if not present
+[2023-08-26 16:19:30.892] INFO  || func: db.createTables, info: created 'RUChannels' table if not present
+[2023-08-26 16:19:30.892] INFO  || func: db.createTables, info: created 'events' table if not present
+[2023-08-26 16:19:33.267] INFO  || event: connection, origSocketID: 1Br7yjLqo6UtJW4RAAAB
+[2023-08-26 16:19:33.272] DEBUG || func: db.fetchRecords, info: table: USERS, origSocketID: 1Br7yjLqo6UtJW4RAAAB
+[2023-08-26 16:19:33.273] INFO  || event: connectUser, origSocketID: 1Br7yjLqo6UtJW4RAAAB, origUID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5
+[2023-08-26 16:19:33.273] ERROR || TypeError: Cannot read properties of undefined (reading 'error'), event: connectUser, origSocketID: 1Br7yjLqo6UtJW4RAAAB, origUID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5
+    Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/index.js:184:26)
+    process.processTicksAndRejections (node:internal/process/task_queues:95:5)

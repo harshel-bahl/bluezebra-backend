@@ -19,13 +19,11 @@ const {
     isNotNull,
     bufferToObject,
     objectToBuffer,
-    checkPacketProps,
     checkParams,
-    extractStackTrace,
-    funcS,
-    errLog,
-    eventS,
-    eventF,
+    checkPacketProps,
+    checkSocketStatus,
+    SMsg,
+    FMsg,
 } = require('./utilities');
 
 class eventFuncs {
@@ -143,7 +141,7 @@ class eventFuncs {
                         try {
                             if (err) {
                                 throw new FuncErr(err.message);
-                            } else if (response[0] != null) {
+                            } else if (response[0] != null) { 
                                 throw new ClientResponseErr(response[0]);
                             }
 

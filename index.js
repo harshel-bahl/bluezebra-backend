@@ -27,11 +27,13 @@ const {
     objectToBuffer,
     checkPacketProps,
     checkParams,
+    checkSocketStatus,
     extractStackTrace,
     funcS,
     errLog,
     eventS,
     eventErrLog,
+    checkSocketStatus,
 } = require('./utilities');
 
 const app = require('express')();
@@ -98,11 +100,10 @@ io.on('connection', (socket) => {
     // checkUsername
     // request operation
     socket.on('checkUsername', async function (data, ack) {
-
-        let username = data;
-
         try {
-            checkParams({username: username}, ["username"]);
+            checkPacketProps(data, ["username"]);
+
+            var username = data;
 
             let result = await db.fetchRecord(socket.id, null, "USERS", "username", username, undefined, undefined, "userID", false)
 
@@ -122,22 +123,14 @@ io.on('connection', (socket) => {
     // createUser
     // creation operation
     socket.on('createUser', async function (data, ack) {
-
-        let packetBuffer = data.packet
-
         try {
-            if (packetBuffer == null) {
-                throw new error.EventError("createUser", `missing required parameters: (packetBuffer: ${packetBuffer})`);
-            }
+            checkPacketProps(data, ["packet"]);
 
-            let packetObject = JSON.parse(packetBuffer.toString());
-            let packetProps = ["userID", "username", "avatar", "creationDate"];
+            var packetBuffer = data.packet
 
-            if (packetProps.every(key => packetObject.hasOwnProperty(key)) == false) {
-                throw new error.EventError("createUser", `packet property(s) missing: (packetObject: ${packetObject})`);
-            } else if (Object.values(packetObject).every(item => item !== null) == false) {
-                throw new error.EventError("createUser", `packet property(s) null: (packetObject: ${packetObject})`);
-            };
+            let packetObject = bufferToObject(packetBuffer);
+
+            checkPacketProps(packetObject, ["userID", "username", "avatar", "creationDate"]);
 
             try {
                 await db.createUser(socket.id, packetObject.userID, packetObject.username, packetObject.avatar, packetObject.creationDate);
@@ -158,56 +151,56 @@ io.on('connection', (socket) => {
     // Request operation
     // - Checks if user exists in database, if yes then sends null callback, otherwise sends failure to client to clear local storage
     socket.on('connectUser', async function (data, ack) {
-
-        let userID = data.userID;
-
         try {
-            if (userID == null) {
-                throw EventErr("connectUser", "userID is null");
-            };
+            checkPacketProps(data, ["userID"]);
 
-            let userRecord = await db.fetchRecords(socket.id, null, "USERS", "userID", userID, "userID", undefined, undefined, 1);
+            var userID = data.userID;
 
-            if (userRecord.length != 1) {
-                throw EventErr("connectUser", "user does not exist");
-            } else {
-                connectUser(userID);
-            };
+            try {
+                let userRecord = await db.fetchRecord(socket.id, null, "USERS", "userID", userID);
+            } catch (error) {
+                logger.error(eventErrLog("connectUser", error, undefined, socket.id, userID));
+
+                if (error instanceof EmptyDBResult) {
+                    ack("user does not exist");
+                } else {
+                    ack(false);
+                }
+            }
+
+            connectUser(userID);
 
             logger.info(eventS("connectUser", undefined, socket.id, userID));
             ack(null);
 
-            await ef.sendUserOnline(socket.id, userID);
+            await ef.sendUserConnect(socket.id, userID);
 
             await ef.emitPendingEvents(socket.id, userID, socket, 1000);
         } catch (error) {
             logger.error(eventErrLog("connectUser", error, undefined, socket.id, userID));
             ack(false);
-        };
+        }
     });
 
     socket.on('disconnect', async (reason) => {
-
-        let socketID = socket.id;
-        let userID = socket.userdata.userID;
-
         try {
-            if (socket.userdata.connected == false || userID == null) {
-                throw EventErr("disconnect", "disconnected or socket.userdata.userID is null");
-            };
+            checkSocketStatus(socket);
+
+            var socketID = socket.id;
+            var userID = socket.userdata.userID;
 
             disconnectUser();
 
             try {
                 await db.updateRecord(socketID, userID, "USERS", "userID", userID, undefined, undefined, "lastOnline", util.currDT);
-            } catch (error) { };
+            } catch (error) { }
 
-            logger.info(eventS("disconnect", undefined, socketID, userID));
+            logger.info(eventS("disconnect", `socket disconnect info: ${reason}`, socketID, userID));
 
             await ef.sendUserDisconnect(socketID, userID);
         } catch (error) {
-            logger.error(eventErrLog("disconnect", error, undefined, socketID, userID));
-        };
+            logger.error(eventErrLog("disconnect", error, `socket disconnect info: ${reason}`, socketID, userID));
+        }
     });
 
     // deleteUser
@@ -216,35 +209,32 @@ io.on('connection', (socket) => {
     // - If successful, deleteUserTrace event is emitted to all RUIDs
     // - On receiving ack, if success it's logged, otherwise added to events table for another try later
     socket.on('deleteUser', async function (data, ack) {
-
-        let userID = data.userID;
-
         try {
-            if (socket.userdata.connected == false || socket.userdata.userID == null) {
-                throw EventErr("deleteUser", "disconnected or socket.userdata.userID is null");
-            };
+            checkSocketStatus(socket);
 
-            if (userID == null) {
-                throw EventErr("deleteUser", "missing required parameters");
-            } else if (userID != socket.userdata.userID) {
-                throw EventErr("deleteUser", "userID does not match socket.userdata.userID");
-            };
+            checkPacketProps(data, ["userID"]);
+
+            var userID = data.userID;
+
+            if (userID != socket.userdata.userID) {
+                throw new SocketStatusErr("userID does not match socket.userdata.userID");
+            }
 
             let RUIDs = await this.db.fetchRUChannelsbyUserID(origUID, "userID");
 
-            await ef.deleteUserdata(socket.socketID, socket.userdata.userID);
+            await ef.deleteUserdata(socket.id, socket.userdata.userID);
 
             disconnectUser();
 
-            logger.info(eventS("deleteUser", `userID: ${userID}`, socket.socketID, socket.userdata.userID));
+            logger.info(eventS("deleteUser", `userID: ${userID}`, socket.id, socket.userdata.userID));
             ack(null);
 
-            await ef.sendDeleteUserTrace(socket.socketID, userID, RUIDs);
-            
+            await ef.sendDeleteUserTrace(socket.id, userID, RUIDs);
+
         } catch (error) {
-            logger.error(eventErrLog("deleteUser", error, `userID: ${userID}`, socket.socketID, socket.userdata.userID));
-            ack(error.message);
-        };
+            logger.error(eventErrLog("deleteUser", error, `userID: ${userID}`, socket.id, socket.userdata.userID));
+            ack(false);
+        }
     });
 
     // ChannelDC Events
@@ -257,10 +247,11 @@ io.on('connection', (socket) => {
         let userID = data;
 
         try {
-            if (socket.userdata.connected == false || socket.userdata.userID == null) {
-                throw EventErr("fetchRU", "disconnected or socket.userdata.userID is null");
-            };
+            checkSocketStatus(socket);
 
+            checkParams({
+                data: data
+            }, )
             if (userID == null) {
                 throw EventErr("fetchRU", "missing required parameters");
             };
@@ -315,12 +306,12 @@ io.on('connection', (socket) => {
                 throw EventErr("checkRUIDsOnline", "missing required paramters");
             };
 
-            let returnRUIDs = await ef.checkRUIDsOnline(socket.socketID, socket.userdata.userID, RUIDs);
+            let returnRUIDs = await ef.checkRUIDsOnline(socket.id, socket.userdata.userID, RUIDs);
 
-            logger.info(eventS("checkRUIDsOnline", `RUIDCount: ${RUIDs.length}, returnRUIDCount: ${returnRUIDs.length}`, socket.socketID, socket.userdata.userID));
+            logger.info(eventS("checkRUIDsOnline", `RUIDCount: ${RUIDs.length}, returnRUIDCount: ${returnRUIDs.length}`, socket.id, socket.userdata.userID));
             ack(null, returnRUIDs);
         } catch (error) {
-            logger.error(eventErrLog("checkRUIDsOnline", error, `RUIDCount: ${RUIDs.length}`, socket.socketID, socket.userdata.userID));
+            logger.error(eventErrLog("checkRUIDsOnline", error, `RUIDCount: ${RUIDs.length}`, socket.id, socket.userdata.userID));
             ack(error.message);
         };
     });
@@ -342,9 +333,9 @@ io.on('connection', (socket) => {
 
             await ef.checkCRs(socket.userdata.userID, socket, clientRequestIDs, ack);
 
-            logger.info(eventS("checkCRs", `requestIDCount: ${clientRequestIDs.length}`, socket.socketID, socket.userdata.userID));
+            logger.info(eventS("checkCRs", `requestIDCount: ${clientRequestIDs.length}`, socket.id, socket.userdata.userID));
         } catch (error) {
-            logger.error(eventErrLog("checkCRs", error, `requestIDCount: ${clientRequestIDs.length}`, socket.socketID, socket.userdata.userID));
+            logger.error(eventErrLog("checkCRs", error, `requestIDCount: ${clientRequestIDs.length}`, socket.id, socket.userdata.userID));
             ack(error.message);
         };
     });
@@ -445,7 +436,7 @@ io.on('connection', (socket) => {
     });
 
 
-    
+
 
     // sendCR
     // - A CR packet is sent, and an ack is pending to A to create CR objects in its database
@@ -467,17 +458,17 @@ io.on('connection', (socket) => {
                 throw EventErr("sendCR", "missing required parameters");
             };
 
-            let packetObject = await ef.sendCR(socket.socketID, socket.userdata.userID, recUID, packetBuffer, ack);
+            let packetObject = await ef.sendCR(socket.id, socket.userdata.userID, recUID, packetBuffer, ack);
 
             try {
                 await ef.receivedCR(origSocketID, origUID, recUID, packetObject);
 
-                logger.info(eventS("sendCR", undefined, socket.socketID, socket.userdata.userID, undefined, recUID));
+                logger.info(eventS("sendCR", undefined, socket.id, socket.userdata.userID, undefined, recUID));
             } catch (error) {
-                logger.error(eventErrLog("sendCR", error, `requestID: ${packetObject.requestID}`, socket.socketID, socket.userdata.userID, undefined, recUID));
+                logger.error(eventErrLog("sendCR", error, `requestID: ${packetObject.requestID}`, socket.id, socket.userdata.userID, undefined, recUID));
             };
         } catch (error) {
-            logger.error(eventErrLog("sendCR", error, undefined, socket.socketID, socket.userdata.userID, undefined, recUID));
+            logger.error(eventErrLog("sendCR", error, undefined, socket.id, socket.userdata.userID, undefined, recUID));
             ack(error.message);
         };
     });

@@ -13,8 +13,8 @@ const {
   isNull,
   isNotNull,
   checkParams,
-  funcS,
-  errLog,
+  SMsg,
+  FMsg,
 } = require('./utilities');
 
 class Database {
@@ -38,15 +38,15 @@ class Database {
     this.con.connect((err) => {
       try {
         if (err) {
-          throw new DBErr(err.message);
+          throw new DBErr(FMsg(undefined, err.message));
         }
 
-        this.logger.info(funcS("db.connectDB", "connected to MySQL DB"))
+        this.logger.info(SMsg("db.connectDB", undefined, "connected to MySQL DB"))
         this.connected = true;
 
         this.createTables();
       } catch (error) {
-        this.logger.error(errLog(error))
+        this.logger.error(error)
         this.connected = false;
       }
     });
@@ -94,48 +94,48 @@ class Database {
     this.con.query(table1, (err, result) => {
       try {
         if (err) {
-          throw new DBErr(err.message);
+          throw new DBErr(FMsg(undefined, err.message));
         };
 
-        this.logger.info(funcS("db.createTables", "created 'users' table if not present"));
+        this.logger.info(SMsg("db.createTables", undefined, "created 'users' table if not present"));
       } catch (error) {
-        this.logger.error(errLog(error, "failed to create 'users' table"));
+        this.logger.error(error);
       };
     });
 
     this.con.query(table2, (err, result) => {
       try {
         if (err) {
-          throw new DBErr(err.message);
+          throw new DBErr(FMsg(undefined, err.message));
         };
 
-        this.logger.info(funcS("db.createTables", "created 'CRs' table if not present"));
+        this.logger.info(SMsg("db.createTables", undefined, "created 'CRs' table if not present"));
       } catch (error) {
-        this.logger.error(errLog(error, "failed to create 'CRs' table"));
+        this.logger.error(error);
       };
     });
 
     this.con.query(table3, (err, result) => {
       try {
         if (err) {
-          throw new DBErr(err.message);
+          throw new DBErr(FMsg(undefined, err.message));
         };
 
-        this.logger.info(funcS("db.createTables", "created 'RUChannels' table if not present"));
+        this.logger.info(SMsg("db.createTables", undefined, "created 'RUChannels' table if not present"));
       } catch (error) {
-        this.logger.error(errLog(error, "failed to create 'RUChannels' table"));
+        this.logger.error(error);
       };
     });
 
     this.con.query(table4, (err, result) => {
       try {
         if (err) {
-          throw new DBErr(err.message);
+          throw new DBErr(FMsg(undefined, err.message));
         };
 
-        this.logger.info(funcS("db.createTables", "created 'events' table if not present"));
+        this.logger.info(SMsg("db.createTables", undefined, "created 'events' table if not present"));
       } catch (error) {
-        this.logger.error(errLog(error, "failed to create 'events' table"));
+        this.logger.error(error);
       };
     });
   };
@@ -193,22 +193,22 @@ class Database {
         this.con.query(query, values, (err, result, fields) => {
           try {
             if (err) {
-              throw new DBErr("db.fetchRecord", err.message);
+              throw new DBErr(FMsg(undefined, err.message, socketID, UID));
             } else if (result.length == 0 && errorOnEmpty) {
-              throw new EmptyDBResult();
+              throw new EmptyDBResult(FMsg(undefined, `no record found in table: ${table}`));
             } else if (result.length > 1 && errorOnMultiple) {
-              throw new MultipleDBResults();
+              throw new MultipleDBResults(FMsg(undefined, `multiple records found in table: ${table}`));
             } else {
-              this.logger.debug(funcS("db.fetchRecord", `table: ${table}`, socketID, UID));
+              this.logger.debug(SMsg("db.fetchRecord", undefined, `table: ${table}`, socketID, UID));
               resolve(result[0]);
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `table: ${table}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `table: ${table}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -267,20 +267,20 @@ class Database {
         this.con.query(query, values, (err, result, fields) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else if (result.length == 0 && failOnEmpty) {
-              throw new EmptyDBResult();
+              throw new EmptyDBResult(FMsg(undefined, `no records found in table: ${table}`));
             } else {
-              this.logger.debug(funcS("db.fetchRecords", `table: ${table}`, socketID, UID));
+              this.logger.debug(SMsg("db.fetchRecords", undefined, `table: ${table}`, socketID, UID));
               resolve(result);
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `table: ${table}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `table: ${table}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -335,22 +335,22 @@ class Database {
         this.con.query(query, values, (err, result, fields) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else if (result.affectedRows == 0) {
-              throw new EmptyDBResult();
+              throw new EmptyDBResult(FMsg(undefined, `no record found in table: ${table}`));
             } else if (result.affectedRows == 1 && result.changedRows == 0) {
-              throw new DBErr("no changes made");
+              throw new DBErr(FMsg(undefined, `no changes made to record in table: ${table}`));
             } else {
-              this.logger.debug(funcS("db.updateRecord", `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+              this.logger.debug(SMsg("db.updateRecord", undefined, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -396,20 +396,20 @@ class Database {
         this.con.query(query, values, (err, result, fields) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else if (result.affectedRows == 0 && failOnEmpty) {
-              throw new EmptyDBResult();
+              throw new EmptyDBResult(FMsg(undefined, `no records found in table: ${table}`));
             } else {
-              this.logger.debug(funcS("db.updateRecords", `table: ${table}, updateProp: ${updateProp}, updated: ${result.changedRows}`, socketID, UID));
+              this.logger.debug(SMsg("db.updateRecords", undefined, `table: ${table}, updateProp: ${updateProp}, updated: ${result.changedRows}`, socketID, UID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `table: ${table}, updateProp: ${updateProp}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -458,20 +458,20 @@ class Database {
         this.con.query(query, values, (err, result, fields) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else if (result.affectedRows == 0) {
-              throw new EmptyDBResult
+              throw new EmptyDBResult(FMsg(undefined, `no record found in table: ${table}`));
             } else {
-              this.logger.debug(funcS("db.deleteRecord", `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
+              this.logger.debug(SMsg("db.deleteRecord", undefined, `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `table: ${table}, predProp1: ${predProp1}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -511,20 +511,20 @@ class Database {
         this.con.query(query, values, (err, result, fields) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else if (result.affectedRows == 0 && failOnEmpty) {
-              throw new EmptyDBResult
+              throw new EmptyDBResult(FMsg(undefined, `no records found in table: ${table}`));
             } else {
-              this.logger.debug(funcS("db.deleteRecords", `table: ${table}, predProp: ${predProp}, deleted: ${result.affectedRows}`, socketID, UID));
+              this.logger.debug(SMsg("db.deleteRecords", undefined, `table: ${table}, predProp: ${predProp}, deleted: ${result.affectedRows}`, socketID, UID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `table: ${table}, predProp: ${predProp}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `table: ${table}, predProp: ${predProp}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       }
     });
@@ -563,18 +563,18 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else {
-              this.logger.debug(funcS("db.createUser", `userID: ${userID}, username: ${username}`, socketID));
+              this.logger.debug(SMsg("db.createUser", undefined, `userID: ${userID}, username: ${username}`, socketID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `userID: ${userID}, username: ${username}`, socketID));
+            this.logger.warn(error);
             reject(error);
           }
         });
       } catch (error) {
-        this.logger.error(errLog(error, `userID: ${userID}, username: ${username}`, socketID));
+        this.logger.error(error);
         reject(error);
       }
     });
@@ -606,18 +606,18 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else {
-              this.logger.debug(funcS("db.fetchUsersByUsername", `username: ${username}`, socketID, UID));
+              this.logger.debug(SMsg("db.fetchUsersByUsername", undefined, `username: ${username}`, socketID, UID));
               resolve(result);
             }
           } catch (error) {
-            this.logger.warn(errLog(error, `username: ${username}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `username: ${username}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -659,18 +659,18 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else {
-              this.logger.debug(funcS("db.createCR", `requestID: ${requestID}`, socketID, UID));
+              this.logger.debug(SMsg("db.createCR", undefined, `requestID: ${requestID}`, socketID, UID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `requestID: ${requestID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           }
         });
       } catch (error) {
-        this.logger.error(errLog(error, `requestID: ${requestID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -706,18 +706,18 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             } else {
-              this.logger.debug(funcS("db.fetchCRsbyUserID", `userID: ${userID}`, socketID, UID));
+              this.logger.debug(SMsg("db.fetchCRsbyUserID", undefined, `userID: ${userID}`, socketID, UID));
               resolve();
             };
           } catch (error) {
-            this.logger.warn(errLog(error, `userID: ${userID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -745,19 +745,19 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             };
 
-            this.logger.debug(funcS("db.deleteCRsByUserID", `userID: ${userID}`, socketID, UID));
+            this.logger.debug(SMsg("db.deleteCRsByUserID", undefined, `userID: ${userID}`, socketID, UID));
             resolve();
 
           } catch (error) {
-            this.logger.warn(errLog(error, `userID: ${userID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           }
         });
       } catch (error) {
-        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -775,6 +775,7 @@ class Database {
   ) {
     return new Promise((resolve, reject) => {
       try {
+        
         checkParams({
           channelID: channelID,
           userID: userID,
@@ -795,19 +796,19 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             }
 
-            this.logger.debug(funcS("db.createRUChannel", `channelID: ${channelID}`, socketID, UID));
+            this.logger.debug(SMsg("db.createRUChannel", undefined, `channelID: ${channelID}`, socketID, UID));
             resolve();
 
           } catch (error) {
-            this.logger.warn(errLog(error, `channelID: ${channelID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `channelID: ${channelID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -848,19 +849,19 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             };
 
-            this.logger.debug(funcS("db.fetchRUChannelsByChannelID", `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
+            this.logger.debug(SMsg("db.fetchRUChannelsByChannelID", undefined, `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
             resolve(result);
 
           } catch (error) {
-            this.logger.warn(errLog(error, `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `channelID: ${channelID}, userID: ${userID}`, socketID, UID));
+        this.logger.error(error);
         reject(error)
       };
     });
@@ -904,19 +905,19 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             };
 
-            this.logger.debug(funcS("db.fetchRUChannelsbyUserID", `userID: ${userID}`, socketID, UID));
+            this.logger.debug(SMsg("db.fetchRUChannelsbyUserID", undefined, `userID: ${userID}`, socketID, UID));
             resolve(result);
 
           } catch (error) {
-            this.logger.warn(errLog(error, `userID: ${userID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -949,23 +950,23 @@ class Database {
           this.con.query(query, values, (err, result) => {
             try {
               if (err) {
-                throw new DBErr(err.message);
+                throw new DBErr(FMsg(undefined, err.message));
               }
 
-              this.logger.debug(funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: ${result.affectedRows}`, socketID, UID));
+              this.logger.debug(SMsg("db.deleteRUChannelsByUserID", undefined, `userID: ${userID}, deleted: ${result.affectedRows}`, socketID, UID));
               resolve();
 
             } catch (error) {
-              this.logger.warn(errLog(error, `userID: ${userID}, deleted: ${result.affectedRows}`, socketID, UID));
+              this.logger.warn(error);
               reject(error);
             };
           });
         } else {
-          this.logger.debug(funcS("db.deleteRUChannelsByUserID", `userID: ${userID}, deleted: 0`, socketID, UID));
+          this.logger.debug(SMsg("db.deleteRUChannelsByUserID", undefined, `userID: ${userID}, deleted: 0`, socketID, UID));
           resolve();
         };
       } catch (error) {
-        this.logger.error(errLog(error, `userID: ${userID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
@@ -1009,19 +1010,19 @@ class Database {
         this.con.query(query, values, (err, result) => {
           try {
             if (err) {
-              throw new DBErr(err.message);
+              throw new DBErr(FMsg(undefined, err.message));
             }
 
-            this.logger.debug(funcS("db.createEvent", `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
+            this.logger.debug(SMsg("db.createEvent", undefined, `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
             resolve();
 
           } catch (error) {
-            this.logger.warn(errLog(error, `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
+            this.logger.warn(error);
             reject(error);
           };
         });
       } catch (error) {
-        this.logger.error(errLog(error, `eventName: ${eventName} recUID: ${recUID}`, socketID, UID));
+        this.logger.error(error);
         reject(error);
       };
     });
