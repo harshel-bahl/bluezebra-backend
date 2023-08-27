@@ -1,42 +1,27 @@
 const mysql = require('mysql');
-const logger = require('./logger');
+const config = require('./config');
 
 const {
   ReqParamsNull,
-  SocketStatusErr,
   EmptyObj,
   MissingObjProps,
   ObjPropsNull,
-  ParseJSONErr,
-  JSONBufferErr,
   DBErr,
   EmptyDBResult,
   MultipleDBResults,
-  EventErr,
   FuncErr,
-  ClientResponseErr,
+  ...errors
 } = require('./error');
 
 const {
-  currDT,
-  UUID,
-  isNull,
-  isNotNull,
-  isEmpty,
-  bufferToObject,
-  objectToBuffer,
-  cleanStackTrace,
-  logObj,
   logDebug,
   logInfo,
   logWarn,
   logError,
   checkParams,
-  checkObjReqProps,
   checkObjProps,
-  checkSocketStatus,
+  ...util
 } = require('./utilities');
-const { log } = require('winston');
 
 
 class Database {
@@ -837,4 +822,4 @@ class Database {
   };
 }
 
-module.exports = Database;
+module.exports = new Database();

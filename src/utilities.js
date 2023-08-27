@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const logger = require('./logger');
 
 const {
     ReqParamsNull,
@@ -15,8 +16,6 @@ const {
     FuncErr,
     ClientResponseErr,
 } = require('./error');
-
-const logger = require('./logger');
 
 
 // Utility Functions

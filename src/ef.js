@@ -1,7 +1,11 @@
+const logger = require('./logger');
+
 const {
     ReqParamsNull,
-    MissingPacketProps,
-    PacketPropsNull,
+    SocketStatusErr,
+    EmptyObj,
+    MissingObjProps,
+    ObjPropsNull,
     ParseJSONErr,
     JSONBufferErr,
     DBErr,
@@ -17,21 +21,26 @@ const {
     UUID,
     isNull,
     isNotNull,
+    isEmpty,
     bufferToObject,
     objectToBuffer,
+    cleanStackTrace,
+    logObj,
+    logDebug,
+    logInfo,
+    logWarn,
+    logError,
     checkParams,
-    checkPacketProps,
+    checkObjReqProps,
+    checkObjProps,
     checkSocketStatus,
-    SMsg,
-    FMsg,
 } = require('./utilities');
 
-class eventFuncs {
+class EventFuncs {
 
-    constructor(io, db, logger, connectedUsers) {
+    constructor(io, db, connectedUsers) {
         this.io = io;
         this.db = db;
-        this.logger = logger;
         this.connectedUsers = connectedUsers;
     }
 

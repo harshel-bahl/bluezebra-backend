@@ -1,13 +1,14 @@
-const dbC = require('./db');
-const eventFuncsC = require('./eventFuncs');
+const { io } = require('./server');
+const auth = require('./auth');
+const db = require('./db');
+const ef = require('./eventFuncs');
 const config = require('./config');
 const logger = require('./logger');
 
 const {
-    ReqParamsNull,
     SocketStatusErr,
-    MissingPacketProps,
-    PacketPropsNull,
+    MissingObjProps,
+    ObjPropsNull,
     ParseJSONErr,
     JSONBufferErr,
     DBErr,
@@ -16,60 +17,25 @@ const {
     EventErr,
     FuncErr,
     ClientResponseErr,
+    ...errors
 } = require('./error');
 
 const {
-    currDT,
-    UUID,
-    isNull,
-    isNotNull,
     bufferToObject,
     objectToBuffer,
-    checkPacketProps,
+    logDebug,
+    logInfo,
+    logWarn,
+    logError,
     checkParams,
+    checkObjReqProps,
+    checkObjProps,
     checkSocketStatus,
-    extractStackTrace,
-    funcS,
-    errLog,
-    eventS,
-    eventErrLog,
-    checkSocketStatus,
+    ...util
 } = require('./utilities');
 
-const app = require('express')();
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-
-// const privateKey = fs.readFileSync('path_to/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('path_to/fullchain.pem', 'utf8');
-// const ca = fs.readFileSync('path_to/chain.pem', 'utf8');
-
-// const credentials = {
-// key: privateKey,
-// cert: certificate,
-// ca: ca
-// };
-// const server = https.createServer(credentials, app);
-
-// add JWTs for authentication
-
-let db = new dbC(logger);
-let ef = new eventFuncsC(db, logger);
-
-db.connectDB();
-
-function startServer() {
-    server.listen(3000, () => {
-        logger.info(funcS("startServer", "Server listening on localhost, port 3000"));
-    });
-}
-
-
-// connectedUsers
-// - userID: socketID
-let connectedUsers = {};
+// Socket Events
+// =============
 
 io.on('connection', (socket) => {
 
@@ -77,24 +43,9 @@ io.on('connection', (socket) => {
 
     socket.userdata = {
         socketID: socket.id,
-        userID: null,
+        UID: null,
         connected: null,
         emittedPendingEvents: false
-    };
-
-    function connectUser(userID) {
-        socket.userdata.userID = userID;
-        socket.userdata.connected = true;
-
-        connectedUsers[userID] = {
-            socketID: socket.id
-        };
-    };
-
-    function disconnectUser() {
-        delete connectedUsers[socket.userdata.userID];
-        socket.userdata.connected = false;
-        socket.userdata.userID = null;
     };
 
     // checkUsername
@@ -758,6 +709,3 @@ io.on('connection', (socket) => {
         };
     });
 });
-
-
-startServer();
