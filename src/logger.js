@@ -1,8 +1,7 @@
-const { json } = require('express');
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
-const { combine, timestamp, printf, colorize, align, errors } = winston.format;
+const { combine, timestamp, printf, json, colorize } = winston.format;
 
 const logLevels = {
     error: 0,
@@ -16,10 +15,9 @@ const consoleFormat = combine(
     timestamp({
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
-    errors({ stack: true }),
     printf((info) => {
 
-        const { timestamp, level, message, error, stack, json, ...metadata } = info;
+        const { timestamp, level, message, error, json, ...metadata } = info;
 
         let timestampStr = `[${timestamp}]`;
         let levelStr = level; 
@@ -31,25 +29,25 @@ const consoleFormat = combine(
         let log = `${timestampStr} ${levelStr}${paddingStr}|| `;
 
         if (message) {
-            log += message;
-        }
-
-        if (error) {
-            log += `error: ${error}`;
+            log += `${message} | `;
         }
 
         if (metadata) {
             for (let key in metadata) {
-                log += `${key}: ${metadata[key]}`;
+                log += `${key}: ${metadata[key]} | `;
+            }
+        }
+
+        if (error) {
+            log += `error: [${error.name}: ${error.message}] | `;
+
+            if (error.stack) {
+                log += `STACK:\n${error.stack}`;
             }
         }
 
         if (json) {
-            log += `JSON: ${JSON.stringify(json, null, 2)}`;
-        }
-
-        if (stack) {
-            log += '\n' + stack;
+            log += `\nJSON: ${JSON.stringify(json, null, 2)} `;
         }
         
         return log;
@@ -60,10 +58,9 @@ const fileFormat = combine(
     timestamp({
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
-    errors({ stack: true }),
     printf((info) => {
 
-        const { timestamp, level, message, error, stack, json, ...metadata } = info;
+        const { timestamp, level, message, error, json, ...metadata } = info;
 
         let timestampStr = `[${timestamp}]`;
         let levelStr = level.toUpperCase(); 
@@ -75,25 +72,25 @@ const fileFormat = combine(
         let log = `${timestampStr} ${levelStr}${paddingStr}|| `;
 
         if (message) {
-            log += message;
-        }
-
-        if (error) {
-            log += `error: ${error}`;
+            log += `${message} | `;
         }
 
         if (metadata) {
             for (let key in metadata) {
-                log += `${key}: ${metadata[key]}`;
+                log += `${key}: ${metadata[key]} | `;
+            }
+        }
+
+        if (error) {
+            log += `error: [${error.name}: ${error.message}] | `;
+
+            if (error.stack) {
+                log += `STACK:\n${error.stack}`;
             }
         }
 
         if (json) {
-            log += `JSON: ${JSON.stringify(json, null, 2)}`;
-        }
-
-        if (stack) {
-            log += '\n' + stack;
+            log += `\nJSON: ${JSON.stringify(json, null, 2)} `;
         }
         
         return log;
@@ -104,7 +101,6 @@ const jsonFileFormat = combine(
     timestamp({
         format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
-    errors({ stack: true }),
     json(),
 );
 

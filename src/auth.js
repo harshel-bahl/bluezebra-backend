@@ -36,7 +36,7 @@ function disconnectUser(
 ) {
     delete connectedUsers[UID];
     socket.userdata.connected = false;
-    socket.userdata.userID = null;
+    socket.userdata.UID = null;
 };
 
 module.exports = {

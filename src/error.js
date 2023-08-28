@@ -131,6 +131,15 @@ class ClientResponseErr extends Error {
     }
 }
 
+class EmitErr extends Error {
+    constructor(message) {
+        super(`(${message})`);
+        this.name = 'EmitErr';
+
+        Error.captureStackTrace(this, EmitErr);
+    }
+}
+
 module.exports = {
     ReqParamsNull,
     SocketStatusErr,
@@ -145,4 +154,5 @@ module.exports = {
     EventErr,
     FuncErr,
     ClientResponseErr,
+    EmitErr
 }

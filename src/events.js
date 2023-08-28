@@ -1,7 +1,7 @@
 const { io } = require('./server');
 const auth = require('./auth');
 const db = require('./db');
-const ef = require('./eventFuncs');
+const ef = require('./ef');
 const config = require('./config');
 const logger = require('./logger');
 
@@ -34,12 +34,13 @@ const {
     ...util
 } = require('./utilities');
 
+
 // Socket Events
 // =============
 
 io.on('connection', (socket) => {
 
-    logger.info(eventS("connection", undefined, socket.id));
+    logInfo('socket connection', undefined, 'connection', undefined, undefined, socket.id);
 
     socket.userdata = {
         socketID: socket.id,
@@ -52,21 +53,19 @@ io.on('connection', (socket) => {
     // request operation
     socket.on('checkUsername', async function (data, ack) {
         try {
-            checkPacketProps(data, ["username"]);
+            checkObjReqProps(data, ["username"]);
 
-            var username = data;
+            let result = await db.fetchRecords(socket.id, null, "USERS", "username", data.username, undefined, undefined, 1, false, true);
 
-            let result = await db.fetchRecord(socket.id, null, "USERS", "username", username, undefined, undefined, "userID", false)
-
-            if (result == undefined) {
+            if (util.isNull(result)) {
                 ack(null, true);
             } else {
                 ack(null, false);
             };
 
-            logger.debug(eventS("checkUsername", `username: ${username}, result: ${result == undefined ? true : false}`, socket.id));
+            logInfo('checked username', undefined, 'checkUsername', undefined, undefined, socket.id);
         } catch (error) {
-            logger.error(eventErrLog("checkUsername", error, `username: ${username}`, socket.id));
+            logError('failed to check username', undefined, 'checkUsername', error, `username: ${data.username}`, socket.id);
             ack(false);
         }
     });
@@ -75,25 +74,23 @@ io.on('connection', (socket) => {
     // creation operation
     socket.on('createUser', async function (data, ack) {
         try {
-            checkPacketProps(data, ["packet"]);
+            checkObjReqProps(data, ["packet"]);
 
-            var packetBuffer = data.packet
+            var packetObject = bufferToObject(data.packet);
 
-            let packetObject = bufferToObject(packetBuffer);
-
-            checkPacketProps(packetObject, ["userID", "username", "avatar", "creationDate"]);
+            checkObjReqProps(packetObject, ["UID", "username", "avatar", "creationDate"]);
 
             try {
-                await db.createUser(socket.id, packetObject.userID, packetObject.username, packetObject.avatar, packetObject.creationDate);
+                await db.createUser(socket.id, packetObject.UID, packetObject.username, packetObject.avatar, packetObject.creationDate);
 
-                logger.info(eventS("createUser", `userID: ${packetObject.userID}`, socket.id));
+                logInfo('created user', undefined, 'createUser', undefined, undefined, socket.id, packetObject.UID);
                 ack(null);
             } catch (error) {
-                logger.error(eventErrLog("createUser", error, `userID: ${packetObject.userID}`, socket.id));
+                logError('failed to create user', undefined, 'createUser', error, `UID: ${packetObject.UID}`, socket.id);
                 ack(false);
             };
         } catch (error) {
-            logger.error(eventErrLog("createUser", error, undefined, socket.id));
+            logError('failed to create user', undefined, 'createUser', error, `UID: ${packetObject.UID}`, socket.id);
             ack(false);
         };
     });
@@ -103,32 +100,31 @@ io.on('connection', (socket) => {
     // - Checks if user exists in database, if yes then sends null callback, otherwise sends failure to client to clear local storage
     socket.on('connectUser', async function (data, ack) {
         try {
-            checkPacketProps(data, ["userID"]);
-
-            var userID = data.userID;
+            checkObjReqProps(data, ["UID"]);
 
             try {
-                let userRecord = await db.fetchRecord(socket.id, null, "USERS", "userID", userID);
+                let userRecord = await db.fetchRecords(socket.id, data.UID, "USERS", {"UID": data.UID}, "UID", undefined, undefined, 1, true);
             } catch (error) {
-                logger.error(eventErrLog("connectUser", error, undefined, socket.id, userID));
+                logError('failed to connect user', undefined, 'connectUser', error, `UID: ${data.UID}`, socket.id);
 
                 if (error instanceof EmptyDBResult) {
                     ack("user does not exist");
+                    throw error;
                 } else {
-                    ack(false);
+                    throw error;
                 }
             }
 
-            connectUser(userID);
+            auth.connectUser(socket.id, data.UID);
 
-            logger.info(eventS("connectUser", undefined, socket.id, userID));
+            logInfo('connected user', undefined, 'connectUser', undefined, undefined, socket.id, data.UID);
             ack(null);
 
             await ef.sendUserConnect(socket.id, userID);
 
-            await ef.emitPendingEvents(socket.id, userID, socket, 1000);
+            await ef.emitPendingEvents(socket.id, data.UID, socket, socket.id, data.UID);
         } catch (error) {
-            logger.error(eventErrLog("connectUser", error, undefined, socket.id, userID));
+            logError('failed to connect user', undefined, 'connectUser', error, `UID: ${data.UID}`, socket.id);
             ack(false);
         }
     });
@@ -138,50 +134,42 @@ io.on('connection', (socket) => {
             checkSocketStatus(socket);
 
             var socketID = socket.id;
-            var userID = socket.userdata.userID;
+            var UID = socket.userdata.UID;
 
-            disconnectUser();
+            auth.disconnectUser(socketID, UID);
 
             try {
-                await db.updateRecord(socketID, userID, "USERS", "userID", userID, undefined, undefined, "lastOnline", util.currDT);
+                await db.updateRecords(socketID, UID, "USERS", {"UID": UID}, "lastOnline", util.currDT);
             } catch (error) { }
 
-            logger.info(eventS("disconnect", `socket disconnect info: ${reason}`, socketID, userID));
+            logInfo('socket disconnect successfully', undefined, 'disconnect', undefined, `reason: ${reason}`, socketID, UID);
 
-            await ef.sendUserDisconnect(socketID, userID);
+            await ef.sendUserDisconnect(socketID, UID, UID);
         } catch (error) {
-            logger.error(eventErrLog("disconnect", error, `socket disconnect info: ${reason}`, socketID, userID));
+            logError('failed to disconnect socket properly', undefined, 'disconnect', error, `reason: ${reason}`, socketID, UID);
         }
     });
 
     // deleteUser
-    // deletion operation
-    // - Deletes user from database and sends null callback to client
-    // - If successful, deleteUserTrace event is emitted to all RUIDs
-    // - On receiving ack, if success it's logged, otherwise added to events table for another try later
+    //
     socket.on('deleteUser', async function (data, ack) {
         try {
             checkSocketStatus(socket);
 
-            checkPacketProps(data, ["userID"]);
+            checkObjReqProps(data, ["UID"]);
 
-            var userID = data.userID;
-
-            if (userID != socket.userdata.userID) {
-                throw new SocketStatusErr("userID does not match socket.userdata.userID");
+            if (data.UID != socket.userdata.UID) {
+                throw new SocketStatusErr("data.UID does not match socket.userdata.UID");
             }
 
-            let RUIDs = await this.db.fetchRUChannelsbyUserID(origUID, "userID");
+            await ef.sendDeleteUserTrace(socket.id, data.UID, data.UID);
 
-            await ef.deleteUserdata(socket.id, socket.userdata.userID);
+            await ef.deleteUserdata(socket.id, socket.userdata.UID, data.UID);
 
-            disconnectUser();
+            auth.disconnectUser(socket.id, data.UID);
 
-            logger.info(eventS("deleteUser", `userID: ${userID}`, socket.id, socket.userdata.userID));
+            logInfo('deleted user', undefined, 'deleteUser', undefined, `UID: ${data.UID}`, socket.id, data.UID);
             ack(null);
-
-            await ef.sendDeleteUserTrace(socket.id, userID, RUIDs);
-
         } catch (error) {
             logger.error(eventErrLog("deleteUser", error, `userID: ${userID}`, socket.id, socket.userdata.userID));
             ack(false);
@@ -194,76 +182,57 @@ io.on('connection', (socket) => {
     // fetchRU
     //
     socket.on('fetchRU', async function (data, ack) {
-
-        let userID = data;
-
         try {
+
             checkSocketStatus(socket);
 
-            checkParams({
-                data: data
-            }, )
-            if (userID == null) {
-                throw EventErr("fetchRU", "missing required parameters");
-            };
+            checkObjReqProps(data, ["UID"]);
+            
+            let userdata = await db.fetchRecords(socket.id, socket.userdata.UID, "USERS", {"UID": data.UID}, undefined, undefined, undefined, undefined, true, true);
 
-            let userdata = await db.fetchRecord(socket.id, socket.userdata.userID, "USERS", "userID", userID)
-
-            logger.info(eventS("fetchRU", `userID: ${userID}`, socket.id, socket.userdata.userID));
+            logInfo('fetched RU', undefined, 'fetchRU', undefined, `UID: ${data.UID}`, socket.id, socket.userdata.UID);
             ack(null, userdata);
         } catch (error) {
-            logger.error(eventErrLog("fetchRU", error, `userID: ${userID}`, socket.id, socket.userdata.userID));
-            ack(error.message)
+            logError('failed to fetch RU', undefined, 'fetchRU', error, `UID: ${data.UID}`, socket.id, socket.userdata.UID);
+            ack(false)
         };
     });
 
     // fetchRUs
     //
-    socket.on('fetchRUs', async function (data, ack) {
-
-        let username = data;
-
+    socket.on('fetchRUsByUsername', async function (data, ack) {
         try {
-            if (socket.userdata.connected == false || socket.userdata.userID == null) {
-                throw EventErr("fetchRUs", "disconnected or socket.userdata.userID is null");
-            };
 
-            if (username == null) {
-                throw EventErr("fetchRUs", "missing required parameters");
-            };
+            checkSocketStatus(socket);
 
-            let userPackets = await db.fetchUsersByUsername(socket.id, socket.userdata.userID, username, 15);
+            checkObjReqProps(data, ["username"]);
 
-            logger.info(eventS("fetchRUs", `username: ${username}, resultCount: ${userPackets.length}`, socket.id, socket.userdata.userID));
+            let userPackets = await db.fetchUsersByUsername(socket.id, socket.userdata.UID, data.username, 15);
+
+            logInfo('fetched RUs', undefined, 'fetchRUsByUsername', undefined, `username: ${data.username}`, socket.id, socket.userdata.UID);
             ack(null, userPackets);
         } catch (error) {
-            logger.error(eventErrLog("fetchRUs", error, `username: ${username}`, socket.id, socket.userdata.userID));
-            ack(error.message);
+            logError('failed to fetch RUs', undefined, 'fetchRUsByUsername', error, `username: ${data.username}`, socket.id, socket.userdata.UID);
+            ack(false);
         }
     });
 
     // checkRUIDsOnline
     //
     socket.on("checkRUIDsOnline", async function (data, ack) {
-
-        let RUIDs = data;
-
         try {
-            if (socket.userdata.connected == false || socket.userdata.userID == null) {
-                throw EventErr("checkRUIDsOnline", "disconnected or socket.userdata.userID is null");
-            };
 
-            if (RUIDs == null) {
-                throw EventErr("checkRUIDsOnline", "missing required paramters");
-            };
+            checkSocketStatus(socket);
 
-            let returnRUIDs = await ef.checkRUIDsOnline(socket.id, socket.userdata.userID, RUIDs);
+            checkObjReqProps(data, ["RUIDs"]);
 
-            logger.info(eventS("checkRUIDsOnline", `RUIDCount: ${RUIDs.length}, returnRUIDCount: ${returnRUIDs.length}`, socket.id, socket.userdata.userID));
+            let returnRUIDs = await ef.checkRUIDsOnline(socket.id, socket.userdata.UID, RUIDs);
+
+            logInfo('checked RUIDs online', undefined, 'checkRUIDsOnline', undefined, `RUIDCount: ${RUIDs.length}, returnRUIDCount: ${returnRUIDs.length}`, socket.id, socket.userdata.UID);
             ack(null, returnRUIDs);
         } catch (error) {
-            logger.error(eventErrLog("checkRUIDsOnline", error, `RUIDCount: ${RUIDs.length}`, socket.id, socket.userdata.userID));
-            ack(error.message);
+            logError('failed to check RUIDs online', undefined, 'checkRUIDsOnline', error, `RUIDCount: ${RUIDs.length}`, socket.id, socket.userdata.UID);
+            ack(false);
         };
     });
 

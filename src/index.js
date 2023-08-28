@@ -1,8 +1,16 @@
-const { server, io, startServer } = require('./server');
-require('./events');
+const { startServer } = require('./server');
 const db = require('./db');
+const util = require('./utilities');
 
+async function startup() {
 
-db.connectDB();
+    util.logInfo("starting server...", "index.startup");
 
-startServer();
+    await db.connectDB();
+
+    require('./events');
+
+    startServer();  
+}
+
+startup();

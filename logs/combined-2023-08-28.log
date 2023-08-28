@@ -1,0 +1,29 @@
+[2023-08-28 03:56:55.681] INFO  || started server | func: server.startServer | info: host: localhost, port: 3000 | 
+[2023-08-28 03:56:55.686] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 03:56:55.688] INFO  || created 'users' table if not present | func: DB.createTables | 
+[2023-08-28 03:56:55.689] INFO  || created 'CRs' table if not present | func: DB.createTables | 
+[2023-08-28 03:56:55.690] INFO  || created 'RUChannels' table if not present | func: DB.createTables | 
+[2023-08-28 03:56:55.691] INFO  || created 'events' table if not present | func: DB.createTables | 
+[2023-08-28 04:13:12.058] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 04:13:12.060] INFO  || started server | func: server.startServer | info: host: localhost, port: 3000 | 
+[2023-08-28 04:13:12.061] INFO  || created 'users' table if not present | func: DB.createTables | 
+[2023-08-28 04:13:12.062] INFO  || created 'CRs' table if not present | func: DB.createTables | 
+[2023-08-28 04:13:12.062] INFO  || created 'RUChannels' table if not present | func: DB.createTables | 
+[2023-08-28 04:13:12.063] INFO  || created 'events' table if not present | func: DB.createTables | 
+[2023-08-28 04:25:19.694] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 04:25:19.697] INFO  || created 'users' table if not present | func: DB.createTables | 
+[2023-08-28 04:25:19.698] INFO  || created 'CRs' table if not present | func: DB.createTables | 
+[2023-08-28 04:25:19.699] INFO  || created 'RUChannels' table if not present | func: DB.createTables | 
+[2023-08-28 04:26:50.733] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 04:26:50.736] INFO  || created 'users' table if not present | func: DB.createTables | 
+[2023-08-28 04:26:50.736] INFO  || created 'CRs' table if not present | func: DB.createTables | 
+[2023-08-28 04:26:50.737] INFO  || created 'RUChannels' table if not present | func: DB.createTables | 
+[2023-08-28 04:26:50.738] INFO  || created 'events' table if not present | func: DB.createTables | 
+[2023-08-28 04:26:50.740] INFO  || started server | func: server.startServer | info: host: localhost, port: 3000 | 
+[2023-08-28 04:29:40.641] INFO  || starting server... | func: index.startup | 
+[2023-08-28 04:29:40.649] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 04:29:40.651] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-08-28 04:29:40.652] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-08-28 04:29:40.652] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-08-28 04:29:40.653] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-08-28 04:29:40.655] INFO  || started server | func: server.startServer | info: host: localhost, port: 3000 | 

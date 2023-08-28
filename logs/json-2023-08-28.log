@@ -1,0 +1,29 @@
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-28 03:56:55.681"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 03:56:55.686"}
+{"func":"DB.createTables","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 03:56:55.688"}
+{"func":"DB.createTables","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-28 03:56:55.689"}
+{"func":"DB.createTables","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 03:56:55.690"}
+{"func":"DB.createTables","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-28 03:56:55.691"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 04:13:12.059"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-28 04:13:12.060"}
+{"func":"DB.createTables","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 04:13:12.061"}
+{"func":"DB.createTables","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-28 04:13:12.062"}
+{"func":"DB.createTables","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 04:13:12.062"}
+{"func":"DB.createTables","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-28 04:13:12.063"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 04:25:19.695"}
+{"func":"DB.createTables","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 04:25:19.697"}
+{"func":"DB.createTables","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-28 04:25:19.698"}
+{"func":"DB.createTables","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 04:25:19.699"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 04:26:50.734"}
+{"func":"DB.createTables","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 04:26:50.736"}
+{"func":"DB.createTables","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-28 04:26:50.736"}
+{"func":"DB.createTables","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 04:26:50.737"}
+{"func":"DB.createTables","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-28 04:26:50.738"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-28 04:26:50.740"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-28 04:29:40.641"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 04:29:40.649"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 04:29:40.651"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-28 04:29:40.652"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 04:29:40.652"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-28 04:29:40.653"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-28 04:29:40.656"}

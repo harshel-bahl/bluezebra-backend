@@ -5,9 +5,11 @@ const { Server } = require("socket.io");
 
 const io = new Server(server);
 
+const util = require('./utilities');
+
 function startServer() {
     server.listen(3000, () => {
-        logger.info(funcS("startServer", "Server listening on localhost, port 3000"));
+        util.logInfo("started server", "server.startServer", undefined, undefined, `host: localhost, port: 3000`);
     });
 }
 

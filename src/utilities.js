@@ -64,13 +64,14 @@ function objectToBuffer(
 }
 
 function cleanStackTrace(
-    error
+    error,
+    sliceFromTop = 0
 ) {
     if (!error.stack) return error;
 
     let stack = error.stack.split('\n');
 
-    const relevantStack = stack.filter(line => {
+    const relevantStack = stack.slice(sliceFromTop).filter(line => {
         if (line.includes('(internal/')) return false;
 
         if (line.includes('node_modules')) return false;
@@ -78,16 +79,36 @@ function cleanStackTrace(
         return true;
     });
 
-    const cleanedStack = relevantStack.map(line => `--${line.replace(/^(\s*)at\s+/, '$1')}`).join('\n');
+    error.stack = relevantStack.join('\n');
+}
 
-    error.stack = cleanedStack;
+function errToObj(
+    error,
+    cleanStack = false
+) {
+    if (error instanceof Error) {
 
-    return error;
+        let errObj = { 
+            name: error.name,
+            message: error.message,
+        };
+
+        if (error.stack) {
+            if (cleanStack) cleanStackTrace(error, 1);
+             
+            errObj.stack = error.stack;
+        }
+
+        return errObj
+    } else {
+        return error;
+    }
 }
 
 function logObj(
     func = null,
     event = null,
+    error = null,
     info = null,
     socketID = null,
     UID = null,
@@ -97,14 +118,15 @@ function logObj(
 ) {
     let outputLogObj = {};
 
-    if (func !== null) outputLogObj.func = func;
-    if (event !== null) outputLogObj.event = event;
-    if (info !== null) outputLogObj.info = info;
-    if (socketID !== null) outputLogObj.socketID = socketID;
-    if (UID !== null) outputLogObj.UID = UID;
-    if (recSocketID !== null) outputLogObj.recSocketID = recSocketID;
-    if (recUID !== null) outputLogObj.recUID = recUID;
-    if (json !== null) outputLogObj.json = json;
+    if (isNotNull(func)) outputLogObj.func = func;
+    if (isNotNull(event)) outputLogObj.event = event;
+    if (isNotNull(error)) outputLogObj.error = errToObj(error, true);
+    if (isNotNull(info)) outputLogObj.info = info;
+    if (isNotNull(socketID)) outputLogObj.socketID = socketID;
+    if (isNotNull(UID)) outputLogObj.UID = UID;
+    if (isNotNull(recSocketID)) outputLogObj.recSocketID = recSocketID;
+    if (isNotNull(recUID)) outputLogObj.recUID = recUID;
+    if (isNotNull(json)) outputLogObj.json = json;
 
     return outputLogObj;
 }
@@ -121,16 +143,12 @@ function logDebug(
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
-
-    let cleanedErr;
-    if (error) { cleanedErr = cleanStackTrace(error); }
+    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
 
     let logArgs = [];
 
     if (message) logArgs.push(message);
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
-    if (cleanedErr) logArgs.push(cleanedErr);
 
     logger.debug(...logArgs);
 }
@@ -147,16 +165,12 @@ function logInfo(
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
-
-    let cleanedErr;
-    if (error) { cleanedErr = cleanStackTrace(error); }
+    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
 
     let logArgs = [];
 
     if (message) logArgs.push(message);
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
-    if (cleanedErr) logArgs.push(cleanedErr);
 
     logger.info(...logArgs);
 }
@@ -173,16 +187,12 @@ function logWarn(
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
-
-    let cleanedErr;
-    if (error) { cleanedErr = cleanStackTrace(error); }
+    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
 
     let logArgs = [];
 
     if (message) logArgs.push(message);
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
-    if (cleanedErr) logArgs.push(cleanedErr);
 
     logger.warn(...logArgs);
 }
@@ -199,23 +209,17 @@ function logError(
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, info, socketID, UID, recSocketID, recUID, json);
-
-    let cleanedErr;
-    if (error) { cleanedErr = cleanStackTrace(error); }
+    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
 
     let logArgs = [];
 
     if (message) logArgs.push(message);
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
-    if (cleanedErr) logArgs.push(cleanedErr);
-
+    
     logger.error(...logArgs);
 }
 
 function checkParams(
-    socketID = null,
-    UID = null,
     params,
     reqParams,
 ) {
