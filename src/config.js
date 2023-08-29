@@ -1,3 +1,6 @@
+// import * as dotenv from 'dotenv';
+// dotenv.config();
+
 class Config {
 
     get logLevel() {
@@ -9,4 +12,14 @@ class Config {
     }
 };
 
-module.exports = new Config();
+const config = {
+    jwt: {
+        secret: process.env.JWT_SECRET,
+        audience: process.env.JWT_AUDIENCE,
+        issuer: process.env.JWT_ISSUER
+    },
+    port: process.env.PORT || 3000,
+    prefix: process.env.API_PREFIX || 'api'
+};
+
+module.exports = config;

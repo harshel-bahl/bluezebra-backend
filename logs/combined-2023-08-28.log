@@ -27,3 +27,23 @@
 [2023-08-28 04:29:40.652] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
 [2023-08-28 04:29:40.653] INFO  || created 'events' table if not present | func: DB.createTable4 | 
 [2023-08-28 04:29:40.655] INFO  || started server | func: server.startServer | info: host: localhost, port: 3000 | 
+[2023-08-28 16:12:21.221] INFO  || starting server... | func: index.startup | 
+[2023-08-28 16:12:21.229] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 16:12:21.232] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-08-28 16:12:21.234] ERROR || failed to create 'CRs' table | func: DB.createTable2 | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FOREIGN KEY (recUID) REFERENCES USERS(UID)
+      )' at line 8)] | STACK:
+      )' at line 8)
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:124:19)
+[2023-08-28 16:13:36.634] INFO  || starting server... | func: index.startup | 
+[2023-08-28 16:13:36.641] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-28 16:13:36.643] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-08-28 16:13:36.645] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-08-28 16:13:36.646] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-08-28 16:13:36.647] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-08-28 16:13:36.649] INFO  || started server | func: server.startServer | info: host: localhost, port: 3000 | 
+[2023-08-28 16:14:14.487] INFO  || socket connection | event: connection | socketID: ZjsGUwGgbT_1KXvQAAAB | 
+[2023-08-28 16:14:14.600] ERROR || failed to connect user | event: connectUser | info: UID: undefined | socketID: ZjsGUwGgbT_1KXvQAAAB | error: [MissingObjProps: (missing props: UID)] | STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:242:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:103:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)

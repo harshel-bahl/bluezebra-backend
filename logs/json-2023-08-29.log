@@ -1,0 +1,297 @@
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:25:03.283"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:25:03.307"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:25:03.330"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:25:03.331"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:25:03.332"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:25:03.332"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:25:03.336"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"oFeR-5hggKiaHr4VAAAB","timestamp":"2023-08-29 06:25:12.626"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(ER_BAD_FIELD_ERROR: Unknown column 'UID' in 'field list')","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:261:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"oFeR-5hggKiaHr4VAAAB","timestamp":"2023-08-29 06:25:12.631"}
+{"error":{"message":"(ER_BAD_FIELD_ERROR: Unknown column 'UID' in 'field list')","name":"DBErr","stack":""},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"oFeR-5hggKiaHr4VAAAB","timestamp":"2023-08-29 06:25:12.631"}
+{"error":{"message":"(ER_BAD_FIELD_ERROR: Unknown column 'UID' in 'field list')","name":"DBErr"},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"oFeR-5hggKiaHr4VAAAB","timestamp":"2023-08-29 06:25:12.631"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:26:00.984"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:26:00.991"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:26:01.016"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:26:01.024"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:26:01.033"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:26:01.040"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:26:01.043"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"4Oy8ayxeM7wkrPqEAAAB","timestamp":"2023-08-29 06:26:13.260"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"fetched records","socketID":"4Oy8ayxeM7wkrPqEAAAB","timestamp":"2023-08-29 06:26:13.370"}
+{"error":{"message":"Cannot set properties of undefined (setting 'UID')","name":"TypeError","stack":"    at Object.connectUser (/Users/harshel/Documents/bluezebra-backend/src/auth.js:25:25)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:118:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"4Oy8ayxeM7wkrPqEAAAB","timestamp":"2023-08-29 06:26:13.371"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:30:19.177"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:30:19.184"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:30:19.188"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:30:19.195"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:30:19.196"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:30:19.200"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:30:19.203"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"t2pxe8WWtxvWZsxXAAAB","timestamp":"2023-08-29 06:30:24.830"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"fetched records","socketID":"t2pxe8WWtxvWZsxXAAAB","timestamp":"2023-08-29 06:30:24.834"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","event":"connectUser","level":"info","message":"connected user","socketID":"t2pxe8WWtxvWZsxXAAAB","timestamp":"2023-08-29 06:30:24.835"}
+{"error":{"message":"userID is not defined","name":"ReferenceError","stack":"    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:123:49)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"t2pxe8WWtxvWZsxXAAAB","timestamp":"2023-08-29 06:30:24.836"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:32:19.786"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:32:19.794"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:32:19.798"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:32:19.800"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:32:19.801"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:32:19.802"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:32:19.805"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"VFTX3N-JWqYREi9HAAAB","timestamp":"2023-08-29 06:32:25.030"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"VFTX3N-JWqYREi9HAAAB","timestamp":"2023-08-29 06:32:25.033"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult","stack":""},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"VFTX3N-JWqYREi9HAAAB","timestamp":"2023-08-29 06:32:25.034"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult"},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"VFTX3N-JWqYREi9HAAAB","timestamp":"2023-08-29 06:32:25.034"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:34:27.861"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:34:27.868"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:34:27.871"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:34:27.872"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:34:27.874"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:34:27.875"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:34:27.878"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"cLE8rP0aOWL16pMhAAAB","timestamp":"2023-08-29 06:34:31.938"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"cLE8rP0aOWL16pMhAAAB","timestamp":"2023-08-29 06:34:32.048"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult","stack":""},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"cLE8rP0aOWL16pMhAAAB","timestamp":"2023-08-29 06:34:32.049"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:38:26.969"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:38:26.977"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:38:26.981"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:38:26.982"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:38:26.983"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:38:26.984"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:38:26.986"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"H5z2KUMmIa4WNra-AAAB","timestamp":"2023-08-29 06:38:31.006"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"H5z2KUMmIa4WNra-AAAB","timestamp":"2023-08-29 06:38:31.114"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:39:06.057"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:39:06.063"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:39:06.066"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:39:06.066"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:39:06.067"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:39:06.068"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:39:06.071"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"vL1yGl8bZdhMJptFAAAB","timestamp":"2023-08-29 06:39:09.635"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"vL1yGl8bZdhMJptFAAAB","timestamp":"2023-08-29 06:39:09.639"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:40:20.853"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:40:20.860"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:40:20.862"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:40:20.863"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:40:20.864"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:40:20.866"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:40:20.868"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"C0S17NdBjdIWvt1qAAAB","timestamp":"2023-08-29 06:40:24.926"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"C0S17NdBjdIWvt1qAAAB","timestamp":"2023-08-29 06:40:24.930"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:40:56.860"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:40:56.866"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:40:56.869"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:40:56.870"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:40:56.871"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:40:56.871"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:40:56.874"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"1aB6CqLF-aRuOylCAAAB","timestamp":"2023-08-29 06:41:00.786"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"1aB6CqLF-aRuOylCAAAB","timestamp":"2023-08-29 06:41:00.894"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:43:19.927"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:43:19.935"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:43:19.939"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:43:19.941"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:43:19.942"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:43:19.943"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:43:19.946"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"nR9dqksPZH1EaopmAAAB","timestamp":"2023-08-29 06:43:25.106"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"nR9dqksPZH1EaopmAAAB","timestamp":"2023-08-29 06:43:25.216"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult","stack":""},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"nR9dqksPZH1EaopmAAAB","timestamp":"2023-08-29 06:43:25.217"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:44:59.551"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:44:59.557"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:44:59.560"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:44:59.561"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:44:59.562"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:44:59.563"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:44:59.566"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"fFkR6j4qWw_mYCwdAAAB","timestamp":"2023-08-29 06:45:03.282"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"fFkR6j4qWw_mYCwdAAAB","timestamp":"2023-08-29 06:45:03.285"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult","stack":""},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"fFkR6j4qWw_mYCwdAAAB","timestamp":"2023-08-29 06:45:03.286"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:51:39.929"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:51:39.937"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:51:39.939"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:51:39.940"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:51:39.941"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:51:39.942"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:51:39.945"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"yf1s_uTOdkeDt6w4AAAB","timestamp":"2023-08-29 06:51:43.691"}
+{"UID":"D994A4B4-15DB-433E-90C5-F0EFA9919EA5","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"D994A4B4-15DB-433E-90C5-F0EFA9919EA5\"}","level":"debug","message":"failed to fetch records","socketID":"yf1s_uTOdkeDt6w4AAAB","timestamp":"2023-08-29 06:51:43.695"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:263:21)"},"event":"connectUser","info":"UID: D994A4B4-15DB-433E-90C5-F0EFA9919EA5","level":"error","message":"failed to connect user","socketID":"yf1s_uTOdkeDt6w4AAAB","timestamp":"2023-08-29 06:51:43.695"}
+{"error":{"message":"(socket status: (connected: null, userID: undefined))","name":"SocketStatusErr","stack":"    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:273:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:133:13)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"event":"disconnect","info":"reason: client namespace disconnect","level":"error","message":"failed to disconnect socket properly","timestamp":"2023-08-29 06:53:35.318"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 06:55:58.670"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 06:55:58.678"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 06:55:58.681"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 06:55:58.682"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 06:55:58.684"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 06:55:58.685"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 06:55:58.688"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"-dJLfYvuhpaDln9NAAAB","timestamp":"2023-08-29 06:56:03.475"}
+{"error":{"message":"(missing props: username)","name":"MissingObjProps","stack":"    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:244:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:56:13)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"event":"checkUsername","info":"username: undefined","level":"error","message":"failed to check username","socketID":"-dJLfYvuhpaDln9NAAAB","timestamp":"2023-08-29 06:56:07.036"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 07:02:22.672"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 07:02:22.680"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 07:02:22.683"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 07:02:22.684"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 07:02:22.685"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 07:02:22.687"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 07:02:22.689"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"VIY9c36w6QcXsGBIAAAB","timestamp":"2023-08-29 07:02:28.934"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"h\"}","level":"debug","message":"fetched records","socketID":"VIY9c36w6QcXsGBIAAAB","timestamp":"2023-08-29 07:02:32.400"}
+{"event":"checkUsername","level":"info","message":"checked username","socketID":"VIY9c36w6QcXsGBIAAAB","timestamp":"2023-08-29 07:02:32.402"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"VIY9c36w6QcXsGBIAAAB","timestamp":"2023-08-29 07:02:41.228"}
+{"event":"checkUsername","level":"info","message":"checked username","socketID":"VIY9c36w6QcXsGBIAAAB","timestamp":"2023-08-29 07:02:41.229"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 07:06:44.705"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 07:06:44.712"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 07:06:44.716"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 07:06:44.717"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 07:06:44.717"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 07:06:44.718"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 07:06:44.721"}
+{"level":"info","message":{"event":"connection","socketID":"eumRyo3Ub21wKDCUAAAB"},"timestamp":"2023-08-29 07:06:48.265"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 07:24:23.228"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 07:24:23.239"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 07:24:23.242"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 07:24:23.243"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 07:24:23.244"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 07:24:23.245"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 07:24:23.248"}
+{"event":"connection","level":"info","message":"","socketID":"kfQM3ELr7gHAMEOcAAAB","timestamp":"2023-08-29 07:24:29.418"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"h\"}","level":"debug","message":"fetched records","socketID":"kfQM3ELr7gHAMEOcAAAB","timestamp":"2023-08-29 07:24:34.498"}
+{"event":"checkUsername","info":"username: h","level":"info","message":"checked username","socketID":"kfQM3ELr7gHAMEOcAAAB","timestamp":"2023-08-29 07:24:34.501"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 07:46:20.093"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 07:46:20.103"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 07:46:20.106"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 07:46:20.108"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 07:46:20.109"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 07:46:20.110"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 07:46:20.114"}
+{"event":"connection","level":"info","message":"","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:46:27.776"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:46:32.314"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:46:32.315"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:46:35.169"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:46:35.170"}
+{"error":{"message":"(Cannot read properties of undefined (reading 'toString'))","name":"ParseJSONErr","stack":"    at bufferToObject (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:52:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:79:32)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"event":"createUser","level":"error","message":"failed to create user","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:46:49.167"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:48:22.970"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"HCIlsbHSkYxSV-6dAAAB","timestamp":"2023-08-29 07:48:22.972"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 07:48:26.624"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 07:48:26.630"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 07:48:26.632"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 07:48:26.634"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 07:48:26.635"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 07:48:26.636"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 07:48:26.638"}
+{"event":"connection","level":"info","message":"","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:31.668"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:38.019"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:38.020"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:39.467"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:39.469"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","func":"DB.createUser","info":"UID: F3324E1F-1E0C-4B71-9A88-CB46080685A6, username: harshel","level":"debug","message":"created user","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:44.611"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","event":"createUser","level":"info","message":"created user","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:44.611"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"F3324E1F-1E0C-4B71-9A88-CB46080685A6\"}","level":"debug","message":"fetched records","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:47.638"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","event":"connectUser","level":"info","message":"connected user","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:47.639"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","error":{"message":"(null params: queryUID)","name":"ReqParamsNull","stack":"    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:249:15)\n    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:117:22)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"},"func":"EF.sendUserConnect","info":"event: userConnect","level":"error","message":"failed to emit user connect events","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:47.641"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","func":"DB.fetchRecords","info":"table: EVENTS, predObj: {\"recUID\":\"F3324E1F-1E0C-4B71-9A88-CB46080685A6\"}","level":"debug","message":"fetched records","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:47.645"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","func":"EF.emitEvent","info":"event: receivedPendingEvents","level":"debug","message":"emitted event","recSocketID":"6lXfrwBQQBJ3bWwOAAAB","recUID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:47.646"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","func":"EF.emitPendingEvents","info":"eventCount: 0","level":"info","message":"emitted pending events","recSocketID":"6lXfrwBQQBJ3bWwOAAAB","recUID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","socketID":"6lXfrwBQQBJ3bWwOAAAB","timestamp":"2023-08-29 07:48:47.647"}
+{"error":{"message":"(socket status: (connected: true, userID: undefined))","name":"SocketStatusErr","stack":"    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:291:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:128:13)\n    at Socket.emit (node:events:513:28)\n    at Socket.emit (node:events:525:35)\n    at Object.onceWrapper (node:events:627:28)\n    at WebSocket.emit (node:events:513:28)"},"event":"disconnect","info":"reason: transport close","level":"error","message":"failed to disconnect socket properly","timestamp":"2023-08-29 12:25:14.999"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 15:52:26.368"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 15:52:26.378"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 15:52:26.387"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 15:52:26.388"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 15:52:26.388"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 15:52:26.389"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 15:53:07.213"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 15:53:07.219"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 15:53:07.222"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 15:53:07.223"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 15:53:07.224"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 15:53:07.225"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 15:53:07.243"}
+{"event":"connection","level":"info","message":"","socketID":"UR2JhqbhWqhejvHLAAAB","timestamp":"2023-08-29 15:53:16.060"}
+{"UID":"F3324E1F-1E0C-4B71-9A88-CB46080685A6","error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:266:21)"},"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"F3324E1F-1E0C-4B71-9A88-CB46080685A6\"}","level":"debug","message":"failed to fetch records","socketID":"UR2JhqbhWqhejvHLAAAB","timestamp":"2023-08-29 15:53:16.063"}
+{"error":{"message":"(no records found)","name":"EmptyDBResult","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:266:21)"},"event":"connectUser","info":"UID: F3324E1F-1E0C-4B71-9A88-CB46080685A6","level":"error","message":"failed to connect user","socketID":"UR2JhqbhWqhejvHLAAAB","timestamp":"2023-08-29 15:53:16.064"}
+{"error":{"message":"(socket status: (connected: null, userID: undefined))","name":"SocketStatusErr","stack":"    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:136:13)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"event":"disconnect","info":"reason: client namespace disconnect","level":"error","message":"failed to disconnect socket properly","timestamp":"2023-08-29 15:53:27.280"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 15:53:35.949"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 15:53:35.957"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 15:53:35.960"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 15:53:35.961"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 15:53:35.962"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 15:53:35.963"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 15:53:35.984"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 15:53:41.713"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 15:53:41.720"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 15:53:41.722"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 15:53:41.723"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 15:53:41.723"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 15:53:41.724"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 15:53:41.740"}
+{"event":"connection","level":"info","message":"","socketID":"CshXL4C1df3ZwnHuAAAB","timestamp":"2023-08-29 15:53:45.848"}
+{"error":{"message":"(socket status: (connected: null, userID: undefined))","name":"SocketStatusErr","stack":"    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:136:13)\n    at Socket.emit (node:events:513:28)\n    at Socket.emit (node:events:525:35)\n    at Object.onceWrapper (node:events:627:28)\n    at WebSocket.emit (node:events:513:28)"},"event":"disconnect","info":"reason: transport close","level":"error","message":"failed to disconnect socket properly","timestamp":"2023-08-29 15:54:45.604"}
+{"event":"connection","level":"info","message":"","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:54:48.848"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:55:09.269"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:55:09.270"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:55:10.646"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:55:10.647"}
+{"UID":"1A2BA87E-8D15-46BD-82C0-8C06369758BC","error":{"message":"(ER_TRUNCATED_WRONG_VALUE: Incorrect datetime value: 'MIIBCgKCAQEA2GxhEN4rbOBj0xRdXn5HkrwD3DW7gNtym6+CgYJYMNAGktPmIDzzPeynUCT+KBNNfUmv6jb6wV6e7iuhx0j/gUgwQy38RoPVwFtF6+87se8zyKsatcuW' for column 'creationDate' at row 1)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:453:21)"},"func":"DB.createUser","info":"UID: 1A2BA87E-8D15-46BD-82C0-8C06369758BC, username: harshel","level":"debug","message":"failed to create user","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:55:19.309"}
+{"error":{"message":"(ER_TRUNCATED_WRONG_VALUE: Incorrect datetime value: 'MIIBCgKCAQEA2GxhEN4rbOBj0xRdXn5HkrwD3DW7gNtym6+CgYJYMNAGktPmIDzzPeynUCT+KBNNfUmv6jb6wV6e7iuhx0j/gUgwQy38RoPVwFtF6+87se8zyKsatcuW' for column 'creationDate' at row 1)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:453:21)"},"event":"createUser","level":"error","message":"failed to create user","socketID":"K_ujre_oaVF_uW1EAAAD","timestamp":"2023-08-29 15:55:19.310"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 15:59:19.047"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 15:59:19.055"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 15:59:19.058"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 15:59:19.059"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 15:59:19.060"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 15:59:19.061"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 15:59:19.095"}
+{"event":"connection","level":"info","message":"","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:23.174"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:27.407"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:27.408"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:29.120"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:29.121"}
+{"UID":"0C744CEA-6510-46E8-928F-9DED37A96B16","error":{"message":"(null params: password, publicKey)","name":"ReqParamsNull","stack":"    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)\n    at /Users/harshel/Documents/bluezebra-backend/src/db.js:432:9\n    at new Promise (<anonymous>)\n    at DB.createUser (/Users/harshel/Documents/bluezebra-backend/src/db.js:429:12)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:22)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"func":"DB.createUser","info":"UID: 0C744CEA-6510-46E8-928F-9DED37A96B16, username: harshel","level":"debug","message":"failed to create user","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:35.489"}
+{"error":{"message":"(null params: password, publicKey)","name":"ReqParamsNull","stack":"    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)\n    at /Users/harshel/Documents/bluezebra-backend/src/db.js:432:9\n    at new Promise (<anonymous>)\n    at DB.createUser (/Users/harshel/Documents/bluezebra-backend/src/db.js:429:12)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:22)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"event":"createUser","level":"error","message":"failed to create user","socketID":"AbcdcYH2lDa2J2LVAAAB","timestamp":"2023-08-29 15:59:35.491"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 16:01:53.101"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 16:01:53.107"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 16:01:53.109"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 16:01:53.110"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 16:01:53.111"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 16:01:53.112"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 16:01:53.132"}
+{"event":"connection","level":"info","message":"","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:01:56.577"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:00.778"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:00.780"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:02.151"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:02.152"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:02.779"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:02.780"}
+{"UID":"A1311D18-25BB-4A4D-8481-234B4B22B101","error":{"message":"(ER_WRONG_VALUE_COUNT_ON_ROW: Column count doesn't match value count at row 1)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:459:21)"},"func":"DB.createUser","info":"UID: A1311D18-25BB-4A4D-8481-234B4B22B101, username: harshel","level":"debug","message":"failed to create user","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:10.980"}
+{"error":{"message":"(ER_WRONG_VALUE_COUNT_ON_ROW: Column count doesn't match value count at row 1)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:459:21)"},"event":"createUser","level":"error","message":"failed to create user","socketID":"w7LYJBXshUHQ7CKqAAAB","timestamp":"2023-08-29 16:02:10.981"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 16:03:50.514"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 16:03:50.521"}
+{"error":{"message":"(ER_BLOB_KEY_WITHOUT_LENGTH: BLOB/TEXT column 'publicKey' used in key specification without a key length)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:98:19)"},"func":"DB.createTable1","level":"error","message":"failed to create 'users' table","timestamp":"2023-08-29 16:03:50.528"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 16:10:15.698"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 16:10:15.707"}
+{"error":{"message":"(ER_BLOB_KEY_WITHOUT_LENGTH: BLOB/TEXT column 'publicKey' used in key specification without a key length)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:98:19)"},"func":"DB.createTable1","level":"error","message":"failed to create 'users' table","timestamp":"2023-08-29 16:10:15.715"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 16:11:05.581"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 16:11:05.588"}
+{"error":{"message":"(ER_TOO_LONG_KEY: Specified key was too long; max key length is 3072 bytes)","name":"DBErr","stack":"    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:98:19)"},"func":"DB.createTable1","level":"error","message":"failed to create 'users' table","timestamp":"2023-08-29 16:11:05.595"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 16:13:42.591"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 16:13:42.602"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 16:13:42.626"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 16:13:42.637"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 16:13:42.644"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 16:13:42.651"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 16:13:42.675"}
+{"event":"connection","level":"info","message":"","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:49.226"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:54.411"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:54.413"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:57.275"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:57.276"}
+{"func":"DB.fetchRecords","info":"table: USERS, predObj: {\"username\":\"harshel\"}","level":"debug","message":"fetched records","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:58.692"}
+{"event":"checkUsername","info":"username: harshel","level":"info","message":"checked username","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:13:58.692"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"DB.createUser","info":"UID: 47C2B6BE-2607-437A-AEAE-4F64C9848516, username: harshel","level":"debug","message":"created user","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:05.667"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","event":"createUser","level":"info","message":"created user","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:05.668"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"DB.fetchRecords","info":"table: USERS, predObj: {\"UID\":\"47C2B6BE-2607-437A-AEAE-4F64C9848516\"}","level":"debug","message":"fetched records","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.667"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","event":"connectUser","level":"info","message":"connected user","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.667"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","error":{"message":"(null params: queryUID)","name":"ReqParamsNull","stack":"    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)\n    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:125:22)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"},"func":"EF.sendUserConnect","info":"event: userConnect","level":"error","message":"failed to emit user connect events","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.669"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"DB.fetchRecords","info":"table: EVENTS, predObj: {\"recUID\":\"47C2B6BE-2607-437A-AEAE-4F64C9848516\"}","level":"debug","message":"fetched records","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.674"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"EF.emitEvent","info":"event: receivedPendingEvents","level":"debug","message":"emitted event","recSocketID":"kIZ5lBwxPW8Tuf3jAAAB","recUID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.676"}
+{"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"EF.emitPendingEvents","info":"eventCount: 0","level":"info","message":"emitted pending events","recSocketID":"kIZ5lBwxPW8Tuf3jAAAB","recUID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.677"}
+{"error":{"message":"(socket status: (connected: true, userID: undefined))","name":"SocketStatusErr","stack":"    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:136:13)\n    at Socket.emit (node:events:513:28)\n    at Socket.emit (node:events:525:35)\n    at Object.onceWrapper (node:events:627:28)\n    at WebSocket.emit (node:events:513:28)"},"event":"disconnect","info":"reason: transport close","level":"error","message":"failed to disconnect socket properly","timestamp":"2023-08-29 16:14:46.556"}

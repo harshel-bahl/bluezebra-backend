@@ -417,14 +417,14 @@ class EF {
             Object.keys(packetObject2).forEach(async eventID => {
                 try {
                     if (packetObject2[eventID] == true) {
-                        await db.deleteRecords(socketID, UID, "EVENTS", {"eventID": eventID}, true);
+                        await db.deleteRecords(socketID, UID, "EVENTS", { "eventID": eventID }, true);
 
                         logDebug("completed event emit", "EF.emitEventBatch", undefined, undefined, `eventID: ${eventID}`, socketID, UID, recSocketID, recUID);
                         completedEvents++;
                     } else if (packetObject2[eventID] == false) {
                         await this.handleEventFailure(socketID, UID, packetObject2[eventID]);
 
-                        await db.deleteRecords(socketID, UID, "EVENTS", {"eventID": eventID}, true);
+                        await db.deleteRecords(socketID, UID, "EVENTS", { "eventID": eventID }, true);
 
                         logWarn("handled failed clientResponse", "EF.emitEventBatch", undefined, undefined, `eventID: ${eventID}`, socketID, UID, recSocketID, recUID, packetObject2[eventID]);
                     }
@@ -468,7 +468,7 @@ class EF {
 
                     switch (event.eventName) {
                         case "receivedCR":
-                            let fetchedEvent = await db.fetchRecords(socketID, UID, "EVENTS", {"eventID": event.eventID}, true);
+                            let fetchedEvent = await db.fetchRecords(socketID, UID, "EVENTS", { "eventID": event.eventID }, true);
 
                             checkObjReqProps(fetchedEvent, ["eventID", "eventName", "datetime", "origUID", "recUID", "packet"]);
 
@@ -496,7 +496,7 @@ class EF {
     ////
     async handleEventFailure(
         socketID,
-        UID, 
+        UID,
         packetObject
     ) {
         try {
@@ -536,11 +536,11 @@ class EF {
 
             await db.deleteCRsByUserID(socketID, UID, queryUID);
 
-            await db.deleteRUChannelsByUserID(socketID, UID, queryUID);
+            await db.deleteRecords(socketID, UID, "RUChannels", { "UID": queryUID }, "OR");
 
-            await db.deleteRecords(socketID, UID, "EVENTS", {"recUID": queryUID});
+            await db.deleteRecords(socketID, UID, "EVENTS", { "recUID": queryUID });
 
-            await db.deleteRecords(socketID, UID, "USERS", {"UID": queryUID});
+            await db.deleteRecords(socketID, UID, "USERS", { "UID": queryUID });
 
             logDebug("deleted userdata", "EF.deleteUserdata", undefined, undefined, `UID: ${queryUID}`, socketID, UID);
         } catch (error) {
@@ -548,7 +548,7 @@ class EF {
             throw error;
         };
     };
-    
+
     async sendDeleteUserTrace(
         socketID = null,
         UID = null,
@@ -559,19 +559,29 @@ class EF {
                 queryUID: queryUID
             }, ["queryUID"]);
 
-            let RUIDs = await db.fetchRecRUChannelsbyUserID(socketID, UID, data.UID, "UID");
+            let channelObjs = await db.fetchRecords(socketID, UID, "RUChannels", { "UID1": queryUID, "UID2": queryUID }, undefined, undefined, undefined, undefined, "OR");
 
-            let packetObject = { "queryUID": queryUID };
+            let RUIDs = channelObjs
+                .filter(channelObj => {
+                    return (channelObj.UID1 == queryUID) || (channelObj.UID2 == queryUID);
+                })
+                .map(channelObj => {
+                    if (channelObj.UID1 == queryUID && channelObj.UID2 != queryUID) {
+                        return channelObj.UID2;
+                    } else if (channelObj.UID1 != queryUID && channelObj.UID2 == queryUID) {
+                        return channelObj.UID1;
+                    }
+                });
 
-            let packetBuffer = objectToBuffer(packetObject);
+            let packetBuffer = objectToBuffer({ "queryUID": queryUID });
 
             for (let i = 0; i < RUIDs.length; i++) {
                 try {
-                    await this.checkOnlineEmitWithAckOrStore(socketID, UID, queryUID, RUIDs[i].UID, "deleteUserTrace", packetBuffer, 1000);
+                    await this.checkOnlineEmitWithAckOrStore(socketID, UID, queryUID, RUIDs[i], "deleteUserTrace", packetBuffer, 1000);
 
-                    logDebug("emitted delete user trace", "EF.sendDeleteUserTrace", undefined, undefined, `event: deleteUserTrace`, socketID, UID, undefined, RUIDs[i].UID);
+                    logDebug("emitted delete user trace", "EF.sendDeleteUserTrace", undefined, undefined, `event: deleteUserTrace`, socketID, UID, undefined, RUIDs[i]);
                 } catch (error) {
-                    logError("failed to emit delete user trace", "EF.sendDeleteUserTrace", undefined, error, `event: deleteUserTrace`, socketID, UID, undefined, RUIDs[i].UID);
+                    logError("failed to emit delete user trace", "EF.sendDeleteUserTrace", undefined, error, `event: deleteUserTrace`, socketID, UID, undefined, RUIDs[i]);
                 }
             }
 
@@ -591,15 +601,27 @@ class EF {
                 queryUID: queryUID
             }, ["queryUID"]);
 
-            let RUIDs = await db.fetchRecRUChannelsbyUserID(socketID, UID, queryUID, "UID");
+            let channelObjs = await db.fetchRecords(socketID, UID, "RUChannels", { "UID1": queryUID, "UID2": queryUID }, undefined, undefined, undefined, undefined, "OR");
+
+            let RUIDs = channelObjs
+                .filter(channelObj => {
+                    return (channelObj.UID1 == queryUID) || (channelObj.UID2 == queryUID);
+                })
+                .map(channelObj => {
+                    if (channelObj.UID1 == queryUID && channelObj.UID2 != queryUID) {
+                        return channelObj.UID2;
+                    } else if (channelObj.UID1 != queryUID && channelObj.UID2 == queryUID) {
+                        return channelObj.UID1;
+                    }
+                });
 
             for (let i = 0; i < RUIDs.length; i++) {
                 try {
-                    await this.checkOnlineEmit(socketID, UID, RUIDs[i].UID, "userConnect", queryUID);
+                    await this.checkOnlineEmit(socketID, UID, RUIDs[i], "userConnect", queryUID);
 
-                    logDebug("emitted user connect", "EF.sendUserConnect", undefined, undefined, `event: userConnect`, socketID, UID, undefined, RUIDs[i].UID);
+                    logDebug("emitted user connect", "EF.sendUserConnect", undefined, undefined, `event: userConnect`, socketID, UID, undefined, RUIDs[i]);
                 } catch (error) {
-                    logError("failed to emit user connect", "EF.sendUserConnect", undefined, error, `event: userConnect`, socketID, UID, undefined, RUIDs[i].UID);
+                    logError("failed to emit user connect", "EF.sendUserConnect", undefined, error, `event: userConnect`, socketID, UID, undefined, RUIDs[i]);
                 }
             }
 
@@ -619,15 +641,27 @@ class EF {
                 queryUID: queryUID
             }, ["queryUID"]);
 
-            let RUIDs = await db.fetchRecRUChannelsbyUserID(socketID, UID, queryUID, "UID");
+            let channelObjs = await db.fetchRecords(socketID, UID, "RUChannels", { "UID1": queryUID, "UID2": queryUID }, undefined, undefined, undefined, undefined, "OR");
+
+            let RUIDs = channelObjs
+                .filter(channelObj => {
+                    return (channelObj.UID1 == queryUID) || (channelObj.UID2 == queryUID);
+                })
+                .map(channelObj => {
+                    if (channelObj.UID1 == queryUID && channelObj.UID2 != queryUID) {
+                        return channelObj.UID2;
+                    } else if (channelObj.UID1 != queryUID && channelObj.UID2 == queryUID) {
+                        return channelObj.UID1;
+                    }
+                });
 
             for (let i = 0; i < RUIDs.length; i++) {
                 try {
-                    await this.checkOnlineEmit(socketID, UID, RUIDs[i].userID, "userDisconnect", queryUID);
+                    await this.checkOnlineEmit(socketID, UID, RUIDs[i], "userDisconnect", queryUID);
 
-                    logDebug("emitted user disconnect", "EF.sendUserDisconnect", undefined, undefined, `event: userDisconnect`, socketID, UID, undefined, RUIDs[i].userID);
+                    logDebug("emitted user disconnect", "EF.sendUserDisconnect", undefined, undefined, `event: userDisconnect`, socketID, UID, undefined, RUIDs[i]);
                 } catch (error) {
-                    logError("failed to emit user disconnect", "EF.sendUserDisconnect", undefined, error, `event: userDisconnect`, socketID, UID, undefined, RUIDs[i].userID);
+                    logError("failed to emit user disconnect", "EF.sendUserDisconnect", undefined, error, `event: userDisconnect`, socketID, UID, undefined, RUIDs[i]);
                 }
             }
 
@@ -636,7 +670,7 @@ class EF {
             logError("failed to emit user disconnect events", "EF.sendUserDisconnect", undefined, error, `event: userDisconnect`, socketID, UID);
         }
     }
-    
+
     async checkRUIDsOnline(
         socketID = null,
         UID = null,
@@ -654,7 +688,7 @@ class EF {
                     if (RUIDs[i] in auth.connectedUsers) {
                         returnRUIDs[RUIDs[i]] = true;
                     } else {
-                        let RULastOnline = await db.fetchRecords(socketID, UID, "USERS", {"UID": RUIDs[i]}, "lastOnline", undefined, undefined, undefined, true, true);
+                        let RULastOnline = await db.fetchRecords(socketID, UID, "USERS", { "UID": RUIDs[i] }, "lastOnline", undefined, undefined, undefined, true, true);
 
                         returnRUIDs[RUIDs[i]] = RULastOnline.lastOnline;
                     }
@@ -673,24 +707,27 @@ class EF {
             throw error;
         }
     }
-    ////
-    async checkCRs(
-        userID,
+    
+    async checkDeletedCRs(
+        socketID = null,
+        UID = null,
         recSocket,
+        recSocketID,
+        recUID,
         clientRequestIDs,
         ack
     ) {
         try {
             checkParams({
-                userID: userID,
                 recSocket: recSocket,
-                recSocketID: recSocket.id,
+                recSocketID: recSocketID,
+                recUID: recUID,
                 clientRequestIDs: clientRequestIDs,
                 ack: ack
-            }, ["userID", "recSocket", "recSocketID", "clientRequestIDs", "ack"]);
+            }, ["recSocket", "recSocketID", "recUID", "clientRequestIDs", "ack"]);
 
-            let serverRequestIDObjects = await this.db.fetchCRsByUserID(recSocket.id, userID, userID, "requestID");
-            let serverRequestIDs = serverRequestIDObjects.map(CR => CR.requestID);
+            let CRObjects = await db.fetchCRsByUserID(socketID, UID, recUID, "requestID");
+            let serverRequestIDs = CRObjects.map(CR => CR.requestID);
 
             let returnCRs = {};
             for (let i = 0; i < clientRequestIDs.length; i++) {
@@ -701,81 +738,85 @@ class EF {
 
             ack(null, returnCRs);
 
-            await this.sendMissingCRs(userID, recSocket, clientRequestIDs);
-
-            this.logger.debug(funcS("eventFuncs.checkCRs", `requestIDCount: ${clientRequestIDs.length}, returnCRCount: ${Object.keys(returnCRs).length}`, recSocket.id, userID, recSocket.id, userID));
+            logDebug("checked deleted CRs", "EF.checkDeletedCRs", undefined, undefined, `requestIDCount: ${clientRequestIDs.length}, returnCRCount: ${Object.keys(returnCRs).length}`, socketID, UID, recSocketID, recUID);
         } catch (error) {
-            this.logger.error(errLog(error, `requestIDCount: ${clientRequestIDs.length}`, recSocket.id, userID, recSocket.id, userID));
+            logError("failed to check deleted CRs", "EF.checkDeletedCRs", undefined, error, undefined, socketID, UID, recSocketID, recUID);
             throw error;
         }
     }
-////
+    ////
     async sendMissingCRs(
-        userID,
+        socketID = null,
+        UID = null,
         recSocket,
+        recSocketID,
+        recUID,
         clientRequestIDs,
     ) {
         try {
             checkParams({
-                userID: userID,
                 recSocket: recSocket,
-                recSocketID: recSocket.id,
+                recSocketID: recSocketID,
+                recUID: recUID,
                 clientRequestIDs: clientRequestIDs
-            }, ["userID", "recSocket", "recSocketID", "clientRequestIDs"]);
+            }, ["recSocket", "recSocketID", "recUID", "clientRequestIDs"]);
 
             let missingCRCount = 0;
             for (let i = 0; i < serverRequestIDs.length; i++) {
                 if (!clientRequestIDs.includes(serverRequestIDs[i])) {
                     try {
-                        let CR = await this.db.fetchRecord(recSocket.id, userID, "CRs", "requestID", serverRequestIDs[i]);
+                        let CR = await db.fetchRecords(socketID, UID, "CRs", { "requestID": serverRequestIDs[i] }, undefined, undefined, undefined, undefined, true, true);
 
                         let packetObject = {
                             requestID: CR.requestID,
                             date: CR.date
                         };
 
-                        if (CR.originUserID == socket.userdata.userID && CR.receivingUserID != socket.userdata.userID) {
-                            packetObject.isOrigin = true;
+                        try {
+                            if (CR.origUID == recUID && CR.recUID != recUID) {
+                                packetObject.isOrigin = true;
 
-                            let RU = await db.fetchRecord(recSocket.id, userID, "USERS", "userID", CR.receivingUserID);
-                            packetObject.RU = RU;
-                        } else {
-                            packetObject.isOrigin = false;
+                                let RU = await db.fetchRecords(socketID, UID, "USERS", { "UID": CR.recUID }, undefined, undefined, undefined, undefined, true, true);
+                                packetObject.RU = RU;
+                            } else {
+                                packetObject.isOrigin = false;
 
-                            let RU = await db.fetchRecord(recSocket.id, userID, "USERS", "userID", CR.originUserID);
-                            packetObject.RU = RU;
-                        }
+                                let RU = await db.fetchRecords(socketID, UID, "USERS", { "UID": CR.origUID }, undefined, undefined, undefined, undefined, true, true);
+                                packetObject.RU = RU;
+                            }
+                        } catch (error) {
+                            if (error instanceof EmptyDBResult) {
+                                try {
+                                    logWarn("failed to find RU", "EF.sendMissingCRs", undefined, error, `requestID: ${serverRequestIDs[i]}`, socketID, UID, recSocketID, recUID);
 
-                        let packetBuffer = Buffer.from(JSON.stringify(packetObject));
+                                    await db.deleteRecords(socketID, UID, "CRs", { "requestID": serverRequestIDs[i] });
 
-                        await this.receivedCR(recSocket.id, userID, recSocket, userID, packetBuffer);
-
-                        missingCRCount++;
-                        this.logger.debug(funcS("eventFuncs.sendMissingCRs", `missing request sent - requestID: ${packetObject.requestID}`, recSocket.id, userID, recSocket.id, userID));
-                    } catch (error) {
-                        this.logger.warn(errLog(error, `failed to send missing request - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
-
-                        if (error.message == "db.fetchRecord - err: no results") {
-                            try {
-                                this.logger.warn(errLog(error, `failed to find RU - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
-
-                                await this.db.deleteRecord("CRs", "requestID", serverRequestIDs[i]);
-
-                                this.logger.debug(funcS("eventFuncs.sendMissingCRs", `deleted CR - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
-                            } catch {
-                                this.logger.error(errLog(error, `failed to delete CR - requestID: ${serverRequestIDs[i]}`, recSocket.id, userID, recSocket.id, userID));
+                                    logInfo("deleted CR", "EF.sendMissingCRs", undefined, undefined, `requestID: ${serverRequestIDs[i]}`, socketID, UID, recSocketID, recUID);
+                                } catch (error) {
+                                    logError("failed to delete CR", "EF.sendMissingCRs", undefined, error, `requestID: ${serverRequestIDs[i]}`, socketID, UID, recSocketID, recUID);
+                                }
                             }
                         }
+
+                        let packetBuffer = objectToBuffer(packetObject);
+
+                        await this.receivedCR(socketID, UID, undefined, recSocket, recSocketID, recUID, packetBuffer);
+
+                        missingCRCount++;
+
+                        logDebug("sent missing CR", "EF.sendMissingCRs", undefined, undefined, `requestID: ${serverRequestIDs[i]}`, socketID, UID, recSocketID, recUID);
+                    } catch (error) {
+                        logWarn("failed to send missing CR", "EF.sendMissingCRs", undefined, error, `requestID: ${serverRequestIDs[i]}`, socketID, UID, recSocketID, recUID);
                     }
                 }
             }
 
-            this.logger.debug(funcS("eventFuncs.sendMissingCRs", `requestIDCount: ${clientRequestIDs.length}, missingCRCount: ${missingCRCount}`, recSocket.id, userID, recSocket.id, userID));
+            logDebug("sent missing CRs", "EF.sendMissingCRs", undefined, undefined, `requestIDCount: ${clientRequestIDs.length}, missingCRCount: ${missingCRCount}`, socketID, UID, recSocketID, recUID);
         } catch (error) {
-            this.logger.error(errLog(error, `requestIDCount: ${clientRequestIDs.length}`, recSocket.id, userID, recSocket.id, userID));
+            logError("failed to send missing CRs", "EF.sendMissingCRs", undefined, error, undefined, socketID, UID, recSocketID, recUID);
         }
     }
-////
+    ////
     async checkRUChannels(
         userID,
         recSocket,
@@ -811,7 +852,7 @@ class EF {
             throw error;
         }
     }
-/////
+    /////
     async sendMissingRUChannels(
         userID,
         recSocket,
@@ -870,10 +911,10 @@ class EF {
             this.logger.error(errLog(error, `channelIDCount: ${clientChannelIDs.length}`, recSocket.id, userID, recSocket.id, userID));
         }
     }
-/////
+    /////
     async sendCR(
-        origSocketID = null,
-        origUID = null,
+        socketID = null,
+        UID = null,
         recUID,
         packetBuffer,
         ack
@@ -900,64 +941,73 @@ class EF {
             throw error;
         }
     }
-////
+
+    // receivedCR
+    //
     async receivedCR(
         socketID = null,
         UID = null,
-        origUID,
-        recSocket = null, 
+        origUID = null,
+        recSocket = null,
         recSocketID = null,
         recUID,
-        packetObject
+        packetBuffer
     ) {
         try {
-            checkParams({
-                recUID: recUID,
-                packetObject: packetObject
-            }, ["recUID", "packetObject"]);
-
-            checkPacketProps(packetObject, ["requestID", "date", "isOrigin"]);
-
-            let RU = await this.db.fetchRecord("USERS", "userID", origUID);
-            packetObject.RU = RU;
-
-            let packetBuffer = bufferToObject(packetBuffer);
-
             if (recSocket) {
-                await this.emitEventWithAckOrStore(origSocketID, origUID, recSocket, recUID, "receivedCR", packetBuffer, 1000);
+                checkParams({
+                    recSocket: recSocket,
+                    recSocketID: recSocketID,
+                    recUID: recUID,
+                    packetBuffer: packetBuffer
+                }, ["recSocket", "recSocketID", "recUID", "packetBuffer"]);
             } else {
-                await this.checkOnlineEmitWithAck(origSocketID, origUID, recUID, undefined, "receivedCR", packetBuffer);
+                checkParams({
+                    origUID: origUID,
+                    recUID: recUID,
+                    packetBuffer: packetBuffer
+                }, ["origUID", "recUID", "packetBuffer"]);
             }
 
-            this.logger.debug(funcS("eventFuncs.receivedCR", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
-        } catch (error) {
-            this.logger.error(errLog(error, undefined, origSocketID, origUID, undefined, recUID));
+            let packetObject = bufferToObject(packetBuffer);
 
-            await this.receivedCRFailure(origSocketID, origUID, recUID, packetObject);
+            checkObjReqProps(packetObject, ["requestID", "date", "isOrigin", "RU"]);
+
+            if (recSocket) {
+                await this.emitEventWithAck(socketID, UID, recSocket, recSocketID, recUID, "receivedCR", packetBuffer, 1000);
+            } else {
+                await this.checkOnlineEmitWithAckOrStore(socketID, UID, origUID, recUID, "receivedCR", packetBuffer, 1000);
+            }
+
+            logDebug("emitted receivedCR", "EF.receivedCR", undefined, undefined, `requestID: ${packetObject.requestID}`, socketID, UID, recSocketID, recUID);
+        } catch (error) {
+            logError("failed to emit receivedCR", "EF.receivedCR", undefined, error, undefined, socketID, UID, recSocketID, recUID);
+
+            if (error instanceof ClientResponseErr) {
+                await this.receivedCRFailure(origSocketID, origUID, recUID, packetObject);
+            }
 
             throw error;
         }
     }
-////
+    ////
     async receivedCRFailure(
-        origSocketID = null,
-        origUID = null,
-        recUID,
+        socketID = null,
+        UID = null,
         packetObject
     ) {
         try {
             checkParams({
-                recUID: recUID,
                 packetObject: packetObject
-            }, ["recUID", "packetObject"]);
+            }, ["packetObject"]);
 
-            checkPacketProps(packetObject, ["requestID"]);
+            checkObjReqProps(packetObject, ["requestID"]);
 
-            await this.db.deleteRecord("CRs", "requestID", packetObject.requestID);
+            await db.deleteRecords(socketID, UID, "CRs", { "requestID": packetObject.requestID }, undefined, true);
 
-            this.logger.debug(funcS("eventFuncs.receivedCRFailure", `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
+            logDebug("successfully handled receivedCRFailure", "EF.receivedCRFailure", undefined, undefined, `requestID: ${packetObject.requestID}`, socketID, UID);
         } catch (error) {
-            this.logger.error(errLog(error, `requestID: ${packetObject.requestID}`, origSocketID, origUID, undefined, recUID));
+            logError("failed to handle receivedCRFailure", "EF.receivedCRFailure", undefined, error, undefined, socketID, UID);
         }
     }
 
@@ -972,7 +1022,7 @@ class EF {
 
         };
     };
-///
+    ///
     async receivedRUChannel(
         origSocketID = null,
         origUID = null,

@@ -1,4 +1,6 @@
 const { server, io } = require('./server');
+const jwt = require('jsonwebtoken');
+const config = require('./config');
 
 // const privateKey = fs.readFileSync('path_to/privkey.pem', 'utf8');
 // const certificate = fs.readFileSync('path_to/fullchain.pem', 'utf8');

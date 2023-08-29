@@ -23,6 +23,7 @@ const {
   ...util
 } = require('./utilities');
 
+// Add transactions support for rollbacks in case of failures
 
 class DB {
 
@@ -81,8 +82,10 @@ class DB {
       let table1 = `CREATE TABLE IF NOT EXISTS USERS (
         UID VARCHAR(255) NOT NULL CHECK (UID <> ''),
         username VARCHAR(255) NOT NULL CHECK (username <> ''), 
+        password VARCHAR(100) NOT NULL CHECK (password <> ''),
+        publicKey BlOB NOT NULL,
         avatar VARCHAR(50) NOT NULL CHECK (avatar <> ''),
-        creationDate DATETIME NOT NULL, 
+        creationDate DATETIME NOT NULL,
         lastOnline DATETIME,
         PRIMARY KEY (UID),
         UNIQUE (username)
@@ -112,7 +115,9 @@ class DB {
         origUID VARCHAR(255) NOT NULL CHECK (origUID <> ''),
         recUID VARCHAR(255) NOT NULL CHECK (recUID <> ''),
         requestDate DATETIME NOT NULL,
-        PRIMARY KEY (requestID, origUID)
+        PRIMARY KEY (requestID),
+        FOREIGN KEY (origUID) REFERENCES USERS(UID),
+        FOREIGN KEY (recUID) REFERENCES USERS(UID)
       );`;
 
       this.con.query(table2, (err, result) => {
@@ -136,9 +141,12 @@ class DB {
 
       let table3 = `CREATE TABLE IF NOT EXISTS RUChannels (
         channelID VARCHAR(255) NOT NULL CHECK (channelID <> ''),
-        UID VARCHAR(255) NOT NULL CHECK (UID <> ''),
+        UID1 VARCHAR(255) NOT NULL CHECK (UID1 <> ''),
+        UID2 VARCHAR(255) NOT NULL CHECK (UID2 <> ''),
         creationDate DATETIME NOT NULL,
-        PRIMARY KEY (channelID, UID)
+        PRIMARY KEY (channelID),
+        FOREIGN KEY (UID1) REFERENCES USERS(UID),
+        FOREIGN KEY (UID2) REFERENCES USERS(UID)
       );`;
 
       this.con.query(table3, (err, result) => {
@@ -167,7 +175,9 @@ class DB {
         origUID VARCHAR(255) NOT NULL CHECK (origUID <> ''),
         recUID VARCHAR(255) NOT NULL CHECK (recUID <> ''),
         packet BLOB,
-        PRIMARY KEY (eventID, origUID)
+        PRIMARY KEY (eventID),
+        FOREIGN KEY (origUID) REFERENCES USERS(UID),
+        FOREIGN KEY (recUID) REFERENCES USERS(UID)
       );`;
 
       this.con.query(table4, (err, result) => {
@@ -198,7 +208,8 @@ class DB {
     cols = null,
     sortColumn = null,
     sortOrder = "DESC",
-    limit = null,
+    limit = null, // if limit=1 then only the first record is returned
+    whereClauseSeperator = "AND",
     errorOnEmpty = false,
     errorOnMultiple = false // forces function to return only the first record
   ) {
@@ -222,7 +233,7 @@ class DB {
         }
 
         const predKeys = Object.keys(predObj);
-        let whereClauses = predKeys.map(key => '?? = ?').join(' AND ');
+        let whereClauses = predKeys.map(key => '?? = ?').join(` ${whereClauseSeperator} `);
 
         let values = [table];
         for (let i = 0; i < predKeys.length; i++) {
@@ -257,7 +268,7 @@ class DB {
             }
             logDebug(`fetched records`, "DB.fetchRecords", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
 
-            if (errorOnMultiple) {
+            if (errorOnMultiple || limit == 1) {
               resolve(result[0]);
             } else {
               resolve(result);
@@ -274,7 +285,7 @@ class DB {
       };
     });
   };
-
+  
   // updateRecords
   // predProps should be primary keys to ensure that only one record is updated
   updateRecords(
@@ -283,7 +294,8 @@ class DB {
     table,
     predObj, // { pred1: value1, pred2: value2, ... }
     updateProp,
-    updateValue
+    updateValue,
+    whereClauseSeperator = "AND",
   ) {
     return new Promise((resolve, reject) => {
       try {
@@ -298,7 +310,7 @@ class DB {
         checkObjProps(predObj);
 
         const predKeys = Object.keys(predObj);
-        let whereClauses = predKeys.map(key => '?? = ?').join(' AND ');
+        let whereClauses = predKeys.map(key => '?? = ?').join(` ${whereClauseSeperator} `);
 
         let values = [
           table,
@@ -350,6 +362,7 @@ class DB {
     UID = null,
     table,
     predObj, // { pred1: value1, pred2: value2, ... }
+    whereClauseSeperator = "AND",
     errorOnEmpty = false,
   ) {
     return new Promise((resolve, reject) => {
@@ -363,7 +376,7 @@ class DB {
         checkObjProps(predObj);
 
         const predKeys = Object.keys(predObj);
-        let whereClauses = predKeys.map(key => '?? = ?').join(' AND ');
+        let whereClauses = predKeys.map(key => '?? = ?').join(` ${whereClauseSeperator} `);
 
         let values = [table];
         for (let i = 0; i < predKeys.length; i++) {
@@ -407,6 +420,8 @@ class DB {
     socketID = null,
     UID,
     username,
+    password,
+    publicKey,
     avatar,
     creationDate
   ) {
@@ -416,18 +431,22 @@ class DB {
         checkParams({
           UID: UID,
           username: username,
+          password: password,
+          publicKey: publicKey,
           avatar: avatar,
           creationDate: creationDate
-        }, ["UID", "username", "avatar", "creationDate"]);
+        }, ["UID", "username", "password", "publicKey", "avatar", "creationDate"]);
 
         let query = `
         INSERT INTO USERS 
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
         let values = [
           UID,
           username,
+          password,
+          publicKey,
           avatar,
           creationDate,
           null
@@ -656,7 +675,8 @@ class DB {
     socketID = null,
     UID = null,
     channelID,
-    queryUID,
+    UID1,
+    UID2,
     creationDate
   ) {
     return new Promise((resolve, reject) => {
@@ -664,18 +684,20 @@ class DB {
 
         checkParams({
           channelID: channelID,
-          queryUID: queryUID,
+          UID1: UID1,
+          UID2: UID2,
           creationDate: creationDate
-        }, ["channelID", "queryUID", "creationDate"]);
+        }, ["channelID", "UID1", "UID2", "creationDate"]);
 
         let query = `
             INSERT INTO RUChannels 
-            VALUES (?, ?, ?)
+            VALUES (?, ?, ?, ?)
           `;
 
         let values = [
           channelID,
-          queryUID,
+          UID1,
+          UID2,
           creationDate
         ];
 
@@ -685,26 +707,27 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`created RUChannel`, "DB.createRUChannel", undefined, undefined, `channelID: ${channelID}, queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`created RUChannel`, "DB.createRUChannel", undefined, undefined, `channelID: ${channelID}`, socketID, UID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}, queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}`, socketID, UID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}, queryUID: ${queryUID}`, socketID, UID);
+        logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}`, socketID, UID);
         reject(error);
       }
     });
   };
 
-  fetchRecRUChannelsbyUserID(
+  fetchRUChannelsByUserID(
     socketID = null,
     UID = null,
     queryUID,
-    cols = null
+    cols = null,
+    sortOrder = "DESC"
   ) {
     return new Promise((resolve, reject) => {
       try {
@@ -720,17 +743,13 @@ class DB {
           selectCols = cols;
         } else {
           selectCols = '*';
-        };
+        }
 
         let query = `
             SELECT ${selectCols}
             FROM RUChannels
-            WHERE UID != ?
-            AND channelID IN (
-              SELECT channelID
-              FROM RUChannels
-              WHERE UID = ? 
-            );
+            WHERE UID1 = ? OR UID2 = ?
+            ORDER BY creationDate ${sortOrder};
           `;
 
         let values = [queryUID, queryUID];
@@ -739,71 +758,23 @@ class DB {
           try {
             if (err) {
               throw new DBErr(err.message);
-            };
+            }
 
-            logDebug(`fetched RUChannels`, "DB.fetchRecRUChannelsbyUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, UID);
-            resolve(result);
+            logDebug(`fetched RUChannels`, "DB.fetchRUChannelsByUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, UID);
+            resolve();
 
           } catch (error) {
-            logDebug(`failed to fetch RUChannels`, "DB.fetchRecRUChannelsbyUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`failed to fetch RUChannels`, "DB.fetchRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to fetch RUChannels`, "DB.fetchRecRUChannelsbyUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+        logDebug(`failed to fetch RUChannels`, "DB.fetchRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
         reject(error);
       };
     });
   };
 
-  deleteRUChannelsByUserID(
-    socketID = null,
-    UID = null,
-    queryUID
-  ) {
-    return new Promise(async (resolve, reject) => {
-      try {
-
-        checkParams({
-          queryUID: queryUID
-        }, ["queryUID"]);
-
-        let channelRecords = await this.fetchRecords(socketID, UID, "RUChannels", "UID", queryUID, "channelID");
-
-        if (channelRecords.length > 0) {
-
-          let query = `
-              DELETE 
-              FROM RUChannels 
-              WHERE channelID IN (?);
-            `;
-
-          let values = [channelRecords.map(channelRecord => channelRecord.channelID)];
-
-          this.con.query(query, values, (err, result) => {
-            try {
-              if (err) {
-                throw new DBErr(err.message);
-              }
-
-              logDebug(`deleted RUChannels`, "DB.deleteRUChannelsByUserID", undefined, undefined, `queryUID: ${queryUID}, deleted: ${result.affectedRows}`, socketID, UID);
-              resolve();
-
-            } catch (error) {
-              logDebug(`failed to delete RUChannels`, "DB.deleteRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
-              reject(error);
-            };
-          });
-        } else {
-          logDebug(`no RUChannels to delete`, "DB.deleteRUChannelsByUserID", undefined, undefined, `queryUID: ${queryUID}, deleted: 0`, socketID, UID);
-          resolve();
-        };
-      } catch (error) {
-        logDebug(`failed to delete RUChannels`, "DB.deleteRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
-        reject(error);
-      };
-    });
-  };
 
   // EVENTS Table Functions
   // =====================

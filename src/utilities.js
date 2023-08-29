@@ -29,6 +29,22 @@ function UUID() {
     return uuidv4();
 }
 
+function genRandPassword(
+    length = 13
+    ) {
+
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!£$?%^&*()_+-=<>@#~";
+
+    let password = "";
+
+    for (let i = 0; i < length; ++i) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+    }
+
+    return password;
+  }
+
 function isNull(value) {
     return value === null || value === undefined;
 }
@@ -42,8 +58,6 @@ function isEmpty(obj) {
 }
 
 function bufferToObject(
-    socketID = null,
-    UID = null,
     buffer
 ) {
     try {
@@ -79,7 +93,7 @@ function cleanStackTrace(
         return true;
     });
 
-    error.stack = relevantStack.join('\n');
+    return relevantStack.join('\n');
 }
 
 function errToObj(
@@ -88,15 +102,17 @@ function errToObj(
 ) {
     if (error instanceof Error) {
 
-        let errObj = { 
+        let errObj = {
             name: error.name,
             message: error.message,
         };
 
         if (error.stack) {
-            if (cleanStack) cleanStackTrace(error, 1);
-             
-            errObj.stack = error.stack;
+            if (cleanStack) {
+                errObj.stack = cleanStackTrace(error, 1);
+            } else {
+                errObj.stack = error.stack;
+            }
         }
 
         return errObj
@@ -147,7 +163,12 @@ function logDebug(
 
     let logArgs = [];
 
-    if (message) logArgs.push(message);
+    if (message) {
+        logArgs.push(message);
+    } else {
+        logArgs.push('');
+    }
+
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
 
     logger.debug(...logArgs);
@@ -169,7 +190,12 @@ function logInfo(
 
     let logArgs = [];
 
-    if (message) logArgs.push(message);
+    if (message) {
+        logArgs.push(message);
+    } else {
+        logArgs.push('');
+    }
+
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
 
     logger.info(...logArgs);
@@ -191,7 +217,12 @@ function logWarn(
 
     let logArgs = [];
 
-    if (message) logArgs.push(message);
+    if (message) {
+        logArgs.push(message);
+    } else {
+        logArgs.push('');
+    }
+
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
 
     logger.warn(...logArgs);
@@ -213,9 +244,14 @@ function logError(
 
     let logArgs = [];
 
-    if (message) logArgs.push(message);
+    if (message) {
+        logArgs.push(message);
+    } else {
+        logArgs.push('');
+    }
+
     if (!isEmpty(inputLogObj)) logArgs.push(inputLogObj);
-    
+
     logger.error(...logArgs);
 }
 
@@ -275,6 +311,7 @@ function checkSocketStatus(
 module.exports = {
     currDT,
     UUID,
+    genRandPassword,
     isNull,
     isNotNull,
     isEmpty,

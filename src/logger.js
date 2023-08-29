@@ -20,21 +20,25 @@ const consoleFormat = combine(
         const { timestamp, level, message, error, json, ...metadata } = info;
 
         let timestampStr = `[${timestamp}]`;
-        let levelStr = level; 
+        let levelStr = level;
 
         let maxWidth = 41;
         let spacePadding = maxWidth - timestampStr.length - levelStr.length;
         let paddingStr = ' '.repeat(spacePadding);
-        
+
         let log = `${timestampStr} ${levelStr}${paddingStr}|| `;
 
-        if (message) {
+        if (message !== null && message !== undefined && message != "") {
             log += `${message} | `;
         }
 
         if (metadata) {
             for (let key in metadata) {
-                log += `${key}: ${metadata[key]} | `;
+                if (key == "info") {
+                    log += `(${key}: ${metadata[key]}) | `;
+                } else {
+                    log += `${key}: ${metadata[key]} | `;
+                }
             }
         }
 
@@ -49,7 +53,7 @@ const consoleFormat = combine(
         if (json) {
             log += `\nJSON: ${JSON.stringify(json, null, 2)} `;
         }
-        
+
         return log;
     })
 );
@@ -63,21 +67,25 @@ const fileFormat = combine(
         const { timestamp, level, message, error, json, ...metadata } = info;
 
         let timestampStr = `[${timestamp}]`;
-        let levelStr = level.toUpperCase(); 
+        let levelStr = level.toUpperCase();
 
         let maxWidth = 31;
         let spacePadding = maxWidth - timestampStr.length - levelStr.length;
         let paddingStr = ' '.repeat(spacePadding);
-        
+
         let log = `${timestampStr} ${levelStr}${paddingStr}|| `;
 
-        if (message) {
+        if (message !== null && message !== undefined && message != "") {
             log += `${message} | `;
         }
 
         if (metadata) {
             for (let key in metadata) {
-                log += `${key}: ${metadata[key]} | `;
+                if (key == "info") {
+                    log += `(${key}: ${metadata[key]}) | `;
+                } else {
+                    log += `${key}: ${metadata[key]} | `;
+                }
             }
         }
 
@@ -85,14 +93,14 @@ const fileFormat = combine(
             log += `error: [${error.name}: ${error.message}] | `;
 
             if (error.stack) {
-                log += `STACK:\n${error.stack}`;
+                log += `\nSTACK:\n${error.stack}`;
             }
         }
 
         if (json) {
             log += `\nJSON: ${JSON.stringify(json, null, 2)} `;
         }
-        
+
         return log;
     })
 );

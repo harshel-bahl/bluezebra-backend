@@ -27,3 +27,16 @@
 {"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 04:29:40.652"}
 {"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-28 04:29:40.653"}
 {"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-28 04:29:40.656"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-28 16:12:21.221"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 16:12:21.229"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 16:12:21.233"}
+{"error":{"message":"(ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FOREIGN KEY (recUID) REFERENCES USERS(UID)\n      )' at line 8)","name":"DBErr","stack":"      )' at line 8)\n    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:124:19)"},"func":"DB.createTable2","level":"error","message":"failed to create 'CRs' table","timestamp":"2023-08-28 16:12:21.234"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-28 16:13:36.635"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-28 16:13:36.641"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-28 16:13:36.643"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-28 16:13:36.645"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-28 16:13:36.646"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-28 16:13:36.647"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-28 16:13:36.649"}
+{"event":"connection","level":"info","message":"socket connection","socketID":"ZjsGUwGgbT_1KXvQAAAB","timestamp":"2023-08-28 16:14:14.488"}
+{"error":{"message":"(missing props: UID)","name":"MissingObjProps","stack":"    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:242:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:103:13)\n    at Socket.emit (node:events:513:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"},"event":"connectUser","info":"UID: undefined","level":"error","message":"failed to connect user","socketID":"ZjsGUwGgbT_1KXvQAAAB","timestamp":"2023-08-28 16:14:14.600"}

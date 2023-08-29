@@ -9,6 +9,11 @@
             "date": 1693191415655,
             "name": "logs/json-2023-08-28.log",
             "hash": "418c21e2388b6c91d1e0747414408590cff7032ed45d01b3dd50c3a08e7cbb66"
+        },
+        {
+            "date": 1693286703257,
+            "name": "logs/json-2023-08-29.log",
+            "hash": "9e154842ee2505d8160119e6d2a51584d30cd293aae7bd3c916931ac59763d28"
         }
     ],
     "hashType": "sha256"
