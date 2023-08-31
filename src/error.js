@@ -20,6 +20,18 @@ class SocketStatusErr extends Error {
     }
 }
 
+// Auth Errors
+// ===========
+
+class AuthErr extends Error {
+    constructor(message = "authentication failed") {
+        super(`(${message})`);
+        this.name = 'AuthErr';
+
+        Error.captureStackTrace(this, AuthErr);
+    }
+}
+
 // JSON Errors
 // ===========
 
@@ -143,6 +155,7 @@ class EmitErr extends Error {
 module.exports = {
     ReqParamsNull,
     SocketStatusErr,
+    AuthErr,
     EmptyObj,
     MissingObjProps,
     ObjPropsNull,

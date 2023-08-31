@@ -295,3 +295,10 @@
 {"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"EF.emitEvent","info":"event: receivedPendingEvents","level":"debug","message":"emitted event","recSocketID":"kIZ5lBwxPW8Tuf3jAAAB","recUID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.676"}
 {"UID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","func":"EF.emitPendingEvents","info":"eventCount: 0","level":"info","message":"emitted pending events","recSocketID":"kIZ5lBwxPW8Tuf3jAAAB","recUID":"47C2B6BE-2607-437A-AEAE-4F64C9848516","socketID":"kIZ5lBwxPW8Tuf3jAAAB","timestamp":"2023-08-29 16:14:08.677"}
 {"error":{"message":"(socket status: (connected: true, userID: undefined))","name":"SocketStatusErr","stack":"    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)\n    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:136:13)\n    at Socket.emit (node:events:513:28)\n    at Socket.emit (node:events:525:35)\n    at Object.onceWrapper (node:events:627:28)\n    at WebSocket.emit (node:events:513:28)"},"event":"disconnect","info":"reason: transport close","level":"error","message":"failed to disconnect socket properly","timestamp":"2023-08-29 16:14:46.556"}
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-08-29 20:32:29.987"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-08-29 20:32:29.994"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-08-29 20:32:29.997"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-08-29 20:32:30.003"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-08-29 20:32:30.005"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-08-29 20:32:30.006"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-08-29 20:32:30.028"}

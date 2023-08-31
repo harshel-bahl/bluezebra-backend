@@ -13,6 +13,7 @@ class Config {
 };
 
 const config = {
+    passwordSaltRounds: 10,
     jwt: {
         secret: process.env.JWT_SECRET,
         audience: process.env.JWT_AUDIENCE,

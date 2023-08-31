@@ -410,3 +410,10 @@ STACK:
     at Socket.emit (node:events:525:35)
     at Object.onceWrapper (node:events:627:28)
     at WebSocket.emit (node:events:513:28)
+[2023-08-29 20:32:29.987] INFO  || starting server... | func: index.startup | 
+[2023-08-29 20:32:29.994] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-08-29 20:32:29.997] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-08-29 20:32:30.003] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-08-29 20:32:30.005] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-08-29 20:32:30.006] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-08-29 20:32:30.028] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 

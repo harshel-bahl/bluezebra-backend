@@ -53,6 +53,7 @@ io.on('connection', (socket) => {
     // ||
     socket.on('checkUsername', async function (data, ack) {
         try {
+
             checkObjReqProps(data, ["username"]);
 
             let result = await db.fetchRecords(socket.id, undefined, "USERS", {"username": data.username}, "UID", undefined, undefined, 1);
@@ -71,20 +72,23 @@ io.on('connection', (socket) => {
     });
 
     // createUser
-    // ||
+    // 
     socket.on('createUser', async function (data, ack) {
         try {
+
             checkObjReqProps(data, ["packet"]);
 
             var packetObject = bufferToObject(data.packet);
 
             checkObjReqProps(packetObject, ["UID", "username", "password", "publicKey", "avatar", "creationDate"]);
 
+            let hashedPassword = auth.hashPassword(socket.id, packetObject.UID, packetObject.password);
+
             await db.createUser(
                 socket.id, 
                 packetObject.UID, 
                 packetObject.username, 
-                packetObject.password, 
+                hashedPassword, 
                 packetObject.publicKey, 
                 packetObject.avatar, 
                 packetObject.creationDate
@@ -99,11 +103,11 @@ io.on('connection', (socket) => {
     });
 
     // connectUser
-    // Request operation
-    // - Checks if user exists in database, if yes then sends null callback, otherwise sends failure to client to clear local storage
+    // ||
     socket.on('connectUser', async function (data, ack) {
         try {
-            checkObjReqProps(data, ["UID"]);
+
+            checkObjReqProps(data, ["UID", "password"]);
 
             try {
                 let userRecord = await db.fetchRecords(socket.id, data.UID, "USERS", {"UID": data.UID}, undefined, undefined, undefined, undefined, undefined, true, true);
