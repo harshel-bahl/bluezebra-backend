@@ -1,0 +1,711 @@
+[2023-09-10 14:29:15.309] INFO  || starting server... | func: index.startup | 
+[2023-09-10 14:29:15.344] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 14:29:15.377] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 14:29:15.378] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 14:29:15.380] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 14:29:15.381] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 14:29:15.466] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 14:29:30.897] INFO  || event: connection | socketID: kjM2bZcwSjeiQpWfAAAB | 
+[2023-09-10 14:30:40.338] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 14:30:43.808] INFO  || event: connection | socketID: T_KpJSCm6pC0wQi7AAAD | 
+[2023-09-10 14:32:18.345] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 14:32:19.888] INFO  || event: connection | socketID: 0Xb5uhrMBAkk9tqzAAAF | 
+[2023-09-10 15:00:57.633] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:01:00.928] INFO  || event: connection | socketID: hN_aUjS_6pqOG_wuAAAH | 
+[2023-09-10 15:01:27.024] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"harshel"}) | socketID: hN_aUjS_6pqOG_wuAAAH | 
+[2023-09-10 15:01:27.026] INFO  || checked username | event: checkUsername | (info: username: harshel) | socketID: hN_aUjS_6pqOG_wuAAAH | 
+[2023-09-10 15:01:31.062] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"harshel"}) | socketID: hN_aUjS_6pqOG_wuAAAH | 
+[2023-09-10 15:01:31.066] INFO  || checked username | event: checkUsername | (info: username: harshel) | socketID: hN_aUjS_6pqOG_wuAAAH | 
+[2023-09-10 15:20:04.398] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:20:32.680] INFO  || event: connection | socketID: Ur2ZsjgmlbKShErJAAAJ | 
+[2023-09-10 15:20:39.529] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"harshel"}) | socketID: Ur2ZsjgmlbKShErJAAAJ | 
+[2023-09-10 15:20:39.529] INFO  || checked username | event: checkUsername | (info: username: harshel) | socketID: Ur2ZsjgmlbKShErJAAAJ | 
+[2023-09-10 15:20:40.592] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"harshel"}) | socketID: Ur2ZsjgmlbKShErJAAAJ | 
+[2023-09-10 15:20:40.594] INFO  || checked username | event: checkUsername | (info: username: harshel) | socketID: Ur2ZsjgmlbKShErJAAAJ | 
+[2023-09-10 15:20:46.122] ERROR || failed to create user | event: createUser | socketID: Ur2ZsjgmlbKShErJAAAJ | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 15:22:56.634] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:26:39.504] INFO  || event: connection | socketID: 6NUfUhT-SqvKV0aZAAAL | 
+[2023-09-10 15:26:49.827] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: 6NUfUhT-SqvKV0aZAAAL | 
+[2023-09-10 15:26:49.828] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: 6NUfUhT-SqvKV0aZAAAL | 
+[2023-09-10 15:26:55.551] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: 6NUfUhT-SqvKV0aZAAAL | 
+[2023-09-10 15:26:55.552] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: 6NUfUhT-SqvKV0aZAAAL | 
+[2023-09-10 15:27:35.267] ERROR || failed to create user | event: createUser | socketID: 6NUfUhT-SqvKV0aZAAAL | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 15:27:51.624] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:31:44.611] INFO  || event: connection | socketID: N0MpV0Le5yNm77bwAAAN | 
+[2023-09-10 15:31:47.912] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: N0MpV0Le5yNm77bwAAAN | 
+[2023-09-10 15:31:47.913] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: N0MpV0Le5yNm77bwAAAN | 
+[2023-09-10 15:31:49.144] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: N0MpV0Le5yNm77bwAAAN | 
+[2023-09-10 15:31:49.146] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: N0MpV0Le5yNm77bwAAAN | 
+[2023-09-10 15:32:10.060] ERROR || failed to create user | event: createUser | socketID: N0MpV0Le5yNm77bwAAAN | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 15:40:52.607] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:52:53.822] INFO  || event: connection | socketID: retKg2YXO21gdWnnAAAP | 
+[2023-09-10 15:52:57.978] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: retKg2YXO21gdWnnAAAP | 
+[2023-09-10 15:52:57.978] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: retKg2YXO21gdWnnAAAP | 
+[2023-09-10 15:52:58.999] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: retKg2YXO21gdWnnAAAP | 
+[2023-09-10 15:52:59.000] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: retKg2YXO21gdWnnAAAP | 
+[2023-09-10 15:53:05.298] ERROR || failed to create user | event: createUser | socketID: retKg2YXO21gdWnnAAAP | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 15:58:08.561] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:58:29.125] INFO  || event: connection | socketID: V33fi2wQKiz7fvkLAAAR | 
+[2023-09-10 15:58:29.156] ERROR || failed to connect user | event: connectUser | socketID: V33fi2wQKiz7fvkLAAAR | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:110:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 15:59:07.463] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 15:59:10.930] INFO  || event: connection | socketID: ixexhfxrh_CpO-LAAAAT | 
+[2023-09-10 15:59:10.957] ERROR || failed to connect user | event: connectUser | socketID: ixexhfxrh_CpO-LAAAAT | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:110:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:04:52.621] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 16:04:56.057] INFO  || event: connection | socketID: qWY_tEHoCMlzT5wtAAAV | 
+[2023-09-10 16:04:56.089] ERROR || failed to connect user | event: connectUser | socketID: qWY_tEHoCMlzT5wtAAAV | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:110:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:05:02.057] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: client namespace disconnect) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:05:12.024] INFO  || event: connection | socketID: ykwYZ9EvSXAFazA0AAAX | 
+[2023-09-10 16:05:14.264] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: ykwYZ9EvSXAFazA0AAAX | 
+[2023-09-10 16:05:14.265] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: ykwYZ9EvSXAFazA0AAAX | 
+[2023-09-10 16:05:15.543] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: ykwYZ9EvSXAFazA0AAAX | 
+[2023-09-10 16:05:15.544] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: ykwYZ9EvSXAFazA0AAAX | 
+[2023-09-10 16:05:23.934] ERROR || failed to create user | event: createUser | socketID: ykwYZ9EvSXAFazA0AAAX | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:05:53.546] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 16:05:56.561] INFO  || event: connection | socketID: ZLq9z4QRxTbnCpWSAAAZ | 
+[2023-09-10 16:05:56.583] ERROR || failed to connect user | event: connectUser | socketID: ZLq9z4QRxTbnCpWSAAAZ | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:110:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:12:09.701] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 16:12:13.154] INFO  || event: connection | socketID: roPwz36MXZMtBiAXAAAb | 
+[2023-09-10 16:12:13.178] ERROR || failed to connect user | event: connectUser | socketID: roPwz36MXZMtBiAXAAAb | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:110:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:14:46.302] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 16:14:50.028] INFO  || event: connection | socketID: r-5WefDRyBD-8aRPAAAd | 
+[2023-09-10 16:14:50.062] ERROR || failed to connect user | event: connectUser | socketID: r-5WefDRyBD-8aRPAAAd | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:110:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:14:52.658] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: client namespace disconnect) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:14:59.064] INFO  || event: connection | socketID: MFILSDGDQ7RJTmaFAAAf | 
+[2023-09-10 16:15:01.423] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: MFILSDGDQ7RJTmaFAAAf | 
+[2023-09-10 16:15:01.425] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: MFILSDGDQ7RJTmaFAAAf | 
+[2023-09-10 16:15:02.083] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: MFILSDGDQ7RJTmaFAAAf | 
+[2023-09-10 16:15:02.084] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: MFILSDGDQ7RJTmaFAAAf | 
+[2023-09-10 16:15:06.871] ERROR || failed to create user | event: createUser | socketID: MFILSDGDQ7RJTmaFAAAf | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 16:15:10.921] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 16:15:12.382] INFO  || event: connection | socketID: 8zzBgSpTywykxJLdAAAh | 
+[2023-09-10 18:29:16.965] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:142:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 18:29:20.118] INFO  || event: connection | socketID: 70Wvwt_dZkVs6RrKAAAj | 
+[2023-09-10 18:39:17.790] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: 70Wvwt_dZkVs6RrKAAAj | 
+[2023-09-10 18:39:17.791] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: 70Wvwt_dZkVs6RrKAAAj | 
+[2023-09-10 18:39:19.710] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: 70Wvwt_dZkVs6RrKAAAj | 
+[2023-09-10 18:39:19.711] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: 70Wvwt_dZkVs6RrKAAAj | 
+[2023-09-10 18:39:25.705] ERROR || failed to create user | event: createUser | socketID: 70Wvwt_dZkVs6RrKAAAj | error: [MissingObjProps: (missing props: UID)] | 
+STACK:
+    at checkObjReqProps (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:278:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:83:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 18:40:27.058] INFO  || starting server... | func: index.startup | 
+[2023-09-10 18:40:27.075] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 18:40:27.087] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 18:40:27.088] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 18:40:27.089] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 18:40:27.090] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 18:40:27.140] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 18:40:31.945] INFO  || event: connection | socketID: C1rI6OvRSTq2aXvVAAAB | 
+[2023-09-10 18:40:37.640] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:143:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 18:40:39.352] INFO  || event: connection | socketID: BIpSxiS7Z2BHCVjJAAAD | 
+[2023-09-10 18:40:48.492] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: BIpSxiS7Z2BHCVjJAAAD | 
+[2023-09-10 18:40:48.494] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: BIpSxiS7Z2BHCVjJAAAD | 
+[2023-09-10 18:40:49.635] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: BIpSxiS7Z2BHCVjJAAAD | 
+[2023-09-10 18:40:49.637] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: BIpSxiS7Z2BHCVjJAAAD | 
+[2023-09-10 18:40:58.455] DEBUG || failed to create user | func: DB.createUser | (info: uID: BDFA13B8-843C-4191-B1AC-5686C9597245, username: h) | socketID: BIpSxiS7Z2BHCVjJAAAD | UID: BDFA13B8-843C-4191-B1AC-5686C9597245 | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'MIIBCgKCAQEA8bcL8jWH2ACqe+ZYhz+Owo+RbQat3z36Kz0NV/f8HbxBQU1XJbhODwxjb01Mkns3F' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:40:58.456] ERROR || failed to create user | event: createUser | socketID: BIpSxiS7Z2BHCVjJAAAD | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'MIIBCgKCAQEA8bcL8jWH2ACqe+ZYhz+Owo+RbQat3z36Kz0NV/f8HbxBQU1XJbhODwxjb01Mkns3F' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:40:58.516] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: BDFA13B8-843C-4191-B1AC-5686C9597245, hash: $2b$10$mhJ19j/cxYBXaaomJs8vleIVXnjjrClwz/qf0sK4hcJV1qciZI.gK) | socketID: BIpSxiS7Z2BHCVjJAAAD | 
+[2023-09-10 18:51:51.828] INFO  || starting server... | func: index.startup | 
+[2023-09-10 18:51:51.835] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 18:51:51.856] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 18:51:51.866] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 18:51:51.875] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 18:51:51.882] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 18:51:51.937] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 18:51:59.518] INFO  || event: connection | socketID: vsf_dF5ZLn17FrFsAAAB | 
+[2023-09-10 18:52:01.806] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: vsf_dF5ZLn17FrFsAAAB | 
+[2023-09-10 18:52:01.808] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: vsf_dF5ZLn17FrFsAAAB | 
+[2023-09-10 18:52:03.404] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: vsf_dF5ZLn17FrFsAAAB | 
+[2023-09-10 18:52:03.405] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: vsf_dF5ZLn17FrFsAAAB | 
+[2023-09-10 18:52:40.557] DEBUG || failed to create user | func: DB.createUser | (info: uID: 54D657CF-1FD0-4305-B294-2073478C7123, username: h) | socketID: vsf_dF5ZLn17FrFsAAAB | UID: 54D657CF-1FD0-4305-B294-2073478C7123 | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'MIIBCgKCAQEAv2fBCaxU3ZxNzE10UMnqtXHxW7G6XFNWN8Yy7MBtfMi/7OSyUPOjUWRX1JwmIjcGR' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:52:40.558] ERROR || failed to create user | event: createUser | socketID: vsf_dF5ZLn17FrFsAAAB | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'MIIBCgKCAQEAv2fBCaxU3ZxNzE10UMnqtXHxW7G6XFNWN8Yy7MBtfMi/7OSyUPOjUWRX1JwmIjcGR' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:52:40.617] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 54D657CF-1FD0-4305-B294-2073478C7123, hash: $2b$10$G1T7ZP2qcmw7jm/QJushWuRvARMQ5ygXctY0/EpOzSVwzJFzOXiYy) | socketID: vsf_dF5ZLn17FrFsAAAB | 
+[2023-09-10 18:55:34.587] INFO  || starting server... | func: index.startup | 
+[2023-09-10 18:55:34.593] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 18:55:34.596] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 18:55:34.599] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 18:55:34.601] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 18:55:34.604] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 18:55:34.651] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 18:55:36.637] INFO  || event: connection | socketID: zt6ZPUIDZwsDrLAEAAAB | 
+[2023-09-10 18:55:38.429] DEBUG || failed to create user | func: DB.createUser | (info: uID: 455F22B1-0F7B-40FF-892D-3F2D67EAB337, username: h) | socketID: zt6ZPUIDZwsDrLAEAAAB | UID: 455F22B1-0F7B-40FF-892D-3F2D67EAB337 | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'MIIBCgKCAQEAwPBUUV0JtJlr0yjWnFbmsJg5Fj+9ZpCD9luC0SM2AOp3MzhiyqVqiArqr8AwnctGW' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:55:38.432] ERROR || failed to create user | event: createUser | socketID: zt6ZPUIDZwsDrLAEAAAB | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'MIIBCgKCAQEAwPBUUV0JtJlr0yjWnFbmsJg5Fj+9ZpCD9luC0SM2AOp3MzhiyqVqiArqr8AwnctGW' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:55:38.493] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 455F22B1-0F7B-40FF-892D-3F2D67EAB337, hash: $2b$10$T9G57hggvt5KMfbJYjS4o.s/SSHMNzhdw3uq8tJl6qvcrvDXU60Xi) | socketID: zt6ZPUIDZwsDrLAEAAAB | 
+[2023-09-10 18:58:22.274] INFO  || starting server... | func: index.startup | 
+[2023-09-10 18:58:22.281] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 18:58:22.284] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 18:58:22.285] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 18:58:22.286] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 18:58:22.287] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 18:58:22.332] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 18:58:24.090] INFO  || event: connection | socketID: -fdfi8jokG7pXQFaAAAB | 
+[2023-09-10 18:58:27.514] DEBUG || failed to create user | func: DB.createUser | (info: uID: 3AF21740-7E14-4DDD-80E9-17649851EE02, username: h) | socketID: -fdfi8jokG7pXQFaAAAB | UID: 3AF21740-7E14-4DDD-80E9-17649851EE02 | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', X'4d49494243674b4341514541766b756b364a7948495932385a6e335072764c327952726c4238' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:58:27.515] ERROR || failed to create user | event: createUser | socketID: -fdfi8jokG7pXQFaAAAB | error: [DBErr: (ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', X'4d49494243674b4341514541766b756b364a7948495932385a6e335072764c327952726c4238' at line 2)] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:458:21)
+[2023-09-10 18:58:27.578] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 3AF21740-7E14-4DDD-80E9-17649851EE02, hash: $2b$10$bKQsR1GM52xDYRs.iHVN.u6tWugog1fUxnR7K5B8vneOVqcuIN0dO) | socketID: -fdfi8jokG7pXQFaAAAB | 
+[2023-09-10 18:59:23.074] INFO  || starting server... | func: index.startup | 
+[2023-09-10 18:59:23.080] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 18:59:23.082] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 18:59:23.084] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 18:59:23.084] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 18:59:23.085] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 18:59:23.129] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 18:59:24.573] INFO  || event: connection | socketID: aU-pTLV1KwDbY9o1AAAB | 
+[2023-09-10 18:59:26.580] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 41E5D18E-E4E2-405D-9156-397C9E60A61F, hash: $2b$10$n56qBUe8juYkKc0h/oTICuOsHawH8k84HCUozDCqJAy56jUl2haWC) | socketID: aU-pTLV1KwDbY9o1AAAB | 
+[2023-09-10 18:59:26.585] DEBUG || created user | func: DB.createUser | (info: uID: 41E5D18E-E4E2-405D-9156-397C9E60A61F, username: h) | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:26.586] INFO  || created user | event: createUser | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.582] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"41E5D18E-E4E2-405D-9156-397C9E60A61F"}) | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.664] DEBUG || authentication successful | func: auth.comparePassword | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.665] DEBUG || user connection successful | func: auth.connectUser | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.665] INFO  || connected user | event: connectUser | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.665] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 18:59:29.668] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"41E5D18E-E4E2-405D-9156-397C9E60A61F"}) | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.669] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | recSocketID: aU-pTLV1KwDbY9o1AAAB | recUID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 18:59:29.669] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: aU-pTLV1KwDbY9o1AAAB | UID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | recSocketID: aU-pTLV1KwDbY9o1AAAB | recUID: 41E5D18E-E4E2-405D-9156-397C9E60A61F | 
+[2023-09-10 19:01:24.577] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: ping timeout) | error: [SocketStatusErr: (socket status: (connected: true, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at listOnTimeout (node:internal/timers:569:17)
+[2023-09-10 19:04:52.208] INFO  || starting server... | func: index.startup | 
+[2023-09-10 19:04:52.214] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 19:04:52.216] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 19:04:52.216] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 19:04:52.218] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 19:04:52.219] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 19:04:52.263] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 19:05:02.692] INFO  || event: connection | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:05.956] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:05.958] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:09.996] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"l"}) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:09.997] INFO  || checked username | event: checkUsername | (info: username: l) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:12.226] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"l"}) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:12.227] INFO  || checked username | event: checkUsername | (info: username: l) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:18.715] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 883E8B75-47F1-4859-9869-F2EEA0D2D7FC, hash: $2b$10$7/gxQZOsIZPMT/onkHcpJ.fuSrhnC8y5bCK.VJFEDFxC17lAEsoD.) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:18.715] ERROR || failed to create user | event: createUser | socketID: UuG2p6flIl3sujqqAAAB | error: [ReferenceError: publicKeyBuffer is not defined] | 
+STACK:
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:94:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:05:21.264] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: FA764048-F818-47D6-A0C8-104A462D2219, hash: $2b$10$cLWpZRzgU7PqNPoqd2uM5.y.aV5wzI/UdWImTVTUHDZHU.BPzuQE.) | socketID: UuG2p6flIl3sujqqAAAB | 
+[2023-09-10 19:05:21.264] ERROR || failed to create user | event: createUser | socketID: UuG2p6flIl3sujqqAAAB | error: [ReferenceError: publicKeyBuffer is not defined] | 
+STACK:
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:94:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:07:25.707] INFO  || starting server... | func: index.startup | 
+[2023-09-10 19:07:25.715] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 19:07:25.719] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 19:07:25.720] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 19:07:25.721] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 19:07:25.722] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 19:07:25.768] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 19:07:27.598] INFO  || event: connection | socketID: lhDtSNRmrCkyemMzAAAB | 
+[2023-09-10 19:07:28.950] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B, hash: $2b$10$nVNuYWUOiY1ubh35amaFOeCWFYxxojd14XsTNkwlGx6psCVlYa/qC) | socketID: lhDtSNRmrCkyemMzAAAB | 
+[2023-09-10 19:07:28.953] DEBUG || created user | func: DB.createUser | (info: uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B, username: l) | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:28.954] INFO  || created user | event: createUser | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:31.922] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:32.007] DEBUG || authentication successful | func: auth.comparePassword | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:32.007] DEBUG || user connection successful | func: auth.connectUser | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:32.007] INFO  || connected user | event: connectUser | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:32.008] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:07:32.009] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:32.010] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: lhDtSNRmrCkyemMzAAAB | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:07:32.010] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: lhDtSNRmrCkyemMzAAAB | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: lhDtSNRmrCkyemMzAAAB | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:12:47.631] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: ping timeout) | error: [SocketStatusErr: (socket status: (connected: true, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at listOnTimeout (node:internal/timers:569:17)
+[2023-09-10 19:13:25.998] INFO  || event: connection | socketID: cjXqfUqKyeY84wNpAAAD | 
+[2023-09-10 19:13:26.025] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:26.085] DEBUG || authentication successful | func: auth.comparePassword | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:26.085] DEBUG || user connection successful | func: auth.connectUser | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:26.086] INFO  || connected user | event: connectUser | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:26.086] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:13:26.087] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:26.088] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: cjXqfUqKyeY84wNpAAAD | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:26.088] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: cjXqfUqKyeY84wNpAAAD | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: cjXqfUqKyeY84wNpAAAD | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:13:58.145] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: true, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 19:14:00.058] INFO  || event: connection | socketID: nJCvHCu0dA-K4VgkAAAF | 
+[2023-09-10 19:14:00.084] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:00.157] DEBUG || authentication successful | func: auth.comparePassword | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:00.157] DEBUG || user connection successful | func: auth.connectUser | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:00.157] INFO  || connected user | event: connectUser | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:00.157] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:14:00.158] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:00.159] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: nJCvHCu0dA-K4VgkAAAF | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:00.159] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: nJCvHCu0dA-K4VgkAAAF | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: nJCvHCu0dA-K4VgkAAAF | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:44.951] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: ping timeout) | error: [SocketStatusErr: (socket status: (connected: true, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at listOnTimeout (node:internal/timers:569:17)
+[2023-09-10 19:14:53.716] INFO  || event: connection | socketID: IbxlyJsMdHqtqdOXAAAH | 
+[2023-09-10 19:14:53.735] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:53.797] DEBUG || authentication successful | func: auth.comparePassword | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:53.797] DEBUG || user connection successful | func: auth.connectUser | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:53.797] INFO  || connected user | event: connectUser | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:53.797] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:14:53.798] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"A15B3F21-D700-4444-8EA7-F98B16A2E19B"}) | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:53.798] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: IbxlyJsMdHqtqdOXAAAH | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:14:53.799] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: IbxlyJsMdHqtqdOXAAAH | uID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | recSocketID: IbxlyJsMdHqtqdOXAAAH | recUID: A15B3F21-D700-4444-8EA7-F98B16A2E19B | 
+[2023-09-10 19:16:44.368] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: client namespace disconnect) | error: [SocketStatusErr: (socket status: (connected: true, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 19:16:52.217] INFO  || event: connection | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:16:54.121] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:16:54.122] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:16:55.852] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"hk"}) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:16:55.853] INFO  || checked username | event: checkUsername | (info: username: hk) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:16:56.740] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"hk"}) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:16:56.741] INFO  || checked username | event: checkUsername | (info: username: hk) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:17:04.157] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE, hash: $2b$10$dm2ZHE2IaUWhU5IZlFSKLumXfQInIO6Ay7Nfv9L1RF76uG.lKf4S6) | socketID: f-tML1aAvlye3kaiAAAJ | 
+[2023-09-10 19:17:04.162] DEBUG || created user | func: DB.createUser | (info: uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE, username: hk) | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:04.162] INFO  || created user | event: createUser | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.119] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.201] DEBUG || authentication successful | func: auth.comparePassword | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.201] DEBUG || user connection successful | func: auth.connectUser | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.202] INFO  || connected user | event: connectUser | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.202] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:17:07.203] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.203] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: f-tML1aAvlye3kaiAAAJ | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:07.203] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: f-tML1aAvlye3kaiAAAJ | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:17:10.263] ERROR || failed to delete user | event: deleteUser | socketID: f-tML1aAvlye3kaiAAAJ | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [SocketStatusErr: (socket status: (connected: true, userID: undefined))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:168:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 19:18:23.637] INFO  || starting server... | func: index.startup | 
+[2023-09-10 19:18:23.643] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 19:18:23.645] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 19:18:23.646] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 19:18:23.647] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 19:18:23.648] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 19:18:23.696] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 19:18:29.528] INFO  || event: connection | socketID: EJk_UUfPZyrdiPsWAAAB | 
+[2023-09-10 19:18:29.547] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:18:29.610] DEBUG || authentication successful | func: auth.comparePassword | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:18:29.610] DEBUG || user connection successful | func: auth.connectUser | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:18:29.611] INFO  || connected user | event: connectUser | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:18:29.611] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:18:29.612] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:18:29.613] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: EJk_UUfPZyrdiPsWAAAB | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:18:29.613] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: EJk_UUfPZyrdiPsWAAAB | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:14.390] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:14.393] DEBUG || failed to update record | func: DB.updateRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}, updateProp: lastOnline) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [TypeError: val.slice is not a function] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/db.js:332:18
+    at new Promise (<anonymous>)
+    at DB.updateRecords (/Users/harshel/Documents/bluezebra-backend/src/db.js:300:12)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:153:26)
+    at Socket.emit (node:events:513:28)
+[2023-09-10 19:19:14.394] INFO  || socket disconnect successfully | event: disconnect | (info: reason: ping timeout) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:14.396] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE","UID2":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:14.396] INFO  || emitted user disconnect events | func: EF.sendUserDisconnect | (info: event: userDisconnect) | socketID: EJk_UUfPZyrdiPsWAAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.585] INFO  || event: connection | socketID: EGMYKOUQaUhagsBEAAAD | 
+[2023-09-10 19:19:27.605] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.675] DEBUG || authentication successful | func: auth.comparePassword | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.675] DEBUG || user connection successful | func: auth.connectUser | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.676] INFO  || connected user | event: connectUser | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.676] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:19:27.677] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.678] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: EGMYKOUQaUhagsBEAAAD | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:27.678] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: EGMYKOUQaUhagsBEAAAD | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:46.354] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:46.354] DEBUG || failed to update record | func: DB.updateRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}, updateProp: lastOnline) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [TypeError: val.slice is not a function] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/db.js:332:18
+    at new Promise (<anonymous>)
+    at DB.updateRecords (/Users/harshel/Documents/bluezebra-backend/src/db.js:300:12)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:153:26)
+    at Socket.emit (node:events:513:28)
+[2023-09-10 19:19:46.355] INFO  || socket disconnect successfully | event: disconnect | (info: reason: transport close) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:46.356] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE","UID2":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:19:46.356] INFO  || emitted user disconnect events | func: EF.sendUserDisconnect | (info: event: userDisconnect) | socketID: EGMYKOUQaUhagsBEAAAD | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.193] INFO  || event: connection | socketID: L1gLb_SOCSxZuoD_AAAF | 
+[2023-09-10 19:21:53.300] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.378] DEBUG || authentication successful | func: auth.comparePassword | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.378] DEBUG || user connection successful | func: auth.connectUser | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.378] INFO  || connected user | event: connectUser | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.379] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:21:53.380] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.381] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: L1gLb_SOCSxZuoD_AAAF | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:21:53.381] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: L1gLb_SOCSxZuoD_AAAF | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:22:15.194] DEBUG || deleted CRs | func: DB.deleteCRsByUserID | (info: queryUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:22:15.197] DEBUG || failed to delete record | func: DB.deleteRecord | (info: table: RUChannels, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [DBErr: (ER_BAD_FIELD_ERROR: Unknown column 'uID' in 'where clause')] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:396:21)
+[2023-09-10 19:22:15.197] ERROR || failed to delete userdata | func: EF.deleteUserdata | (info: uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE) | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [DBErr: (ER_BAD_FIELD_ERROR: Unknown column 'uID' in 'where clause')] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:396:21)
+[2023-09-10 19:22:15.198] ERROR || failed to delete user | event: deleteUser | socketID: L1gLb_SOCSxZuoD_AAAF | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [DBErr: (ER_BAD_FIELD_ERROR: Unknown column 'uID' in 'where clause')] | 
+STACK:
+    at Query.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/db.js:396:21)
+[2023-09-10 19:24:44.640] INFO  || starting server... | func: index.startup | 
+[2023-09-10 19:24:44.646] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-10 19:24:44.649] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-10 19:24:44.651] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-10 19:24:44.652] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-10 19:24:44.653] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-10 19:24:44.700] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-10 19:24:50.059] INFO  || event: connection | socketID: KY-SUeYIu7crA_V2AAAB | 
+[2023-09-10 19:24:50.170] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:24:50.231] DEBUG || authentication successful | func: auth.comparePassword | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:24:50.232] DEBUG || user connection successful | func: auth.connectUser | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:24:50.232] INFO  || connected user | event: connectUser | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:24:50.233] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:24:50.234] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:24:50.234] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: KY-SUeYIu7crA_V2AAAB | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:24:50.234] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | recSocketID: KY-SUeYIu7crA_V2AAAB | recUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.541] DEBUG || deleted CRs | func: DB.deleteCRsByUserID | (info: queryUID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.543] DEBUG || deleted record | func: DB.deleteRecord | (info: table: RUChannels, predObj: {"uID1":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE","uID2":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.545] DEBUG || deleted record | func: DB.deleteRecord | (info: table: EVENTS, predObj: {"recUID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.548] DEBUG || deleted record | func: DB.deleteRecord | (info: table: USERS, predObj: {"uID":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.549] DEBUG || deleted userdata | func: EF.deleteUserdata | (info: uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.551] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE","UID2":"94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE"}) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.552] DEBUG || emitted delete user trace events | func: EF.sendDeleteUserTrace | (info: event: deleteUserTrace) | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:25:02.552] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: KY-SUeYIu7crA_V2AAAB | 
+[2023-09-10 19:25:02.553] INFO  || deleted user | event: deleteUser | socketID: KY-SUeYIu7crA_V2AAAB | uID: 94A2CCB6-9CD1-4AD0-BE75-3301712AA5EE | 
+[2023-09-10 19:33:06.873] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: client namespace disconnect) | error: [SocketStatusErr: (socket status: (connected: false, uID: null))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-10 19:33:15.654] INFO  || event: connection | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:17.485] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"l"}) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:17.486] INFO  || checked username | event: checkUsername | (info: username: l) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:19.063] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"lg"}) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:19.064] INFO  || checked username | event: checkUsername | (info: username: lg) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:20.579] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"lg"}) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:20.580] INFO  || checked username | event: checkUsername | (info: username: lg) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:26.128] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78, hash: $2b$10$6xLDQnIUbNG3oWStgLx1EeEqZ8CJwHelJLY7Xl/HMKKUHohJgUtme) | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:26.131] DEBUG || created user | func: DB.createUser | (info: uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78, username: lg) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:26.131] INFO  || created user | event: createUser | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.085] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"9897BB10-A694-4B6D-A928-8F5DDEE80C78"}) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.169] DEBUG || authentication successful | func: auth.comparePassword | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.169] DEBUG || user connection successful | func: auth.connectUser | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.169] INFO  || connected user | event: connectUser | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.170] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:33:29.171] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"9897BB10-A694-4B6D-A928-8F5DDEE80C78"}) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.171] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | recSocketID: jZQtrL8yHlKasHzsAAAD | recUID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:29.171] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | recSocketID: jZQtrL8yHlKasHzsAAAD | recUID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.292] DEBUG || deleted CRs | func: DB.deleteCRsByUserID | (info: queryUID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.294] DEBUG || deleted record | func: DB.deleteRecord | (info: table: RUChannels, predObj: {"uID1":"9897BB10-A694-4B6D-A928-8F5DDEE80C78","uID2":"9897BB10-A694-4B6D-A928-8F5DDEE80C78"}) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.295] DEBUG || deleted record | func: DB.deleteRecord | (info: table: EVENTS, predObj: {"recUID":"9897BB10-A694-4B6D-A928-8F5DDEE80C78"}) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.297] DEBUG || deleted record | func: DB.deleteRecord | (info: table: USERS, predObj: {"uID":"9897BB10-A694-4B6D-A928-8F5DDEE80C78"}) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.297] DEBUG || deleted userdata | func: EF.deleteUserdata | (info: uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.298] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"9897BB10-A694-4B6D-A928-8F5DDEE80C78","UID2":"9897BB10-A694-4B6D-A928-8F5DDEE80C78"}) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.299] DEBUG || emitted delete user trace events | func: EF.sendDeleteUserTrace | (info: event: deleteUserTrace) | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:33:47.299] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: jZQtrL8yHlKasHzsAAAD | 
+[2023-09-10 19:33:47.300] INFO  || deleted user | event: deleteUser | socketID: jZQtrL8yHlKasHzsAAAD | uID: 9897BB10-A694-4B6D-A928-8F5DDEE80C78 | 
+[2023-09-10 19:34:52.083] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: false, uID: null))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:145:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-10 19:34:55.044] INFO  || event: connection | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:34:58.515] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:34:58.516] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:34:59.396] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"hh"}) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:34:59.396] INFO  || checked username | event: checkUsername | (info: username: hh) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:35:00.366] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"hh"}) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:35:00.367] INFO  || checked username | event: checkUsername | (info: username: hh) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:35:15.115] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: 37572887-5D8A-4ADA-AAE8-6030060CC436, hash: $2b$10$Vc4zTMBBJ9V9yfwc4AlNx.uV4sdYUElLyQhNLmKph7iFGJThWOZG2) | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:35:15.119] DEBUG || created user | func: DB.createUser | (info: uID: 37572887-5D8A-4ADA-AAE8-6030060CC436, username: hh) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:15.119] INFO  || created user | event: createUser | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.089] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"37572887-5D8A-4ADA-AAE8-6030060CC436"}) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.167] DEBUG || authentication successful | func: auth.comparePassword | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.167] DEBUG || user connection successful | func: auth.connectUser | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.167] INFO  || connected user | event: connectUser | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.167] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:134:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-10 19:35:18.168] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"37572887-5D8A-4ADA-AAE8-6030060CC436"}) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.169] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | recSocketID: 3XhtWHMfK9yAH33RAAAF | recUID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:18.169] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | recSocketID: 3XhtWHMfK9yAH33RAAAF | recUID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.789] DEBUG || deleted CRs | func: DB.deleteCRsByUserID | (info: queryUID: 37572887-5D8A-4ADA-AAE8-6030060CC436) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.790] DEBUG || deleted record | func: DB.deleteRecord | (info: table: RUChannels, predObj: {"uID1":"37572887-5D8A-4ADA-AAE8-6030060CC436","uID2":"37572887-5D8A-4ADA-AAE8-6030060CC436"}) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.791] DEBUG || deleted record | func: DB.deleteRecord | (info: table: EVENTS, predObj: {"recUID":"37572887-5D8A-4ADA-AAE8-6030060CC436"}) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.794] DEBUG || deleted record | func: DB.deleteRecord | (info: table: USERS, predObj: {"uID":"37572887-5D8A-4ADA-AAE8-6030060CC436"}) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.795] DEBUG || deleted userdata | func: EF.deleteUserdata | (info: uID: 37572887-5D8A-4ADA-AAE8-6030060CC436) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.796] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"37572887-5D8A-4ADA-AAE8-6030060CC436","UID2":"37572887-5D8A-4ADA-AAE8-6030060CC436"}) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.796] DEBUG || emitted delete user trace events | func: EF.sendDeleteUserTrace | (info: event: deleteUserTrace) | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 
+[2023-09-10 19:35:20.797] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: 3XhtWHMfK9yAH33RAAAF | 
+[2023-09-10 19:35:20.797] INFO  || deleted user | event: deleteUser | socketID: 3XhtWHMfK9yAH33RAAAF | uID: 37572887-5D8A-4ADA-AAE8-6030060CC436 | 

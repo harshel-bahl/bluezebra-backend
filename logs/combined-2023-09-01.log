@@ -1,0 +1,7 @@
+[2023-09-01 18:56:29.720] INFO  || starting server... | func: index.startup | 
+[2023-09-01 18:56:29.727] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-01 18:56:29.742] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-01 18:56:29.752] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-01 18:56:29.759] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-01 18:56:29.764] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-01 18:56:30.373] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 

@@ -80,14 +80,14 @@ class DB {
     return new Promise((resolve, reject) => {
 
       let table1 = `CREATE TABLE IF NOT EXISTS USERS (
-        UID VARCHAR(255) NOT NULL CHECK (UID <> ''),
+        uID VARCHAR(255) NOT NULL CHECK (uID <> ''),
         username VARCHAR(255) NOT NULL CHECK (username <> ''), 
         password VARCHAR(100) NOT NULL CHECK (password <> ''),
         publicKey BlOB NOT NULL,
         avatar VARCHAR(50) NOT NULL CHECK (avatar <> ''),
         creationDate DATETIME NOT NULL,
         lastOnline DATETIME,
-        PRIMARY KEY (UID),
+        PRIMARY KEY (uID),
         UNIQUE (username)
       );`;
 
@@ -116,8 +116,8 @@ class DB {
         recUID VARCHAR(255) NOT NULL CHECK (recUID <> ''),
         requestDate DATETIME NOT NULL,
         PRIMARY KEY (requestID),
-        FOREIGN KEY (origUID) REFERENCES USERS(UID),
-        FOREIGN KEY (recUID) REFERENCES USERS(UID)
+        FOREIGN KEY (origUID) REFERENCES USERS(uID),
+        FOREIGN KEY (recUID) REFERENCES USERS(uID)
       );`;
 
       this.con.query(table2, (err, result) => {
@@ -141,12 +141,12 @@ class DB {
 
       let table3 = `CREATE TABLE IF NOT EXISTS RUChannels (
         channelID VARCHAR(255) NOT NULL CHECK (channelID <> ''),
-        UID1 VARCHAR(255) NOT NULL CHECK (UID1 <> ''),
-        UID2 VARCHAR(255) NOT NULL CHECK (UID2 <> ''),
+        uID1 VARCHAR(255) NOT NULL CHECK (uID1 <> ''),
+        uID2 VARCHAR(255) NOT NULL CHECK (uID2 <> ''),
         creationDate DATETIME NOT NULL,
         PRIMARY KEY (channelID),
-        FOREIGN KEY (UID1) REFERENCES USERS(UID),
-        FOREIGN KEY (UID2) REFERENCES USERS(UID)
+        FOREIGN KEY (uID1) REFERENCES USERS(uID),
+        FOREIGN KEY (uID2) REFERENCES USERS(uID)
       );`;
 
       this.con.query(table3, (err, result) => {
@@ -176,8 +176,8 @@ class DB {
         recUID VARCHAR(255) NOT NULL CHECK (recUID <> ''),
         packet BLOB,
         PRIMARY KEY (eventID),
-        FOREIGN KEY (origUID) REFERENCES USERS(UID),
-        FOREIGN KEY (recUID) REFERENCES USERS(UID)
+        FOREIGN KEY (origUID) REFERENCES USERS(uID),
+        FOREIGN KEY (recUID) REFERENCES USERS(uID)
       );`;
 
       this.con.query(table4, (err, result) => {
@@ -202,7 +202,7 @@ class DB {
   // predProps should be primary keys to ensure that only one record is fetched
   fetchRecords(
     socketID = null,
-    UID = null,
+    uID = null,
     table,
     predObj, // { pred1: value1, pred2: value2, ... }
     cols = null,
@@ -266,7 +266,7 @@ class DB {
             } else if (result.length > 1 && errorOnMultiple) {
               throw new MultipleDBResults('multiple records found');
             }
-            logDebug(`fetched records`, "DB.fetchRecords", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
+            logDebug(`fetched records`, "DB.fetchRecords", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, uID);
 
             if (errorOnMultiple || limit == 1) {
               resolve(result[0]);
@@ -275,12 +275,12 @@ class DB {
             }
 
           } catch (error) {
-            logDebug(`failed to fetch records`, "DB.fetchRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
+            logDebug(`failed to fetch records`, "DB.fetchRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to fetch records`, "DB.fetchRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
+        logDebug(`failed to fetch records`, "DB.fetchRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, uID);
         reject(error);
       };
     });
@@ -290,7 +290,7 @@ class DB {
   // predProps should be primary keys to ensure that only one record is updated
   updateRecords(
     socketID = null,
-    UID = null,
+    uID = null,
     table,
     predObj, // { pred1: value1, pred2: value2, ... }
     updateProp,
@@ -339,16 +339,16 @@ class DB {
               throw new DBErr(`no changes made to record`);
             }
 
-            logDebug(`updated record`, "DB.updateRecords", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}, updateProp: ${updateProp}`, socketID, UID);
+            logDebug(`updated record`, "DB.updateRecords", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}, updateProp: ${updateProp}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to update record`, "DB.updateRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}, updateProp: ${updateProp}`, socketID, UID);
+            logDebug(`failed to update record`, "DB.updateRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}, updateProp: ${updateProp}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to update record`, "DB.updateRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}, updateProp: ${updateProp}`, socketID, UID);
+        logDebug(`failed to update record`, "DB.updateRecords", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}, updateProp: ${updateProp}`, socketID, uID);
         reject(error);
       };
     });
@@ -359,7 +359,7 @@ class DB {
   // predProps should be primary keys to ensure that only one record is updated
   deleteRecords(
     socketID = null,
-    UID = null,
+    uID = null,
     table,
     predObj, // { pred1: value1, pred2: value2, ... }
     whereClauseSeperator = "AND",
@@ -398,16 +398,16 @@ class DB {
               throw new EmptyDBResult(`no records found`);
             }
 
-            logDebug(`deleted record`, "DB.deleteRecord", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
+            logDebug(`deleted record`, "DB.deleteRecord", undefined, undefined, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to delete record`, "DB.deleteRecord", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
+            logDebug(`failed to delete record`, "DB.deleteRecord", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to delete record`, "DB.deleteRecord", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, UID);
+        logDebug(`failed to delete record`, "DB.deleteRecord", undefined, error, `table: ${table}, predObj: ${JSON.stringify(predObj)}`, socketID, uID);
         reject(error);
       };
     });
@@ -418,7 +418,7 @@ class DB {
 
   createUser(
     socketID = null,
-    UID,
+    uID,
     username,
     password,
     publicKey,
@@ -429,21 +429,21 @@ class DB {
       try {
 
         checkParams({
-          UID: UID,
+          uID: uID,
           username: username,
           password: password,
           publicKey: publicKey,
           avatar: avatar,
           creationDate: creationDate
-        }, ["UID", "username", "password", "publicKey", "avatar", "creationDate"]);
+        }, ["uID", "username", "password", "publicKey", "avatar", "creationDate"]);
 
         let query = `
-        INSERT INTO USERS 
+        INSERT INTO USERS (uID, username, password, publicKey, avatar, creationDate, lastOnline)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
         let values = [
-          UID,
+          uID,
           username,
           password,
           publicKey,
@@ -458,16 +458,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`created user`, "DB.createUser", undefined, undefined, `UID: ${UID}, username: ${username}`, socketID, UID);
+            logDebug(`created user`, "DB.createUser", undefined, undefined, `uID: ${uID}, username: ${username}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to create user`, "DB.createUser", undefined, error, `UID: ${UID}, username: ${username}`, socketID, UID);
+            logDebug(`failed to create user`, "DB.createUser", undefined, error, `uID: ${uID}, username: ${username}`, socketID, uID);
             reject(error);
           }
         });
       } catch (error) {
-        logDebug(`failed to create user`, "DB.createUser", undefined, error, `UID: ${UID}, username: ${username}`, socketID, UID);
+        logDebug(`failed to create user`, "DB.createUser", undefined, error, `uID: ${uID}, username: ${username}`, socketID, uID);
         reject(error);
       }
     });
@@ -475,7 +475,7 @@ class DB {
 
   fetchUsersByUsername(
     socketID = null,
-    UID = null,
+    uID = null,
     username,
     limit = 10
   ) {
@@ -502,16 +502,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`fetched users`, "DB.fetchUsersByUsername", undefined, undefined, `username: ${username}`, socketID, UID);
+            logDebug(`fetched users`, "DB.fetchUsersByUsername", undefined, undefined, `username: ${username}`, socketID, uID);
             resolve(result);
 
           } catch (error) {
-            logDebug(`failed to fetch users`, "DB.fetchUsersByUsername", undefined, error, `username: ${username}`, socketID, UID);
+            logDebug(`failed to fetch users`, "DB.fetchUsersByUsername", undefined, error, `username: ${username}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to fetch users`, "DB.fetchUsersByUsername", undefined, error, `username: ${username}`, socketID, UID);
+        logDebug(`failed to fetch users`, "DB.fetchUsersByUsername", undefined, error, `username: ${username}`, socketID, uID);
         reject(error);
       };
     });
@@ -522,7 +522,7 @@ class DB {
 
   createCR(
     socketID = null,
-    UID = null,
+    uID = null,
     requestID,
     origUID,
     recUID,
@@ -560,16 +560,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`created CR`, "DB.createCR", undefined, undefined, `requestID: ${requestID}`, socketID, UID);
+            logDebug(`created CR`, "DB.createCR", undefined, undefined, `requestID: ${requestID}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to create CR`, "DB.createCR", undefined, error, `requestID: ${requestID}`, socketID, UID);
+            logDebug(`failed to create CR`, "DB.createCR", undefined, error, `requestID: ${requestID}`, socketID, uID);
             reject(error);
           }
         });
       } catch (error) {
-        logDebug(`failed to create CR`, "DB.createCR", undefined, error, `requestID: ${requestID}`, socketID, UID);
+        logDebug(`failed to create CR`, "DB.createCR", undefined, error, `requestID: ${requestID}`, socketID, uID);
         reject(error);
       };
     });
@@ -577,7 +577,7 @@ class DB {
 
   fetchCRsByUserID(
     socketID = null,
-    UID = null,
+    uID = null,
     queryUID,
     cols = null,
     sortOrder = "DESC"
@@ -613,16 +613,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`fetched CRs`, "DB.fetchCRsbyUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`fetched CRs`, "DB.fetchCRsbyUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to fetch CRs`, "DB.fetchCRsbyUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`failed to fetch CRs`, "DB.fetchCRsbyUserID", undefined, error, `queryUID: ${queryUID}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to fetch CRs`, "DB.fetchCRsbyUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+        logDebug(`failed to fetch CRs`, "DB.fetchCRsbyUserID", undefined, error, `queryUID: ${queryUID}`, socketID, uID);
         reject(error);
       };
     });
@@ -630,7 +630,7 @@ class DB {
 
   deleteCRsByUserID(
     socketID = null,
-    UID = null,
+    uID = null,
     queryUID
   ) {
     return new Promise((resolve, reject) => {
@@ -653,16 +653,16 @@ class DB {
               throw new DBErr(err.message);
             };
 
-            logDebug(`deleted CRs`, "DB.deleteCRsByUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`deleted CRs`, "DB.deleteCRsByUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to delete CRs`, "DB.deleteCRsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`failed to delete CRs`, "DB.deleteCRsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, uID);
             reject(error);
           }
         });
       } catch (error) {
-        logDebug(`failed to delete CRs`, "DB.deleteCRsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+        logDebug(`failed to delete CRs`, "DB.deleteCRsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, uID);
         reject(error);
       };
     });
@@ -673,7 +673,7 @@ class DB {
 
   createRUChannel(
     socketID = null,
-    UID = null,
+    uID = null,
     channelID,
     UID1,
     UID2,
@@ -707,16 +707,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`created RUChannel`, "DB.createRUChannel", undefined, undefined, `channelID: ${channelID}`, socketID, UID);
+            logDebug(`created RUChannel`, "DB.createRUChannel", undefined, undefined, `channelID: ${channelID}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}`, socketID, UID);
+            logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}`, socketID, UID);
+        logDebug(`failed to create RUChannel`, "DB.createRUChannel", undefined, error, `channelID: ${channelID}`, socketID, uID);
         reject(error);
       }
     });
@@ -724,7 +724,7 @@ class DB {
 
   fetchRUChannelsByUserID(
     socketID = null,
-    UID = null,
+    uID = null,
     queryUID,
     cols = null,
     sortOrder = "DESC"
@@ -760,16 +760,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`fetched RUChannels`, "DB.fetchRUChannelsByUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`fetched RUChannels`, "DB.fetchRUChannelsByUserID", undefined, undefined, `queryUID: ${queryUID}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to fetch RUChannels`, "DB.fetchRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+            logDebug(`failed to fetch RUChannels`, "DB.fetchRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to fetch RUChannels`, "DB.fetchRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, UID);
+        logDebug(`failed to fetch RUChannels`, "DB.fetchRUChannelsByUserID", undefined, error, `queryUID: ${queryUID}`, socketID, uID);
         reject(error);
       };
     });
@@ -781,7 +781,7 @@ class DB {
 
   createEvent(
     socketID = null,
-    UID = null,
+    uID = null,
     eventName,
     datetime,
     origUID,
@@ -818,16 +818,16 @@ class DB {
               throw new DBErr(err.message);
             }
 
-            logDebug(`created event`, "DB.createEvent", undefined, undefined, `eventName: ${eventName} origUID: ${origUID}, recUID: ${recUID}`, socketID, UID);
+            logDebug(`created event`, "DB.createEvent", undefined, undefined, `eventName: ${eventName} origUID: ${origUID}, recUID: ${recUID}`, socketID, uID);
             resolve();
 
           } catch (error) {
-            logDebug(`failed to create event`, "DB.createEvent", undefined, error, `eventName: ${eventName} origUID: ${origUID}, recUID: ${recUID}`, socketID, UID);
+            logDebug(`failed to create event`, "DB.createEvent", undefined, error, `eventName: ${eventName} origUID: ${origUID}, recUID: ${recUID}`, socketID, uID);
             reject(error);
           };
         });
       } catch (error) {
-        logDebug(`failed to create event`, "DB.createEvent", undefined, error, `eventName: ${eventName} origUID: ${origUID}, recUID: ${recUID}`, socketID, UID);
+        logDebug(`failed to create event`, "DB.createEvent", undefined, error, `eventName: ${eventName} origUID: ${origUID}, recUID: ${recUID}`, socketID, uID);
         reject(error);
       }
     });

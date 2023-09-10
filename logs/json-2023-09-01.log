@@ -1,0 +1,7 @@
+{"func":"index.startup","level":"info","message":"starting server...","timestamp":"2023-09-01 18:56:29.720"}
+{"func":"DB.connectDB","level":"info","message":"connected to MySQL DB","timestamp":"2023-09-01 18:56:29.727"}
+{"func":"DB.createTable1","level":"info","message":"created 'users' table if not present","timestamp":"2023-09-01 18:56:29.743"}
+{"func":"DB.createTable2","level":"info","message":"created 'CRs' table if not present","timestamp":"2023-09-01 18:56:29.752"}
+{"func":"DB.createTable3","level":"info","message":"created 'RUChannels' table if not present","timestamp":"2023-09-01 18:56:29.759"}
+{"func":"DB.createTable4","level":"info","message":"created 'events' table if not present","timestamp":"2023-09-01 18:56:29.764"}
+{"func":"server.startServer","info":"host: localhost, port: 3000","level":"info","message":"started server","timestamp":"2023-09-01 18:56:30.374"}

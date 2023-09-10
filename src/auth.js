@@ -24,7 +24,7 @@ let connectedUsers = {};
 
 function hashPassword(
     socketID,
-    UID,
+    uID,
     password,
     saltRounds = config.passwordSaltRounds
 ) {
@@ -40,16 +40,16 @@ function hashPassword(
                     if (err) {
                         throw new errors.FuncErr(err.message);
                     } else {
-                        util.logDebug("password hashed successfully", "auth.hashPassword", undefined, undefined, `UID: ${UID}, hash: ${hash}`, socketID);
+                        util.logDebug("password hashed successfully", "auth.hashPassword", undefined, undefined, `uID: ${uID}, hash: ${hash}`, socketID);
                         resolve(hash);
                     }
                 } catch (error) {
-                    util.logDebug("failed to hash password", "auth.hashPassword", undefined, error, `UID: ${UID}`, socketID);
+                    util.logDebug("failed to hash password", "auth.hashPassword", undefined, error, `uID: ${uID}`, socketID);
                     reject(error);
                 }
             });
         } catch (error) {
-            util.logDebug("failed to hash password", "auth.hashPassword", undefined, error, `UID: ${UID}`, socketID);
+            util.logDebug("failed to hash password", "auth.hashPassword", undefined, error, `uID: ${uID}`, socketID);
             reject(error);
         }
     });
@@ -57,7 +57,7 @@ function hashPassword(
 
 function comparePassword(
     socketID,
-    UID,
+    uID,
     password,
     hashedPassword
 ) {
@@ -74,20 +74,20 @@ function comparePassword(
                         throw errors.FuncErr(err.message);
                     } else {
                         if (result == true) {
-                            util.logDebug("authentication successful", "auth.comparePassword", undefined, undefined, undefined, socketID, UID);
+                            util.logDebug("authentication successful", "auth.comparePassword", undefined, undefined, undefined, socketID, uID);
                             resolve(true);
                         } else {
                             throw errors.AuthErr("auth failed - passwords don't match");
                         }
                     }
                 } catch (error) {
-                    util.logDebug("authentication failed", "auth.comparePassword", undefined, error, `UID: ${UID}`, socketID);
+                    util.logDebug("authentication failed", "auth.comparePassword", undefined, error, `uID: ${uID}`, socketID);
                     reject(error);
                 }
             });
 
         } catch (error) {
-            util.logDebug("authentication failed", "auth.comparePassword", undefined, error, `UID: ${UID}`, socketID);
+            util.logDebug("authentication failed", "auth.comparePassword", undefined, error, `uID: ${uID}`, socketID);
             reject(error);
         }
     });
@@ -96,25 +96,25 @@ function comparePassword(
 async function connectUser(
     socket,
     socketID,
-    UID,
+    uID,
     password,
     hashedPassword
 ) {
     try {
-        let authResult = await comparePassword(socketID, UID, password, hashedPassword);
+        let authResult = await comparePassword(socketID, uID, password, hashedPassword);
 
         if (authResult == true) {
-            socket.userdata.UID = UID;
+            socket.userdata.uID = uID;
             socket.userdata.connected = true;
     
-            connectedUsers[UID] = {
+            connectedUsers[uID] = {
                 socketID: socketID
             };
 
-            util.logDebug("user connection successful", "auth.connectUser", undefined, undefined, undefined, socketID, UID);
+            util.logDebug("user connection successful", "auth.connectUser", undefined, undefined, undefined, socketID, uID);
         }
     } catch (error) {
-        util.logDebug("user connection failed", "auth.connectUser", undefined, error, `UID: ${UID}`, socketID);
+        util.logDebug("user connection failed", "auth.connectUser", undefined, error, `uID: ${uID}`, socketID);
         throw error;
     }
 };
@@ -122,13 +122,13 @@ async function connectUser(
 function disconnectUser(
     socket,
     socketID,
-    UID
+    uID
 ) {
-    delete connectedUsers[UID];
+    delete connectedUsers[uID];
     socket.userdata.connected = false;
-    socket.userdata.UID = null;
+    socket.userdata.uID = null;
 
-    util.logDebug("user disconnection successful", "auth.disconnectUser", undefined, undefined,  undefined, socketID, UID);
+    util.logDebug("user disconnection successful", "auth.disconnectUser", undefined, undefined,  undefined, socketID, uID);
 };
 
 module.exports = {

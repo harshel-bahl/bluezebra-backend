@@ -127,7 +127,7 @@ function logObj(
     error = null,
     info = null,
     socketID = null,
-    UID = null,
+    uID = null,
     recSocketID = null,
     recUID = null,
     json = null,
@@ -139,7 +139,7 @@ function logObj(
     if (isNotNull(error)) outputLogObj.error = errToObj(error, true);
     if (isNotNull(info)) outputLogObj.info = info;
     if (isNotNull(socketID)) outputLogObj.socketID = socketID;
-    if (isNotNull(UID)) outputLogObj.UID = UID;
+    if (isNotNull(uID)) outputLogObj.uID = uID;
     if (isNotNull(recSocketID)) outputLogObj.recSocketID = recSocketID;
     if (isNotNull(recUID)) outputLogObj.recUID = recUID;
     if (isNotNull(json)) outputLogObj.json = json;
@@ -154,12 +154,12 @@ function logDebug(
     error = null,
     info = null,
     socketID = null,
-    UID = null,
+    uID = null,
     recSocketID = null,
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
+    let inputLogObj = logObj(func, event, error, info, socketID, uID, recSocketID, recUID, json);
 
     let logArgs = [];
 
@@ -181,12 +181,12 @@ function logInfo(
     error = null,
     info = null,
     socketID = null,
-    UID = null,
+    uID = null,
     recSocketID = null,
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
+    let inputLogObj = logObj(func, event, error, info, socketID, uID, recSocketID, recUID, json);
 
     let logArgs = [];
 
@@ -208,12 +208,12 @@ function logWarn(
     error = null,
     info = null,
     socketID = null,
-    UID = null,
+    uID = null,
     recSocketID = null,
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
+    let inputLogObj = logObj(func, event, error, info, socketID, uID, recSocketID, recUID, json);
 
     let logArgs = [];
 
@@ -235,12 +235,12 @@ function logError(
     error = null,
     info = null,
     socketID = null,
-    UID = null,
+    uID = null,
     recSocketID = null,
     recUID = null,
     json = null,
 ) {
-    let inputLogObj = logObj(func, event, error, info, socketID, UID, recSocketID, recUID, json);
+    let inputLogObj = logObj(func, event, error, info, socketID, uID, recSocketID, recUID, json);
 
     let logArgs = [];
 
@@ -303,8 +303,8 @@ function checkObjProps(
 function checkSocketStatus(
     socket,
 ) {
-    if (!socket.userdata.connected || isNull(socket.userdata.userID)) {
-        throw new SocketStatusErr(`socket status: (connected: ${socket.userdata.connected}, userID: ${socket.userdata.userID})`);
+    if (!socket.userdata.connected || isNull(socket.userdata.uID)) {
+        throw new SocketStatusErr(`socket status: (connected: ${socket.userdata.connected}, uID: ${socket.userdata.uID})`);
     }
 }
 
