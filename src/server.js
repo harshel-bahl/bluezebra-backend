@@ -2,10 +2,10 @@ const app = require('express')();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const util = require('./utilities');
 
 const io = new Server(server);
 
-const util = require('./utilities');
 
 function startServer() {
     server.listen(3000, () => {

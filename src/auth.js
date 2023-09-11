@@ -5,21 +5,9 @@ const config = require('./config');
 const util = require('./utilities');
 const errors = require('./error');
 
-// const privateKey = fs.readFileSync('path_to/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('path_to/fullchain.pem', 'utf8');
-// const ca = fs.readFileSync('path_to/chain.pem', 'utf8');
-
-// const credentials = {
-// key: privateKey,
-// cert: certificate,
-// ca: ca
-// };
-// const server = https.createServer(credentials, app);
-
-// add JWT middleware to io
-
 // connectedUsers
-// - userID: { socketID }
+// - uID: { socketID }
+
 let connectedUsers = {};
 
 function hashPassword(
@@ -71,13 +59,13 @@ function comparePassword(
             bcrypt.compare(password, hashedPassword, (err, result) => {
                 try {
                     if (err) {
-                        throw errors.FuncErr(err.message);
+                        throw new errors.FuncErr(err.message);
                     } else {
                         if (result == true) {
                             util.logDebug("authentication successful", "auth.comparePassword", undefined, undefined, undefined, socketID, uID);
                             resolve(true);
                         } else {
-                            throw errors.AuthErr("auth failed - passwords don't match");
+                            throw new errors.AuthErr("passwords don't match");
                         }
                     }
                 } catch (error) {

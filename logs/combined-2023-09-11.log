@@ -1,0 +1,516 @@
+[2023-09-11 14:53:01.442] INFO  || starting server... | func: index.startup | 
+[2023-09-11 14:53:01.475] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 14:53:01.498] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 14:53:01.499] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 14:53:01.500] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 14:53:01.500] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 14:53:01.558] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 14:58:36.544] INFO  || event: connection | socketID: obdREPqA5S1RllVQAAAB | 
+[2023-09-11 15:00:34.393] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:00:34.402] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:00:34.405] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:00:34.405] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:00:34.406] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:00:34.407] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:00:34.459] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:00:38.218] INFO  || event: connection | socketID: s1rKIZJ8sfCDTZWYAAAB | 
+[2023-09-11 15:01:59.819] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:01:59.827] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:01:59.830] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:01:59.831] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:01:59.832] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:01:59.833] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:01:59.880] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:02:03.650] INFO  || event: connection | socketID: 6XaxZTZZCBNmXpXMAAAB | 
+[2023-09-11 15:02:28.841] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:02:28.850] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:02:28.853] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:02:28.854] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:02:28.855] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:02:28.856] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:02:28.905] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:02:32.176] INFO  || event: connection | socketID: xAqJWBx7RbJjWFhoAAAB | 
+[2023-09-11 15:03:40.122] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:03:40.131] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:03:40.133] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:03:40.134] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:03:40.135] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:03:40.135] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:03:40.181] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:03:44.207] INFO  || event: connection | socketID: WrumhTJb2NKSyokqAAAB | 
+[2023-09-11 15:05:56.597] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:05:56.607] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:05:56.610] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:05:56.611] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:05:56.611] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:05:56.612] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:05:56.659] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:06:01.059] INFO  || event: connection | socketID: 0G-3plTgIKz9KywWAAAB | 
+[2023-09-11 15:06:32.222] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:06:32.228] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:06:32.232] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:06:32.233] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:06:32.234] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:06:32.235] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:06:32.282] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:06:36.984] INFO  || event: connection | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:38.776] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"h"}) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:38.778] INFO  || checked username | event: checkUsername | (info: username: h) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:40.925] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"har"}) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:40.926] INFO  || checked username | event: checkUsername | (info: username: har) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:41.974] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"username":"har"}) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:41.975] INFO  || checked username | event: checkUsername | (info: username: har) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:46.883] DEBUG || password hashed successfully | func: auth.hashPassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148, hash: $2b$10$GCiIBr49phyID3bMKY8YG.Z1LNjgkOAoyugi8YUoRMDsdJmf8Ofhi) | socketID: _y0lZF8L5SgnMMmHAAAB | 
+[2023-09-11 15:11:46.893] DEBUG || created user | func: DB.createUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148, username: har) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:46.893] INFO  || created user | event: createUser | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.900] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.986] DEBUG || authentication successful | func: auth.comparePassword | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.987] DEBUG || user connection successful | func: auth.connectUser | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.987] INFO  || connected user | event: connectUser | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.988] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:215:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-11 15:11:49.991] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.991] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: _y0lZF8L5SgnMMmHAAAB | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:11:49.991] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: _y0lZF8L5SgnMMmHAAAB | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:01.896] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:01.898] DEBUG || failed to update record | func: DB.updateRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}, updateProp: lastOnline) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [TypeError: val.slice is not a function] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/db.js:332:18
+    at new Promise (<anonymous>)
+    at DB.updateRecords (/Users/harshel/Documents/bluezebra-backend/src/db.js:300:12)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:151:26)
+    at Socket.emit (node:events:513:28)
+[2023-09-11 15:12:01.899] INFO  || socket disconnect successfully | event: disconnect | (info: reason: client namespace disconnect) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:01.901] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"B0C4D6F8-8594-432C-93C2-56C7BC231148","UID2":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:01.902] INFO  || emitted user disconnect events | func: EF.sendUserDisconnect | (info: event: userDisconnect) | socketID: _y0lZF8L5SgnMMmHAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.435] INFO  || event: connection | socketID: rgFmWGp-eWvdH99DAAAC | 
+[2023-09-11 15:12:15.438] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.510] DEBUG || authentication successful | func: auth.comparePassword | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.510] DEBUG || user connection successful | func: auth.connectUser | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.511] INFO  || connected user | event: connectUser | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.511] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:215:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-11 15:12:15.512] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.512] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: rgFmWGp-eWvdH99DAAAC | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:15.512] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: rgFmWGp-eWvdH99DAAAC | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:33.232] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:33.233] DEBUG || failed to update record | func: DB.updateRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}, updateProp: lastOnline) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [TypeError: val.slice is not a function] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/db.js:332:18
+    at new Promise (<anonymous>)
+    at DB.updateRecords (/Users/harshel/Documents/bluezebra-backend/src/db.js:300:12)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:151:26)
+    at Socket.emit (node:events:513:28)
+[2023-09-11 15:12:33.233] INFO  || socket disconnect successfully | event: disconnect | (info: reason: client namespace disconnect) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:33.235] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"B0C4D6F8-8594-432C-93C2-56C7BC231148","UID2":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:33.237] INFO  || emitted user disconnect events | func: EF.sendUserDisconnect | (info: event: userDisconnect) | socketID: rgFmWGp-eWvdH99DAAAC | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.351] INFO  || event: connection | socketID: Hy6aVdJms_gwphPmAAAD | 
+[2023-09-11 15:12:35.374] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.445] DEBUG || authentication successful | func: auth.comparePassword | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.446] DEBUG || user connection successful | func: auth.connectUser | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.446] INFO  || connected user | event: connectUser | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.446] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:215:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-11 15:12:35.447] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.448] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: Hy6aVdJms_gwphPmAAAD | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:35.448] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: Hy6aVdJms_gwphPmAAAD | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:40.085] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:40.087] DEBUG || failed to update record | func: DB.updateRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}, updateProp: lastOnline) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [TypeError: val.slice is not a function] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/db.js:332:18
+    at new Promise (<anonymous>)
+    at DB.updateRecords (/Users/harshel/Documents/bluezebra-backend/src/db.js:300:12)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:151:26)
+    at Socket.emit (node:events:513:28)
+[2023-09-11 15:12:40.088] INFO  || socket disconnect successfully | event: disconnect | (info: reason: client namespace disconnect) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:40.091] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"B0C4D6F8-8594-432C-93C2-56C7BC231148","UID2":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:40.091] INFO  || emitted user disconnect events | func: EF.sendUserDisconnect | (info: event: userDisconnect) | socketID: Hy6aVdJms_gwphPmAAAD | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.100] INFO  || event: connection | socketID: NcjMV5aYzilV9nfJAAAE | 
+[2023-09-11 15:12:41.110] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.181] DEBUG || authentication successful | func: auth.comparePassword | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.181] DEBUG || user connection successful | func: auth.connectUser | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.182] INFO  || connected user | event: connectUser | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.182] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:215:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-11 15:12:41.183] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.184] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: NcjMV5aYzilV9nfJAAAE | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:12:41.184] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: NcjMV5aYzilV9nfJAAAE | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: NcjMV5aYzilV9nfJAAAE | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 15:37:22.938] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:37:22.945] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:37:22.948] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:37:22.949] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:37:22.950] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:37:22.950] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:37:22.996] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:39:47.297] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: SWJf2kZkrqWAxDikAAAB | 
+[2023-09-11 15:39:47.297] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: SWJf2kZkrqWAxDikAAAB | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:39:47.298] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: SWJf2kZkrqWAxDikAAAB | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:39:47.298] ERROR || user authentication failed | socketID: SWJf2kZkrqWAxDikAAAB | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:40:32.313] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: SxvgVMzK4f8XujI5AAAD | 
+[2023-09-11 15:40:32.313] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: SxvgVMzK4f8XujI5AAAD | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:40:32.314] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: SxvgVMzK4f8XujI5AAAD | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:40:32.314] ERROR || user authentication failed | socketID: SxvgVMzK4f8XujI5AAAD | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:41:17.329] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: xT5bJpGcw_hvJx-BAAAF | 
+[2023-09-11 15:41:17.329] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: xT5bJpGcw_hvJx-BAAAF | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:41:17.330] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: xT5bJpGcw_hvJx-BAAAF | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:41:17.330] ERROR || user authentication failed | socketID: xT5bJpGcw_hvJx-BAAAF | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:42:02.344] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: GJ-JfpwHuQkPmg4FAAAH | 
+[2023-09-11 15:42:02.345] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: GJ-JfpwHuQkPmg4FAAAH | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:42:02.345] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: GJ-JfpwHuQkPmg4FAAAH | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:42:02.345] ERROR || user authentication failed | socketID: GJ-JfpwHuQkPmg4FAAAH | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:42:47.369] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: 6VCp0VZoF_IrY5bXAAAJ | 
+[2023-09-11 15:42:47.369] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 6VCp0VZoF_IrY5bXAAAJ | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:42:47.370] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 6VCp0VZoF_IrY5bXAAAJ | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:42:47.370] ERROR || user authentication failed | socketID: 6VCp0VZoF_IrY5bXAAAJ | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:43:32.390] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: ir5ZH5pZHBsIWxMaAAAL | 
+[2023-09-11 15:43:32.390] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: ir5ZH5pZHBsIWxMaAAAL | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:43:32.391] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: ir5ZH5pZHBsIWxMaAAAL | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:43:32.391] ERROR || user authentication failed | socketID: ir5ZH5pZHBsIWxMaAAAL | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:44:17.408] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: llQW0eYXqmD7SqE5AAAN | 
+[2023-09-11 15:44:17.409] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: llQW0eYXqmD7SqE5AAAN | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:44:17.409] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: llQW0eYXqmD7SqE5AAAN | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:44:17.409] ERROR || user authentication failed | socketID: llQW0eYXqmD7SqE5AAAN | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:45:02.421] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: NBJs8HzHGkUYzZzaAAAP | 
+[2023-09-11 15:45:02.422] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: NBJs8HzHGkUYzZzaAAAP | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:45:02.422] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: NBJs8HzHGkUYzZzaAAAP | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:45:02.422] ERROR || user authentication failed | socketID: NBJs8HzHGkUYzZzaAAAP | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:45:47.437] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: 3DrDP9q1vb3Y0fBoAAAR | 
+[2023-09-11 15:45:47.438] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 3DrDP9q1vb3Y0fBoAAAR | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:45:47.438] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 3DrDP9q1vb3Y0fBoAAAR | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:45:47.438] ERROR || user authentication failed | socketID: 3DrDP9q1vb3Y0fBoAAAR | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:46:32.453] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: L5U9NxHGkKWlvMq1AAAT | 
+[2023-09-11 15:46:32.454] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: L5U9NxHGkKWlvMq1AAAT | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:46:32.454] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: L5U9NxHGkKWlvMq1AAAT | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:46:32.454] ERROR || user authentication failed | socketID: L5U9NxHGkKWlvMq1AAAT | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:47:17.464] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: USMaWhcRYM_Ubij6AAAV | 
+[2023-09-11 15:47:17.465] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: USMaWhcRYM_Ubij6AAAV | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:47:17.465] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: USMaWhcRYM_Ubij6AAAV | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:47:17.465] ERROR || user authentication failed | socketID: USMaWhcRYM_Ubij6AAAV | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:48:02.482] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: 0-MVwa0SW1oHeBq7AAAX | 
+[2023-09-11 15:48:02.483] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 0-MVwa0SW1oHeBq7AAAX | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:48:02.483] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 0-MVwa0SW1oHeBq7AAAX | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:48:02.483] ERROR || user authentication failed | socketID: 0-MVwa0SW1oHeBq7AAAX | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:48:47.496] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: V4q4F8SDpWhwZkLcAAAZ | 
+[2023-09-11 15:48:47.496] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: V4q4F8SDpWhwZkLcAAAZ | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:48:47.496] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: V4q4F8SDpWhwZkLcAAAZ | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:48:47.496] ERROR || user authentication failed | socketID: V4q4F8SDpWhwZkLcAAAZ | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:49:32.504] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: Za3ZvPIK_BKBNdEWAAAb | 
+[2023-09-11 15:49:32.504] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: Za3ZvPIK_BKBNdEWAAAb | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:49:32.504] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: Za3ZvPIK_BKBNdEWAAAb | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:49:32.504] ERROR || user authentication failed | socketID: Za3ZvPIK_BKBNdEWAAAb | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:50:17.525] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: 5oXd_QXgDgcZtd7nAAAd | 
+[2023-09-11 15:50:17.526] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 5oXd_QXgDgcZtd7nAAAd | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:50:17.526] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: 5oXd_QXgDgcZtd7nAAAd | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:50:17.526] ERROR || user authentication failed | socketID: 5oXd_QXgDgcZtd7nAAAd | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:51:02.529] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: yMKxcJYDZgT5YVjIAAAf | 
+[2023-09-11 15:51:02.530] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: yMKxcJYDZgT5YVjIAAAf | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:51:02.530] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: yMKxcJYDZgT5YVjIAAAf | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:51:02.530] ERROR || user authentication failed | socketID: yMKxcJYDZgT5YVjIAAAf | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:51:47.536] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: VXCqkK7hsv_89u0IAAAh | 
+[2023-09-11 15:51:47.537] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: VXCqkK7hsv_89u0IAAAh | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:51:47.537] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: VXCqkK7hsv_89u0IAAAh | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:51:47.537] ERROR || user authentication failed | socketID: VXCqkK7hsv_89u0IAAAh | error: [TypeError: Class constructor FuncErr cannot be invoked without 'new'] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:38
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:52:15.435] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:52:15.442] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:52:15.444] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:52:15.446] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:52:15.447] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:52:15.448] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:52:15.494] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:52:21.862] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: e14AVRxKzyCRoMkgAAAB | 
+[2023-09-11 15:52:21.862] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: e14AVRxKzyCRoMkgAAAB | error: [FuncErr: (data and hash must be strings)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:52:21.863] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: e14AVRxKzyCRoMkgAAAB | error: [FuncErr: (data and hash must be strings)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:52:21.863] ERROR || user authentication failed | socketID: e14AVRxKzyCRoMkgAAAB | error: [FuncErr: (data and hash must be strings)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:53:06.871] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: oWsIHCvJsyZmlRxtAAAD | 
+[2023-09-11 15:53:06.872] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: oWsIHCvJsyZmlRxtAAAD | error: [FuncErr: (data and hash must be strings)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:53:06.873] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: oWsIHCvJsyZmlRxtAAAD | error: [FuncErr: (data and hash must be strings)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:53:06.873] ERROR || user authentication failed | socketID: oWsIHCvJsyZmlRxtAAAD | error: [FuncErr: (data and hash must be strings)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:62:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 15:53:36.114] INFO  || starting server... | func: index.startup | 
+[2023-09-11 15:53:36.120] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 15:53:36.123] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 15:53:36.123] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 15:53:36.124] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 15:53:36.125] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 15:53:36.169] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 15:53:39.815] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: ezMleKGda6uRd5JQAAAB | 
+[2023-09-11 15:53:39.871] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: ezMleKGda6uRd5JQAAAB | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:53:39.871] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: ezMleKGda6uRd5JQAAAB | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:53:39.871] ERROR || user authentication failed | socketID: ezMleKGda6uRd5JQAAAB | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:54:24.620] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: ReEK1tlWo8ko5GRtAAAD | 
+[2023-09-11 15:54:24.686] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: ReEK1tlWo8ko5GRtAAAD | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:54:24.686] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: ReEK1tlWo8ko5GRtAAAD | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:54:24.687] ERROR || user authentication failed | socketID: ReEK1tlWo8ko5GRtAAAD | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:55:09.639] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: pbfZ6hX73ojP9lktAAAF | 
+[2023-09-11 15:55:09.732] DEBUG || authentication failed | func: auth.comparePassword | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: pbfZ6hX73ojP9lktAAAF | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:55:09.732] DEBUG || user connection failed | func: auth.connectUser | (info: uID: B0C4D6F8-8594-432C-93C2-56C7BC231148) | socketID: pbfZ6hX73ojP9lktAAAF | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 15:55:09.732] ERROR || user authentication failed | socketID: pbfZ6hX73ojP9lktAAAF | error: [AuthErr: (passwords don't match)] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/auth.js:68:35
+[2023-09-11 16:26:22.595] INFO  || starting server... | func: index.startup | 
+[2023-09-11 16:26:22.602] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 16:26:22.606] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 16:26:22.607] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 16:26:22.608] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 16:26:22.609] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 16:26:22.656] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 16:27:30.011] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: P2MYXDfIA6S9u3hyAAAB | 
+[2023-09-11 16:27:30.070] DEBUG || authentication successful | func: auth.comparePassword | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:30.070] DEBUG || user connection successful | func: auth.connectUser | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:30.071] INFO  || event: connection | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:30.072] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedUserConnected) | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: P2MYXDfIA6S9u3hyAAAB | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:52.727] DEBUG || user disconnection successful | func: auth.disconnectUser | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:52.729] DEBUG || failed to update record | func: DB.updateRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}, updateProp: lastOnline) | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [TypeError: val.slice is not a function] | 
+STACK:
+    at /Users/harshel/Documents/bluezebra-backend/src/db.js:332:18
+    at new Promise (<anonymous>)
+    at DB.updateRecords (/Users/harshel/Documents/bluezebra-backend/src/db.js:300:12)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:179:26)
+    at Socket.emit (node:events:513:28)
+[2023-09-11 16:27:52.730] INFO  || socket disconnect successfully | event: disconnect | (info: reason: client namespace disconnect) | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:52.736] DEBUG || fetched records | func: DB.fetchRecords | (info: table: RUChannels, predObj: {"UID1":"B0C4D6F8-8594-432C-93C2-56C7BC231148","UID2":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 16:27:52.737] INFO  || emitted user disconnect events | func: EF.sendUserDisconnect | (info: event: userDisconnect) | socketID: P2MYXDfIA6S9u3hyAAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 17:30:23.814] INFO  || starting server... | func: index.startup | 
+[2023-09-11 17:30:23.822] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 17:30:23.824] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 17:30:23.825] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 17:30:23.826] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 17:30:23.827] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 17:30:23.892] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 17:30:24.925] INFO  || event: connection | socketID: S6t8sdblrBGLF8uhAAAB | 
+[2023-09-11 17:30:24.929] ERROR || failed to connect user | event: connectUser | socketID: S6t8sdblrBGLF8uhAAAB | error: [ReferenceError: uID is not defined] | 
+STACK:
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:74:96)
+    at Socket.emit (node:events:513:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+[2023-09-11 17:31:30.730] ERROR || failed to disconnect socket properly | event: disconnect | (info: reason: transport close) | error: [SocketStatusErr: (socket status: (connected: null, uID: null))] | 
+STACK:
+    at checkSocketStatus (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:307:15)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:183:13)
+    at Socket.emit (node:events:513:28)
+    at Socket.emit (node:events:525:35)
+    at Object.onceWrapper (node:events:627:28)
+    at WebSocket.emit (node:events:513:28)
+[2023-09-11 17:31:33.120] INFO  || starting server... | func: index.startup | 
+[2023-09-11 17:31:33.127] INFO  || connected to MySQL DB | func: DB.connectDB | 
+[2023-09-11 17:31:33.130] INFO  || created 'users' table if not present | func: DB.createTable1 | 
+[2023-09-11 17:31:33.131] INFO  || created 'CRs' table if not present | func: DB.createTable2 | 
+[2023-09-11 17:31:33.132] INFO  || created 'RUChannels' table if not present | func: DB.createTable3 | 
+[2023-09-11 17:31:33.133] INFO  || created 'events' table if not present | func: DB.createTable4 | 
+[2023-09-11 17:31:33.178] INFO  || started server | func: server.startServer | (info: host: localhost, port: 3000) | 
+[2023-09-11 17:31:39.884] INFO  || event: connection | socketID: T6TfpRvaq0oOFhb3AAAB | 
+[2023-09-11 17:31:39.895] DEBUG || fetched records | func: DB.fetchRecords | (info: table: USERS, predObj: {"uID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: T6TfpRvaq0oOFhb3AAAB | 
+[2023-09-11 17:31:39.950] DEBUG || authentication successful | func: auth.comparePassword | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 17:31:39.950] DEBUG || user connection successful | func: auth.connectUser | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 17:31:39.950] INFO  || connected user | event: connectUser | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 17:31:39.951] ERROR || failed to emit user connect events | func: EF.sendUserConnect | (info: event: userConnect) | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | error: [ReqParamsNull: (null params: queryUID)] | 
+STACK:
+    at checkParams (/Users/harshel/Documents/bluezebra-backend/src/utilities.js:265:15)
+    at EF.sendUserConnect (/Users/harshel/Documents/bluezebra-backend/src/ef.js:600:13)
+    at Socket.<anonymous> (/Users/harshel/Documents/bluezebra-backend/src/events.js:91:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2023-09-11 17:31:39.954] DEBUG || fetched records | func: DB.fetchRecords | (info: table: EVENTS, predObj: {"recUID":"B0C4D6F8-8594-432C-93C2-56C7BC231148"}) | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 17:31:39.955] DEBUG || emitted event | func: EF.emitEvent | (info: event: receivedPendingEvents) | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: T6TfpRvaq0oOFhb3AAAB | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 
+[2023-09-11 17:31:39.955] INFO  || emitted pending events | func: EF.emitPendingEvents | (info: eventCount: 0) | socketID: T6TfpRvaq0oOFhb3AAAB | uID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | recSocketID: T6TfpRvaq0oOFhb3AAAB | recUID: B0C4D6F8-8594-432C-93C2-56C7BC231148 | 

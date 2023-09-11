@@ -35,12 +35,12 @@ const {
 } = require('./utilities');
 
 
-// Socket Events
-// =============
 
-io.on('connection', (socket) => {
+// Socket Middleware
+// =================
+// - add token-based authentication to middleware
 
-    logInfo(undefined, undefined, 'connection', undefined, undefined, socket.id);
+io.use((socket, next) => {
 
     socket.userdata = {
         socketID: socket.id,
@@ -49,60 +49,17 @@ io.on('connection', (socket) => {
         emittedPendingEvents: false
     };
 
-    // checkUsername
-    // 
-    socket.on('checkUsername', async function (data, ack) {
-        try {
+    next()
+});
 
-            checkObjReqProps(data, ["username"]);
 
-            let result = await db.fetchRecords(socket.id, undefined, "USERS", {"username": data.username}, "uID", undefined, undefined, 1);
+// Socket Events
+// =============
 
-            if (util.isNull(result)) {
-                ack(null, true);
-            } else {
-                ack(null, false);
-            };
 
-            logInfo('checked username', undefined, 'checkUsername', undefined, `username: ${data.username}`, socket.id);
-        } catch (error) {
-            ack(false);
-            logError('failed to check username', undefined, 'checkUsername', error, undefined, socket.id);
-        }
-    });
+io.on('connection', (socket) => {
 
-    // createUser
-    // 
-    socket.on('createUser', async function (data, ack) {
-        try {
-
-            checkObjReqProps(data, ["packet"]);
-
-            var packetObject = bufferToObject(data.packet);
-
-            checkObjReqProps(packetObject, ["uID", "username", "password", "publicKey", "avatar", "creationDate"]);
-            
-            let publicKeyBuffer = Buffer.from(packetObject.publicKey, 'utf8');
-            
-            let hashedPassword = await auth.hashPassword(socket.id, packetObject.uID, packetObject.password);
-
-            await db.createUser(
-                socket.id, 
-                packetObject.uID, 
-                packetObject.username, 
-                hashedPassword, 
-                publicKeyBuffer, 
-                packetObject.avatar, 
-                packetObject.creationDate
-            );
-
-            ack(null);
-            logInfo('created user', undefined, 'createUser', undefined, undefined, socket.id, packetObject.uID);
-        } catch (error) {
-            ack(false);
-            logError('failed to create user', undefined, 'createUser', error, undefined, socket.id);
-        };
-    });
+    logInfo(undefined, undefined, 'connection', undefined, undefined, socket.id, socket.userdata ? socket.userdata.uID : undefined);
 
     // connectUser
     // 
@@ -111,10 +68,10 @@ io.on('connection', (socket) => {
 
             checkObjReqProps(data, ["uID", "password"]);
 
-            let userRecord;
+            let storedPassword;
 
             try {
-                userRecord = await db.fetchRecords(socket.id, data.uID, "USERS", {"uID": data.uID}, undefined, undefined, undefined, 1, undefined, true, true);
+                storedPassword = await db.fetchRecords(socket.id, undefined, "USERS", { "uID": data.uID }, "password", undefined, undefined, 1, undefined, true);
             } catch (error) {
                 if (error instanceof EmptyDBResult) {
                     ack("user does not exist");
@@ -125,7 +82,7 @@ io.on('connection', (socket) => {
                 }
             }
 
-            await auth.connectUser(socket, socket.id, data.uID, data.password, userRecord.password);
+            await auth.connectUser(socket, socket.id, data.uID, data.password, storedPassword.password);
 
             ack(null);
 
@@ -150,7 +107,7 @@ io.on('connection', (socket) => {
             auth.disconnectUser(socket, socketID, uID)
 
             try {
-                await db.updateRecords(socketID, uID, "USERS", {"uID": uID}, "lastOnline", util.currDT);
+                await db.updateRecords(socketID, uID, "USERS", { "uID": uID }, "lastOnline", util.currDT);
             } catch (error) { }
 
             logInfo('socket disconnect successfully', undefined, 'disconnect', undefined, `reason: ${reason}`, socketID, uID);
@@ -159,6 +116,61 @@ io.on('connection', (socket) => {
         } catch (error) {
             logError('failed to disconnect socket properly', undefined, 'disconnect', error, `reason: ${reason}`, socketID, uID);
         }
+    });
+
+    // checkUsername
+    // 
+    socket.on('checkUsername', async function (data, ack) {
+        try {
+
+            checkObjReqProps(data, ["username"]);
+
+            let result = await db.fetchRecords(socket.id, undefined, "USERS", { "username": data.username }, "uID", undefined, undefined, 1);
+
+            if (util.isNull(result)) {
+                ack(null, true);
+            } else {
+                ack(null, false);
+            };
+
+            logInfo('checked username', undefined, 'checkUsername', undefined, `username: ${data.username}`, socket.id);
+        } catch (error) {
+            ack(false);
+            logError('failed to check username', undefined, 'checkUsername', error, undefined, socket.id);
+        }
+    });
+
+    // createUser
+    // 
+    socket.on('createUser', async function (data, ack) {
+        try {
+
+            checkObjReqProps(data, ["packet"]);
+
+            var packetObject = bufferToObject(data.packet);
+
+            checkObjReqProps(packetObject, ["uID", "username", "password", "publicKey", "avatar", "creationDate"]);
+
+            let publicKeyBuffer = Buffer.from(packetObject.publicKey, 'utf8');
+
+            let hashedPassword = await auth.hashPassword(socket.id, packetObject.uID, packetObject.password);
+
+            await db.createUser(
+                socket.id,
+                packetObject.uID,
+                packetObject.username,
+                hashedPassword,
+                publicKeyBuffer,
+                packetObject.avatar,
+                packetObject.creationDate
+            );
+
+            ack(null);
+            logInfo('created user', undefined, 'createUser', undefined, undefined, socket.id, packetObject.uID);
+        } catch (error) {
+            ack(false);
+            logError('failed to create user', undefined, 'createUser', error, undefined, socket.id);
+        };
     });
 
     // deleteUser
@@ -198,8 +210,8 @@ io.on('connection', (socket) => {
             checkSocketStatus(socket);
 
             checkObjReqProps(data, ["uID"]);
-            
-            let userdata = await db.fetchRecords(socket.id, socket.userdata.uID, "USERS", {"uID": data.uID}, undefined, undefined, undefined, undefined, true, true);
+
+            let userdata = await db.fetchRecords(socket.id, socket.userdata.uID, "USERS", { "uID": data.uID }, undefined, undefined, undefined, undefined, true, true);
 
             ack(null, userdata);
 
